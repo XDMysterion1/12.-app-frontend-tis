@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 
-export const Dashboard = () => {
+export const Convocatoria = () => {
 
     return (
         <div className="grid">
-             <h1>Estamos trabajando - En el Tablero</h1>
+             <h1>Estamos trabajando - En las Convocatorias</h1>
         </div>
     );
 }

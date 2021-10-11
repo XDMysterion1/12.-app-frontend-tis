@@ -1,36 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
 import { Route } from 'react-router-dom';
-import { CSSTransition } from 'react-transition-group';
+import { CSSTransition }    from 'react-transition-group';
 
-import { AppTopbar } from './AppTopbar';
-import { AppFooter } from './AppFooter';
-import { AppMenu } from './AppMenu';
-import { AppConfig } from './AppConfig';
+import { AppTopbar }        from './AppTopbar';
+import { AppFooter }        from './AppFooter';
+import { AppMenu }          from './AppMenu';
+import { AppConfig }        from './AppConfig';
 
-import { Dashboard } from './components/Dashboard';
-import { ButtonDemo } from './components/ButtonDemo';
-import { ChartDemo } from './components/ChartDemo';
-import { Documentation } from './components/Documentation';
-import { FileDemo } from './components/FileDemo';
-import { FloatLabelDemo } from './components/FloatLabelDemo';
-import { FormLayoutDemo } from './components/FormLayoutDemo';
-import { InputDemo } from './components/InputDemo';
-import { ListDemo } from './components/ListDemo';
-import { MenuDemo } from './components/MenuDemo';
-import { MessagesDemo } from './components/MessagesDemo';
-import { MiscDemo } from './components/MiscDemo';
-import { OverlayDemo } from './components/OverlayDemo';
-import { PanelDemo } from './components/PanelDemo';
-import { TableDemo } from './components/TableDemo';
-import { TreeDemo } from './components/TreeDemo';
+import { Dashboard }             from './components/Dashboard';
+import { ShowUser }              from './components/ShowUser';
+import { RegisterUser }          from './components/RegisterUser';
+import { ShowEmpresa }           from './components/ShowEmpresa';
+import { RegisterEmpresa }       from './components/RegisterEmpresa';
+import { Convocatoria }          from './components/Convocatoria';
+import { PliegoEspecificacion }  from './components/PliegoEspecificacion';
+import { Aviso }                 from './components/Aviso';
+
+
+
+import { ButtonDemo }       from './components/ButtonDemo';
+import { ChartDemo }        from './components/ChartDemo';
+import { Documentation }    from './components/Documentation';
+import { FileDemo }         from './components/FileDemo';
+import { FloatLabelDemo }   from './components/FloatLabelDemo';
+import { FormLayoutDemo }   from './components/FormLayoutDemo';
+import { InputDemo }        from './components/InputDemo';
+import { ListDemo }         from './components/ListDemo';
+import { MenuDemo }         from './components/MenuDemo';
+import { MessagesDemo }     from './components/MessagesDemo';
+import { MiscDemo }         from './components/MiscDemo';
+import { OverlayDemo }      from './components/OverlayDemo';
+import { PanelDemo }        from './components/PanelDemo';
+import { TableDemo }        from './components/TableDemo';
+import { TreeDemo }         from './components/TreeDemo';
 import { InvalidStateDemo } from './components/InvalidStateDemo';
 
-import { Crud } from './pages/Crud';
-import { EmptyPage } from './pages/EmptyPage';
-import { TimelineDemo } from './pages/TimelineDemo';
+import { Crud }             from './pages/Crud';
+import { EmptyPage }        from './pages/EmptyPage';
+import { TimelineDemo }     from './pages/TimelineDemo';
 
-import PrimeReact from 'primereact/api';
+import PrimeReact           from 'primereact/api';
 
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
@@ -149,89 +159,38 @@ const App = () => {
         {
             label: 'Home',
             items: [{
-                label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/'
+                label: 'Tablero', icon: 'pi pi-fw pi-home', to: '/'
             }]
         },
         {
-            label: 'UI Kit', icon: 'pi pi-fw pi-sitemap',
+            label: 'Gestion de Usuario', icon: 'pi pi-fw pi-sitemap',
             items: [
-                {label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/formlayout'},
-                {label: 'Input', icon: 'pi pi-fw pi-check-square', to: '/input'},
-                {label: "Float Label", icon: "pi pi-fw pi-bookmark", to: "/floatlabel"},
-                {label: "Invalid State", icon: "pi pi-fw pi-exclamation-circle", to: "invalidstate"},
-                {label: 'Button', icon: 'pi pi-fw pi-mobile', to: '/button'},
-                {label: 'Table', icon: 'pi pi-fw pi-table', to: '/table'},
-                {label: 'List', icon: 'pi pi-fw pi-list', to: '/list'},
-                {label: 'Tree', icon: 'pi pi-fw pi-share-alt', to: '/tree'},
-                {label: 'Panel', icon: 'pi pi-fw pi-tablet', to: '/panel'},
-                {label: 'Overlay', icon: 'pi pi-fw pi-clone', to: '/overlay'},
-                {label: 'Menu', icon: 'pi pi-fw pi-bars', to: '/menu'},
-                {label: 'Message', icon: 'pi pi-fw pi-comment', to: '/messages'},
-                {label: 'File', icon: 'pi pi-fw pi-file', to: '/file'},
-                {label: 'Chart', icon: 'pi pi-fw pi-chart-bar', to: '/chart'},
-                {label: 'Misc', icon: 'pi pi-fw pi-circle-off', to: '/misc'},
+                {label: 'Mostrar Usuario', icon: 'pi pi-fw pi-user', to: '/ShowUser'},
+                {label: 'Añadir Usuario', icon: 'pi pi-fw pi-user', to: '/RegisterUser'},
             ]
         },
         {
-            label: 'Pages', icon: 'pi pi-fw pi-clone',
+            label: 'Grupo Empresas', icon: 'pi pi-fw pi-sitemap',
             items: [
-                {label: 'Crud', icon: 'pi pi-fw pi-user-edit', to: '/crud'},
-                {label: 'Timeline', icon: 'pi pi-fw pi-calendar', to: '/timeline'},
-                {label: 'Empty', icon: 'pi pi-fw pi-circle-off', to: '/empty'}
+                {label: 'Mostrar Empresa', icon: 'pi pi-fw pi-user', to: '/ShowEmpresa'},
+                {label: 'Añadir Empresa', icon: 'pi pi-fw pi-user', to: '/RegisterEmpresa'},
             ]
         },
         {
-            label: 'Menu Hierarchy', icon: 'pi pi-fw pi-search',
+            label: 'Gestion Publicacion', icon: 'pi pi-fw pi-sitemap',
             items: [
-                {
-                    label: 'Submenu 1', icon: 'pi pi-fw pi-bookmark',
-                    items: [
-                        {
-                            label: 'Submenu 1.1', icon: 'pi pi-fw pi-bookmark',
-                            items: [
-                                {label: 'Submenu 1.1.1', icon: 'pi pi-fw pi-bookmark'},
-                                {label: 'Submenu 1.1.2', icon: 'pi pi-fw pi-bookmark'},
-                                {label: 'Submenu 1.1.3', icon: 'pi pi-fw pi-bookmark'},
-                            ]
-                        },
-                        {
-                            label: 'Submenu 1.2', icon: 'pi pi-fw pi-bookmark',
-                            items: [
-                                {label: 'Submenu 1.2.1', icon: 'pi pi-fw pi-bookmark'},
-                                {label: 'Submenu 1.2.2', icon: 'pi pi-fw pi-bookmark'}
-                            ]
-                        },
-                    ]
-                },
-                {
-                    label: 'Submenu 2', icon: 'pi pi-fw pi-bookmark',
-                    items: [
-                        {
-                            label: 'Submenu 2.1', icon: 'pi pi-fw pi-bookmark',
-                            items: [
-                                {label: 'Submenu 2.1.1', icon: 'pi pi-fw pi-bookmark'},
-                                {label: 'Submenu 2.1.2', icon: 'pi pi-fw pi-bookmark'},
-                                {label: 'Submenu 2.1.3', icon: 'pi pi-fw pi-bookmark'},
-                            ]
-                        },
-                        {
-                            label: 'Submenu 2.2', icon: 'pi pi-fw pi-bookmark',
-                            items: [
-                                {label: 'Submenu 2.2.1', icon: 'pi pi-fw pi-bookmark'},
-                                {label: 'Submenu 2.2.2', icon: 'pi pi-fw pi-bookmark'}
-                            ]
-                        }
-                    ]
-                }
+                {label: 'Convocatoria', icon: 'pi pi-fw pi-id-card', to: '/Convocatoria'},
+                {label: 'Pliego de Especificaciones', icon: 'pi pi-fw pi-check-square', to: '/PliegoEspecificacion'}
             ]
         },
         {
-            label: 'Get Started',
+            label: 'Gestion Avisos', icon: 'pi pi-fw pi-sitemap',
             items: [
-                {label: 'Documentation', icon: 'pi pi-fw pi-question', command: () => {window.location = "#/documentation"}},
-                {label: 'View Source', icon: 'pi pi-fw pi-search', command: () => {window.location = "https://github.com/primefaces/sakai-react"}}
+                {label: 'Avisos', icon: 'pi pi-fw pi-id-card', to: '/Aviso'}
             ]
-        }
+        },
+ 
+    
     ];
 
     const addClass = (element, className) => {
@@ -271,6 +230,14 @@ const App = () => {
             <div className="layout-main-container">
                 <div className="layout-main">
                     <Route path="/" exact component={Dashboard}/>
+                    <Route path="/ShowUser"        component={ShowUser}/>
+                    <Route path="/RegisterUser"    component={RegisterUser}/>
+                    <Route path="/ShowEmpresa"     component={ShowEmpresa}/>
+                    <Route path="/RegisterEmpresa" component={RegisterEmpresa}/>
+                    <Route path="/Convocatoria"    component={Convocatoria}/>
+                    <Route path="/PliegoEspecificacion"     component={PliegoEspecificacion}/>
+                    <Route path="/Aviso" component={Aviso}/>
+
                     <Route path="/formlayout" component={FormLayoutDemo}/>
                     <Route path="/input" component={InputDemo}/>
                     <Route path="/floatlabel" component={FloatLabelDemo}/>

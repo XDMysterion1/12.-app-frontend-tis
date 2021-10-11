@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 
-export const Dashboard = () => {
+export const PliegoEspecificacion = () => {
 
     return (
         <div className="grid">
-             <h1>Estamos trabajando - En el Tablero</h1>
+             <h1>Estamos trabajando - En el Pliego de Especificaciones</h1>
         </div>
     );
 }
