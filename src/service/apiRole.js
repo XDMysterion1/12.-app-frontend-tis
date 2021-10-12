@@ -25,7 +25,6 @@ import axios from 'axios';
 export const updateRolID =(data,id) =>{
     return axios.post(`http://127.0.0.1:8000/api/updateRol/${id}`, 
     {
-       id:  `${data.id}`,
        rol: `${data.rol}`
     }
     )
