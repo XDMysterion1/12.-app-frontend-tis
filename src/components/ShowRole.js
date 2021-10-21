@@ -213,7 +213,7 @@ export const ShowRole = () => {
             <h5 className="p-m-0">Gestion de roles</h5>
             <span className="p-input-icon-left">
                 <i className="pi pi-search" />
-                <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." />
+                <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
             </span>
         </div>
     );
@@ -249,7 +249,7 @@ export const ShowRole = () => {
                         dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} roles"
-                        globalFilter={globalFilter} emptyMessage="No products found." header={header}>
+                        globalFilter={globalFilter} emptyMessage="No se encontraron roles." header={header}>
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
 
                         <Column field="id"  header="id"    sortable body={idBodyTemplate}></Column>
