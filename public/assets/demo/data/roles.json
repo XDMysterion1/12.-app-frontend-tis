@@ -1,0 +1,16 @@
+
+{
+    "data": [
+        {"id": "1","name": "Administrador"},
+        {"id": "2","name": "Docente"},
+        {"id": "3","name": "Usuario"},
+        {"id": "4","name": "Desarrollador"},
+        {"id": "5","name": "Control de Calidad"},
+        {"id": "6","name": "Administrador"},
+        {"id": "7","name": "Docente"},
+        {"id": "8","name": "Usuario"},
+        {"id": "9","name": "Desarrollador"},
+        {"id": "10","name": "Control de Calidad"}
+    ]
+}
+    

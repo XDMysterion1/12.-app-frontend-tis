@@ -9,6 +9,7 @@ import { AppMenu }          from './AppMenu';
 import { AppConfig }        from './AppConfig';
 
 import { Dashboard }             from './components/Dashboard';
+import { ShowRole }              from './components/ShowRole';
 import { ShowUser }              from './components/ShowUser';
 import { RegisterUser }          from './components/RegisterUser';
 import { ShowEmpresa }           from './components/ShowEmpresa';
@@ -163,6 +164,13 @@ const App = () => {
             }]
         },
         {
+            label: 'Gestion de Roles', icon: 'pi pi-fw pi-sitemap',
+            items: [
+                {label: 'Mostrar Roles', icon: 'pi pi-fw pi-user', to: '/ShowRole'},
+               
+            ]
+        },
+        {
             label: 'Gestion de Usuario', icon: 'pi pi-fw pi-sitemap',
             items: [
                 {label: 'Mostrar Usuario', icon: 'pi pi-fw pi-user', to: '/ShowUser'},
@@ -230,6 +238,7 @@ const App = () => {
             <div className="layout-main-container">
                 <div className="layout-main">
                     <Route path="/" exact component={Dashboard}/>
+                    <Route path="/ShowRole"        component={ShowRole}/>
                     <Route path="/ShowUser"        component={ShowUser}/>
                     <Route path="/RegisterUser"    component={RegisterUser}/>
                     <Route path="/ShowEmpresa"     component={ShowEmpresa}/>
