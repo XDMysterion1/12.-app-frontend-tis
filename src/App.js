@@ -9,8 +9,8 @@ import { AppMenu }          from './AppMenu';
 import { AppConfig }        from './AppConfig';
 
 import { Dashboard }             from './components/Dashboard';
-import { ShowRole }              from './components/ShowRole';
-import { ShowUser }              from './components/ShowUser';
+import { Role }                  from './components/Role';
+import { User }                  from './components/User';
 import { RegisterUser }          from './components/RegisterUser';
 import { ShowEmpresa }           from './components/ShowEmpresa';
 import { RegisterEmpresa }       from './components/RegisterEmpresa';
@@ -166,14 +166,14 @@ const App = () => {
         {
             label: 'Gestion de Roles', icon: 'pi pi-fw pi-sitemap',
             items: [
-                {label: 'Mostrar Roles', icon: 'pi pi-fw pi-user', to: '/ShowRole'},
+                {label: 'Roles', icon: 'pi pi-fw pi-users', to: '/Role'},
                
             ]
         },
         {
             label: 'Gestion de Usuario', icon: 'pi pi-fw pi-sitemap',
             items: [
-                {label: 'Mostrar Usuario', icon: 'pi pi-fw pi-user', to: '/ShowUser'},
+                {label: 'Usuarios', icon: 'pi pi-fw pi-user', to: '/User'},
                 {label: 'Añadir Usuario', icon: 'pi pi-fw pi-user', to: '/RegisterUser'},
             ]
         },
@@ -238,8 +238,8 @@ const App = () => {
             <div className="layout-main-container">
                 <div className="layout-main">
                     <Route path="/" exact component={Dashboard}/>
-                    <Route path="/ShowRole"        component={ShowRole}/>
-                    <Route path="/ShowUser"        component={ShowUser}/>
+                    <Route path="/Role"            component={Role}/>
+                    <Route path="/User"            component={User}/>
                     <Route path="/RegisterUser"    component={RegisterUser}/>
                     <Route path="/ShowEmpresa"     component={ShowEmpresa}/>
                     <Route path="/RegisterEmpresa" component={RegisterEmpresa}/>

@@ -1,16 +1,16 @@
 
 {
     "data": [
-        {"id": "1","name": "Administrador"},
-        {"id": "2","name": "Docente"},
-        {"id": "3","name": "Usuario"},
-        {"id": "4","name": "Desarrollador"},
-        {"id": "5","name": "Control de Calidad"},
-        {"id": "6","name": "Administrador"},
-        {"id": "7","name": "Docente"},
-        {"id": "8","name": "Usuario"},
-        {"id": "9","name": "Desarrollador"},
-        {"id": "10","name": "Control de Calidad"}
+        {"id": "1" ,"rol": "Administrador"},
+        {"id": "2" ,"rol": "Docente"},
+        {"id": "3" ,"rol": "Usuario"},
+        {"id": "4" ,"rol": "Desarrollador"},
+        {"id": "5" ,"rol": "Control de Calidad"},
+        {"id": "6" ,"rol": "Administrador"},
+        {"id": "7" ,"rol": "Docente"},
+        {"id": "8" ,"rol": "Usuario"},
+        {"id": "9" ,"rol": "Desarrollador"},
+        {"id": "10","rol": "Control de Calidad"}
     ]
 }
     

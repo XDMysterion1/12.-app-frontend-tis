@@ -13,6 +13,7 @@ import axios from 'axios';
  export const createUser=(data)=>{
     return axios.post('http://127.0.0.1:8000/api/createUser', 
       {
+         id:  `${data.id}`,
          codigoSIS: `${data.codigoSIS}`,
          nombre:    `${data.nombre}`,
          apellido:  `${data.apellido}`,
@@ -34,7 +35,7 @@ import axios from 'axios';
  }
 
 export const updateUserID =(data,id) =>{
-    return axios.post(`http://127.0.0.1:8000/api/updateUser/${id}`, 
+    return axios.put(`http://127.0.0.1:8000/api/updateUser/${id}`, 
     {
         codigoSIS: `${data.codigoSIS}`,
         nombre:    `${data.nombre}`,

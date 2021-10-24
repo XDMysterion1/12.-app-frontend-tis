@@ -11,6 +11,7 @@ import axios from 'axios';
  export const createRol=(data)=>{
     return axios.post('http://127.0.0.1:8000/api/createRol', 
       {
+         id:  `${data.id}`,
          rol: `${data.rol}`,
       }
       )
@@ -23,7 +24,7 @@ import axios from 'axios';
  }
 
 export const updateRolID =(data,id) =>{
-    return axios.post(`http://127.0.0.1:8000/api/updateRol/${id}`, 
+    return axios.put(`http://127.0.0.1:8000/api/updateRol/${id}`, 
     {
        rol: `${data.rol}`
     }
