@@ -174,14 +174,6 @@ const App = () => {
             label: 'Gestion de Usuario', icon: 'pi pi-fw pi-sitemap',
             items: [
                 {label: 'Usuarios', icon: 'pi pi-fw pi-user', to: '/User'},
-                {label: 'Añadir Usuario', icon: 'pi pi-fw pi-user', to: '/RegisterUser'},
-            ]
-        },
-        {
-            label: 'Grupo Empresas', icon: 'pi pi-fw pi-sitemap',
-            items: [
-                {label: 'Mostrar Empresa', icon: 'pi pi-fw pi-user', to: '/ShowEmpresa'},
-                {label: 'Añadir Empresa', icon: 'pi pi-fw pi-user', to: '/RegisterEmpresa'},
             ]
         },
         {

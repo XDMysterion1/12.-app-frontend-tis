@@ -1,119 +1,155 @@
 import React, { useState, useEffect, useRef } from 'react';
-import classNames from 'classnames';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import { Toast } from 'primereact/toast';
-import { Button } from 'primereact/button';
-import { FileUpload } from 'primereact/fileupload';
-import { Rating } from 'primereact/rating';
-import { Toolbar } from 'primereact/toolbar';
-import { InputTextarea } from 'primereact/inputtextarea';
-import { RadioButton } from 'primereact/radiobutton';
-import { InputNumber } from 'primereact/inputnumber';
-import { Dialog } from 'primereact/dialog';
-import { InputText } from 'primereact/inputtext';
-import { ProductService } from '../service/ProductService';
+import classNames           from 'classnames';
+import { DataTable }        from 'primereact/datatable';
+import { Column }           from 'primereact/column';
+import { Toast }            from 'primereact/toast';
+import { Button }           from 'primereact/button';
+import { Toolbar }          from 'primereact/toolbar';
+import { Dialog }           from 'primereact/dialog';
+import { InputText }        from 'primereact/inputtext';
+import { ColumnGroup }      from 'primereact/columngroup';
+import { Row }              from 'primereact/row';
+import { Avatar }           from 'primereact/avatar';
+import { Dropdown }         from 'primereact/dropdown';
+
+
+import gmail                from '../icon/gmail.png';
+import password             from '../icon/password.png';
+import rolImg               from '../icon/rol.png';
+
+
+import uniqid               from 'uniqid';
+
+import { getUsers,getUserID,createUser,updateUserID,deleteUserID } from '../service/apiUser';
+import { getRoles } from '../service/apiRole';
 
 export const User = () => {
 
-    let emptyProduct = {
-        id: null,
-        nombre: '',
-        apellido: null,
-        email: '',
-        password: null,
-        rol: 0,
-        docente: 0
+    let emptyUser = {
+        id:       null,
+        nombre:     '',
+        apellido:     '',
+        email:    '',
+        password: '',
+        rol:      ''
     };
 
-    const [products, setProducts] = useState(null);
-    const [productDialog, setProductDialog] = useState(false);
-    const [deleteProductDialog, setDeleteProductDialog] = useState(false);
-    const [deleteProductsDialog, setDeleteProductsDialog] = useState(false);
-    const [product, setProduct] = useState(emptyProduct);
-    const [selectedProducts, setSelectedProducts] = useState(null);
-    const [submitted, setSubmitted] = useState(false);
-    const [globalFilter, setGlobalFilter] = useState(null);
-    const toast = useRef(null);
-    const dt = useRef(null);
+    const [roles,setRoles]                           = useState(null);
+    const [rol, setRol]                              = useState(null);
+    const [users, setUsers]                          = useState(null);
+    const [userDialog, setUserDialog]                = useState(false);
+    const [deleteUserDialog, setDeleteUserDialog]    = useState(false);
 
-    useEffect(() => {
-        const productService = new ProductService();
-        productService.getProducts().then(data => setProducts(data));
-    }, []);
+    const [user, setUser]                            = useState(emptyUser);
+    const [selectedUsers, setSelectedUsers]          = useState(null);
+    const [submitted, setSubmitted]                  = useState(false);
+    const toast                                      = useRef(null);
+    const dt                                         = useRef(null);
 
-    const formatCurrency = (value) => {
-        return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+
+    useEffect(()=>{
+        fetchRoles();
+    },[])
+
+    const fetchRoles = () =>{
+        getRoles().then(json =>{
+            if(json.error){
+                console.log("Error");
+            }else{
+                console.log("---------roles insertados-----------");
+                setRoles(json.data);
+            }
+        })
+    }
+
+    useEffect(()=>{
+        fetchUsers();
+    },[])
+
+    const fetchUsers = () =>{
+        getUsers().then(json =>{
+            if(json.error){
+                console.log("Error");
+            }else{
+                console.log("---------Users insertados-----------");
+                setUsers(json.data);
+            }
+        })
     }
 
     const openNew = () => {
-        setProduct(emptyProduct);
+        setUser(emptyUser);
         setSubmitted(false);
-        setProductDialog(true);
+        setUserDialog(true);      
     }
 
     const hideDialog = () => {
         setSubmitted(false);
-        setProductDialog(false);
+        setUserDialog(false);
     }
 
-    const hideDeleteProductDialog = () => {
-        setDeleteProductDialog(false);
+    const hideDeleteUserDialog = () => {
+        setDeleteUserDialog(false);
     }
 
-    const hideDeleteProductsDialog = () => {
-        setDeleteProductsDialog(false);
-    }
 
-    const saveProduct = () => {
+    const saveUser = () => {
         setSubmitted(true);
-
-        if (product.name.trim()) {
-            let _products = [...products];
-            let _product = { ...product };
-            if (product.id) {
-                const index = findIndexById(product.id);
-
-                _products[index] = _product;
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+        if (user.nombre.trim()) {
+            let _users = [...users];
+            let _user  = {...user };
+            if (user.id) {
+                const index = findIndexById(user.id);
+                _users[index] = _user;
+                _user.rol=rol.id;
+                updateUserID({nombre:`${_user.nombre}`,apellido:`${_user.apellido}`,email:`${_user.email}`,password:`${_user.password}`,rol:`${rol.id}`},user.id);
+                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Usuario Actualizado', life: 3000 });
             }
             else {
-                _product.id = createId();
-                
-                console.log(_product.id);
-                _product.image = 'product-placeholder.svg';
-                _products.push(_product);
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
+                _user.id = uniqid("user-");
+                _user.rol=rol.id; 
+                _users.push(_user);
+                createUser({id:`${_user.id}`,nombre:`${_user.nombre}`,apellido:`${_user.apellido}`,email:`${_user.email}`,password:`${_user.password}`,rol:`${rol.id}`});
+                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'usuario Creado', life: 3000 });
             }
-
-            setProducts(_products);
-            setProductDialog(false);
-            setProduct(emptyProduct);
+            setUsers(_users);
+            setUserDialog(false);
+            setUser(emptyUser);
+            console.log(users);
         }
     }
 
-    const editProduct = (product) => {
-        setProduct({ ...product });
-        setProductDialog(true);
+
+    const editUser = (user) => {
+        setUser({ ...user });
+        setUserDialog(true);
     }
 
-    const confirmDeleteProduct = (product) => {
-        setProduct(product);
-        setDeleteProductDialog(true);
+    const confirmDeleteUser = (user) => {
+        setUser(user);
+        setDeleteUserDialog(true);
     }
 
-    const deleteProduct = () => {
-        let _products = products.filter(val => val.id !== product.id);
-        setProducts(_products);
-        setDeleteProductDialog(false);
-        setProduct(emptyProduct);
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
+    const deleteUser = () => {
+        let _users = users.filter(val => val.id !== user.id);
+        setUser(_users);
+        setDeleteUserDialog(false);
+
+        if (user.nombre.trim()) {
+            if (user.id) {
+                deleteUserID(user.id);
+            }
+        }
+        setUser(emptyUser);
+        
+        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Usuario Eliminado', life: 3000 });
     }
 
     const findIndexById = (id) => {
         let index = -1;
-        for (let i = 0; i < products.length; i++) {
-            if (products[i].id === id) {
+        for (let i = 0; i < users.length; i++) {
+            if (users[i].id === id) {
+
                 index = i;
                 break;
             }
@@ -122,254 +158,229 @@ export const User = () => {
         return index;
     }
 
-    const createId = () => {
-        let id = '';
-        let chars = '0123456789';
-        for (let i = 0; i < 5; i++) {
-            id += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return id;
-    }
 
-    const exportCSV = () => {
-        dt.current.exportCSV();
-    }
-
-    const confirmDeleteSelected = () => {
-        setDeleteProductsDialog(true);
-    }
-
-    const deleteSelectedProducts = () => {
-        let _products = products.filter(val => !selectedProducts.includes(val));
-        setProducts(_products);
-        setDeleteProductsDialog(false);
-        setSelectedProducts(null);
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
-    }
-
-    const onCategoryChange = (e) => {
-        let _product = { ...product };
-        _product['category'] = e.value;
-        setProduct(_product);
-    }
-
-    const onInputChange = (e, name) => {
+    const onInputChangeNombre = (e, name) => {
         const val = (e.target && e.target.value) || '';
-        let _product = { ...product };
-        _product[`${name}`] = val;
-
-        setProduct(_product);
+        let _user = { ...user };
+        _user[`${name}`] = val;
+        setUser(_user);
     }
 
-    const onInputNumberChange = (e, name) => {
-        const val = e.value || 0;
-        let _product = { ...product };
-        _product[`${name}`] = val;
+    const onInputChangeApellido = (e, name) => {
+        const val = (e.target && e.target.value) || '';
+        let _user = { ...user };
+        _user[`${name}`] = val;
+        setUser(_user);
+    }
 
-        setProduct(_product);
+    const onInputChangeEmail = (e, name) => {
+        const val = (e.target && e.target.value) || '';
+        let _user = { ...user };
+        _user[`${name}`] = val;
+        setUser(_user);
+    }
+
+    const onInputChangePassword = (e, name) => {
+        const val = (e.target && e.target.value) || '';
+        let _user = { ...user };
+        _user[`${name}`] = val;
+        setUser(_user);
+    }
+
+    const onInputChangeRol = (e, name) => {
+        const val = (e.target && e.target.value) || '';
+        let _user = { ...user };
+        _user[`${name}`] = val;
+        setUser(_user);
+    }
+
+    const onRolChange = (e) => {
+        setRol(e.value);
+    }
+
+
+    const idBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">id</span>
+                {rowData.id}
+            </>
+        );
+    }
+
+    const nombreBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Nombre</span>
+                {rowData.nombre}
+            </>
+        );
+    }
+
+    const apellidoBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Apellido</span>
+                {rowData.apellido}
+            </>
+        );
+    }
+
+    const emailBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Correo electronico</span>
+                {rowData.email}
+            </>
+        );
+    }
+
+    const passwordBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Contrasena</span>
+                {rowData.password}
+            </>
+        );
+    }
+
+    const rolBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Rol</span>
+                {rowData.rol}
+            </>
+        );
     }
 
     const leftToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <Button label="New" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={openNew} />
-                <Button label="Delete" icon="pi pi-trash" className="p-button-danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} />
+                <Button label="Nuevo" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={openNew} />
             </React.Fragment>
-        )
-    }
-
-    const rightToolbarTemplate = () => {
-        return (
-            <React.Fragment>
-                <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} label="Import" chooseLabel="Import" className="p-mr-2 p-d-inline-block" />
-                <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />
-            </React.Fragment>
-        )
-    }
-
-    const codeBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Code</span>
-                {rowData.code}
-            </>
-        );
-    }
-
-    const nameBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Name</span>
-                {rowData.name}
-            </>
-        );
-    }
-
-    const imageBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Image</span>
-                <img src={`assets/demo/images/product/${rowData.image}`} alt={rowData.image} className="product-image" />
-            </>
-        )
-    }
-
-    const priceBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Price</span>
-                {formatCurrency(rowData.price)}
-            </>
-        );
-    }
-
-    const categoryBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Category</span>
-                {rowData.category}
-            </>
-        );
-    }
-
-    const ratingBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Reviews</span>
-                <Rating value={rowData.rating} readonly cancel={false} />
-            </>
-        );
-    }
-
-    const statusBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Status</span>
-                <span className={`product-badge status-${rowData.inventoryStatus.toLowerCase()}`}>{rowData.inventoryStatus}</span>
-            </>
         )
     }
 
     const actionBodyTemplate = (rowData) => {
         return (
             <div className="actions">
-                <Button icon="pi pi-pencil" className="p-button-rounded p-button-success p-mr-2" onClick={() => editProduct(rowData)} />
-                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={() => confirmDeleteProduct(rowData)} />
+                <Button icon="pi pi-pencil" className="p-button-rounded p-button-success p-mr-2"   onClick={() => editUser(rowData)} />
+                <Button icon="pi pi-trash"  className="p-button-rounded p-button-warning"          onClick={() => confirmDeleteUser(rowData)} />
             </div>
         );
     }
 
-    const header = (
-        <div className="table-header">
-            <h5 className="p-m-0">Manage Products</h5>
-            <span className="p-input-icon-left">
-                <i className="pi pi-search" />
-                <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
-            </span>
-        </div>
+    const userDialogFooter = (
+        <>
+            <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
+            <Button label="Guardar" icon="pi pi-check" className="p-button-text"  onClick={saveUser} />
+        </>
+    );
+    const deleteUserDialogFooter = (
+        <>
+            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteUserDialog} />
+            <Button label="Si" icon="pi pi-check" className="p-button-text" onClick={deleteUser} />
+        </>
     );
 
-    const productDialogFooter = (
-        <>
-            <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" className="p-button-text" onClick={saveProduct} />
-        </>
-    );
-    const deleteProductDialogFooter = (
-        <>
-            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteProductDialog} />
-            <Button label="Yes" icon="pi pi-check" className="p-button-text" onClick={deleteProduct} />
-        </>
-    );
-    const deleteProductsDialogFooter = (
-        <>
-            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteProductsDialog} />
-            <Button label="Yes" icon="pi pi-check" className="p-button-text" onClick={deleteSelectedProducts} />
-        </>
-    );
+
+    let headerGroup = <ColumnGroup>
+                        <Row>
+                            <Column header="ID"                 style={{ 'background-color': '#13af4e' }} />
+                            <Column header="NOMBRE"             style={{ 'background-color': '#13af4e' }}/>
+                            <Column header="APELLIDO"           style={{ 'background-color': '#13af4e' }} />
+                            <Column header="CORREO ELECTRONICO" style={{ 'background-color': '#13af4e' }}/>
+                            <Column header="CONTRASENA"         style={{ 'background-color': '#13af4e' }} />
+                            <Column header="ROL"                style={{ 'background-color': '#13af4e' }}/>
+                            <Column header="Editar/Eliminar"    style={{ 'background-color': '#13af4e' }}/>
+                        </Row>
+                    </ColumnGroup>;
 
     return (
         <div className="p-grid crud-demo">
             <div className="p-col-12">
                 <div className="card">
+                
                     <Toast ref={toast} />
-                    <Toolbar className="p-mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+                    <Toolbar className="p-mb-4" left={leftToolbarTemplate}></Toolbar>
 
-                    <DataTable ref={dt} value={products} selection={selectedProducts} onSelectionChange={(e) => setSelectedProducts(e.value)}
+                    <DataTable headerColumnGroup={headerGroup} ref={dt} value={users} selection={selectedUsers}  onSelectionChange={(e) => setSelectedUsers(e.value)}
                         dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-                        globalFilter={globalFilter} emptyMessage="No products found." header={header}>
-                        <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
-                        <Column field="code" header="Code" sortable body={codeBodyTemplate}></Column>
-                        <Column field="name" header="Name" sortable body={nameBodyTemplate}></Column>
-                        <Column header="Image" body={imageBodyTemplate}></Column>
-                        <Column field="price" header="Price" body={priceBodyTemplate} sortable></Column>
-                        <Column field="category" header="Category" sortable body={categoryBodyTemplate}></Column>
-                        <Column field="rating" header="Reviews" body={ratingBodyTemplate} sortable></Column>
-                        <Column field="inventoryStatus" header="Status" body={statusBodyTemplate} sortable></Column>
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} users">
+                    
+                        <Column field="id"         header="ID"                 sortable body={idBodyTemplate}></Column>
+                        <Column field="apellido"   header="APELLIDO"           sortable body={nombreBodyTemplate}></Column>
+                        <Column field="nombre"     header="NOMBRE"             sortable body={apellidoBodyTemplate}></Column>
+                        <Column field="email"      header="CORREO ELECTRONICO" sortable body={emailBodyTemplate}></Column>
+                        <Column field="password"   header="CONTRASENA"         sortable body={passwordBodyTemplate}></Column>
+                        <Column field="rol"        header="ROL"                sortable body={rolBodyTemplate}></Column>
                         <Column body={actionBodyTemplate}></Column>
+
                     </DataTable>
 
-                    <Dialog visible={productDialog} style={{ width: '450px' }} header="Product Details" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
-                        {product.image && <img src={`assets/demo/images/product/${product.image}`} alt={product.image} className="product-image" />}
+
+                    <Dialog visible={userDialog} style={{ width: '450px' }} header="Añadir Usuario" modal className="p-fluid" footer={userDialogFooter} onHide={hideDialog}>
                         <div className="p-field">
-                            <label htmlFor="name">Name</label>
-                            <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
-                            {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                            <div className="p-inputgroup">
+                                    <span className="p-inputgroup-addon">
+                                        <i className="pi pi-user"></i>
+                                    </span>
+                                    <InputText id="nombre" value={user.nombre} onChange={(e) => onInputChangeNombre(e, 'nombre')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.nombre })} />
+                            </div>       
                         </div>
-                        <div className="p-field">
-                            <label htmlFor="description">Description</label>
-                            <InputTextarea id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
-                        </div>
+                        {submitted && !user.nombre && <small className="p-invalid">El nombre es requerido</small>}
 
                         <div className="p-field">
-                            <label className="p-mb-3">Category</label>
-                            <div className="p-formgrid p-grid">
-                                <div className="p-field-radiobutton p-col-6">
-                                    <RadioButton inputId="category1" name="category" value="Accessories" onChange={onCategoryChange} checked={product.category === 'Accessories'} />
-                                    <label htmlFor="category1">Accessories</label>
-                                </div>
-                                <div className="p-field-radiobutton p-col-6">
-                                    <RadioButton inputId="category2" name="category" value="Clothing" onChange={onCategoryChange} checked={product.category === 'Clothing'} />
-                                    <label htmlFor="category2">Clothing</label>
-                                </div>
-                                <div className="p-field-radiobutton p-col-6">
-                                    <RadioButton inputId="category3" name="category" value="Electronics" onChange={onCategoryChange} checked={product.category === 'Electronics'} />
-                                    <label htmlFor="category3">Electronics</label>
-                                </div>
-                                <div className="p-field-radiobutton p-col-6">
-                                    <RadioButton inputId="category4" name="category" value="Fitness" onChange={onCategoryChange} checked={product.category === 'Fitness'} />
-                                    <label htmlFor="category4">Fitness</label>
-                                </div>
-                            </div>
+                            <div className="p-inputgroup">
+                                    <span className="p-inputgroup-addon">
+                                        <i className="pi pi-user"></i>
+                                    </span>
+                                    <InputText id="apellido" value={user.apellido} onChange={(e) => onInputChangeApellido(e, 'apellido')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.apellido })} />
+                            </div>       
                         </div>
+                        {submitted && !user.apellido && <small className="p-invalid">El apelllido es requerido</small>}
 
-                        <div className="p-formgrid p-grid">
-                            <div className="p-field p-col">
-                                <label htmlFor="price">Price</label>
-                                <InputNumber id="price" value={product.price} onValueChange={(e) => onInputNumberChange(e, 'price')} mode="currency" currency="USD" locale="en-US" />
-                            </div>
-                            <div className="p-field p-col">
-                                <label htmlFor="quantity">Quantity</label>
-                                <InputNumber id="quantity" value={product.quantity} onValueChange={(e) => onInputNumberChange(e, 'quantity')} integeronly />
-                            </div>
+                        <div className="p-field">
+                            <div className="p-inputgroup">
+                                    <span className="p-inputgroup-addon">
+                                        <Avatar image={gmail} style={{'height': '1.2em','width':'1.2em',}}/>   
+                                    </span>
+                                    <InputText id="email" value={user.email} onChange={(e) => onInputChangeEmail(e, 'email')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.email })} />
+                            </div>       
                         </div>
+                        {submitted && !user.email && <small className="p-invalid">El correo electronico es requerido</small>}
+
+                        <div className="p-field">
+                            <div className="p-inputgroup">
+                                    <span className="p-inputgroup-addon">
+                                        <Avatar image={password} style={{'height': '1.2em','width':'1.2em',}}/>   
+                                    </span>
+                                    <InputText id="password" value={user.password} onChange={(e) => onInputChangePassword(e, 'password')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.password })} />
+                            </div>       
+                        </div>
+                        {submitted && !user.password && <small className="p-invalid">La contrasena es requerido</small>}
+
+                        <div className="p-field">
+                            <div className="p-inputgroup">
+                                    <span className="p-inputgroup-addon">
+                                        <Avatar image={rolImg} style={{'height': '1.2em','width':'1.2em',}}/>   
+                                    </span>
+                                    <Dropdown value={rol} options={roles} onChange={onRolChange} optionLabel="rol" placeholder="Rol" required autoFocus className={classNames({ 'p-invalid': submitted && !user.rol })}/>
+                                    
+                            </div>       
+                        </div>
+                        {submitted && !user.rol && <small className="p-invalid">El rol es requerido</small>}
                     </Dialog>
 
-                    <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
+
+                    <Dialog visible={deleteUserDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteUserDialogFooter} onHide={hideDeleteUserDialog}>
                         <div className="confirmation-content">
                             <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
-                            {product && <span>Are you sure you want to delete <b>{product.name}</b>?</span>}
+                            {user && <span>¿Estás segura de que quieres eliminar? <b>{user.nombre}</b> <b>{user.apellido}</b>?</span>}
                         </div>
                     </Dialog>
-
-                    <Dialog visible={deleteProductsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
-                        <div className="confirmation-content">
-                            <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
-                            {product && <span>Are you sure you want to delete the selected products?</span>}
-                        </div>
-                    </Dialog>
+    
                 </div>
             </div>
         </div>
