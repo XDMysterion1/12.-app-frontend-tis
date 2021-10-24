@@ -1,17 +1,17 @@
 import axios from 'axios';
 
  export const getUsers = () =>{
-     return axios.get('http://127.0.0.1:8000/api/getUsers');
+     return axios.get('https://magich-tech-backend.herokuapp.com/api/getUsers');
  }
 
  export const getUserID =(id) =>{
-     return axios.get(`http://127.0.0.1:8000/api/getUserId/${id}`);
+     return axios.get(`https://magich-tech-backend.herokuapp.com/api/getUserId/${id}`);
  }
 
 
 
  export const createUser=(data)=>{
-    return axios.post('http://127.0.0.1:8000/api/createUser', 
+    return axios.post('https://magich-tech-backend.herokuapp.com/api/createUser', 
       {
          id:        `${data.id}`,
          nombre:    `${data.nombre}`,
@@ -30,7 +30,7 @@ import axios from 'axios';
  }
 
 export const updateUserID =(data,id) =>{
-    return axios.put(`http://127.0.0.1:8000/api/updateUser/${id}`, 
+    return axios.put(`https://magich-tech-backend.herokuapp.com/api/updateUser/${id}`, 
     {
       nombre:    `${data.nombre}`,
       apellido:  `${data.apellido}`,
@@ -48,5 +48,5 @@ export const updateUserID =(data,id) =>{
 }
 
 export const deleteUserID =(id) =>{
-    return axios.delete(`http://127.0.0.1:8000/api/deleteUserId/${id}`);
+    return axios.delete(`https://magich-tech-backend.herokuapp.com/api/deleteUserId/${id}`);
 }
