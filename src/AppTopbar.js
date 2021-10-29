@@ -6,18 +6,20 @@ export const AppTopbar = (props) => {
 
     return (
         <div className="layout-topbar">
-            <Link to="/" className="layout-topbar-logo">
-                <img src={props.layoutColorMode === 'light' ? 'assets/layout/images/MagicTech.png' : 'assets/layout/images/MagicTech.png'} alt="logo" style={{'height': '2em','width':'2.2em',}}/>
-                <span>MAGIC TECH</span>
-            </Link>
 
             <button type="button" className="p-link  layout-menu-button layout-topbar-button" onClick={props.onToggleMenuClick}>
                 <i className="pi pi-bars"/>
             </button>
+        
 
             <button type="button" className="p-link layout-topbar-menu-button layout-topbar-button" onClick={props.onMobileTopbarMenuClick}>
                 <i className="pi pi-ellipsis-v" />
             </button>
+
+            <Link to="/" className="layout-topbar-logo ml-6 ">
+                <img src={props.layoutColorMode === 'light' ? 'assets/layout/images/MagicTech.png' : 'assets/layout/images/MagicTech.png'} alt="logo" style={{'height': '1.8em','width':'2.0em',}}/>
+                <span>MAGIC TECH</span>
+            </Link>
 
                 <ul className={classNames("layout-topbar-menu lg:flex origin-top", {'layout-topbar-menu-mobile-active': props.mobileTopbarMenuActive })}>
                     <li>

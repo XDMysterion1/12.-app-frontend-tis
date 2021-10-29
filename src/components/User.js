@@ -39,6 +39,7 @@ export const User = () => {
     const [users, setUsers]                          = useState(null);
     const [userDialog, setUserDialog]                = useState(false);
     const [deleteUserDialog, setDeleteUserDialog]    = useState(false);
+    const [auxRol, setAuxRol]                        = useState(null);
 
     const [user, setUser]                            = useState(emptyUser);
     const [selectedUsers, setSelectedUsers]          = useState(null);
@@ -240,17 +241,32 @@ export const User = () => {
             <>
                 <span className="p-column-title">Contrasena</span>
                 {rowData.password}
+                
             </>
         );
     }
+
+    
+
 
     const rolBodyTemplate = (rowData) => {
         return (
             <>
                 <span className="p-column-title">Rol</span>
                 {rowData.rol}
+               
+
             </>
         );
+    }
+
+    const findRol = (rolFind) => {
+        
+        var _roles = [...roles]
+
+        let country = _roles.find(el => el.id === rolFind);
+        console.log(country["rol"]);
+
     }
 
     const leftToolbarTemplate = () => {
@@ -273,7 +289,7 @@ export const User = () => {
     const userDialogFooter = (
         <>
             <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
-            <Button label="Guardar" icon="pi pi-check" className="p-button-text"  onClick={saveUser} />
+            <Button label="Guardar"  icon="pi pi-check" className="p-button-text"  onClick={saveUser} />
         </>
     );
     const deleteUserDialogFooter = (
@@ -286,13 +302,13 @@ export const User = () => {
 
     let headerGroup = <ColumnGroup>
                         <Row>
-                            <Column header="ID"                 style={{ 'background-color': '#13af4e' }} />
-                            <Column header="NOMBRE"             style={{ 'background-color': '#13af4e' }}/>
-                            <Column header="APELLIDO"           style={{ 'background-color': '#13af4e' }} />
-                            <Column header="CORREO ELECTRONICO" style={{ 'background-color': '#13af4e' }}/>
-                            <Column header="CONTRASENA"         style={{ 'background-color': '#13af4e' }} />
-                            <Column header="ROL"                style={{ 'background-color': '#13af4e' }}/>
-                            <Column header="Editar/Eliminar"    style={{ 'background-color': '#13af4e' }}/>
+                            <Column header="ID"                 style={{ 'background-color': '#13af4e', width:'20%'}} />
+                            <Column header="NOMBRE"             style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                            <Column header="APELLIDO"           style={{ 'background-color': '#13af4e', width:'20%'}} />
+                            <Column header="CORREO ELECTRONICO" style={{ 'background-color': '#13af4e', width:'40%'}}/>
+                            <Column header="CONTRASENA"         style={{ 'background-color': '#13af4e', width:'20%'}} />
+                            <Column header="ROL"                style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                            <Column header="Editar/Eliminar"    style={{ 'background-color': '#13af4e', width:'20%'}}/>
                         </Row>
                     </ColumnGroup>;
 
@@ -302,66 +318,66 @@ export const User = () => {
                 <div className="card">
                 
                     <Toast ref={toast} />
-                    <Toolbar className="p-mb-4" left={leftToolbarTemplate}></Toolbar>
+                    <Toolbar className="" left={leftToolbarTemplate}></Toolbar>
 
                     <DataTable headerColumnGroup={headerGroup} ref={dt} value={users} selection={selectedUsers}  onSelectionChange={(e) => setSelectedUsers(e.value)}
-                        dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive"
+                        dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive p-datatable-sm col-12"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} users">
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} users" resizableColumns columnResizeMode="fit" showGridlines>
                     
-                        <Column field="id"         header="ID"                 sortable body={idBodyTemplate}></Column>
-                        <Column field="apellido"   header="APELLIDO"           sortable body={nombreBodyTemplate}></Column>
-                        <Column field="nombre"     header="NOMBRE"             sortable body={apellidoBodyTemplate}></Column>
-                        <Column field="email"      header="CORREO ELECTRONICO" sortable body={emailBodyTemplate}></Column>
-                        <Column field="password"   header="CONTRASENA"         sortable body={passwordBodyTemplate}></Column>
-                        <Column field="rol"        header="ROL"                sortable body={rolBodyTemplate}></Column>
-                        <Column body={actionBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} field="id"         header="ID"                 sortable body={idBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} field="apellido"   header="APELLIDO"           sortable body={nombreBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} field="nombre"     header="NOMBRE"             sortable body={apellidoBodyTemplate}></Column>
+                        <Column style={{width:'40%'}} field="email"      header="CORREO ELECTRONICO" sortable body={emailBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} field="password"   header="CONTRASENA"         sortable body={passwordBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} field="rol"        header="ROL"                sortable body={rolBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} body={actionBodyTemplate}></Column>
 
                     </DataTable>
 
 
                     <Dialog visible={userDialog} style={{ width: '450px' }} header="Añadir Usuario" modal className="p-fluid" footer={userDialogFooter} onHide={hideDialog}>
-                        <div className="p-field">
+                        <div className="p-field mt-2" >
                             <div className="p-inputgroup">
                                     <span className="p-inputgroup-addon">
                                         <i className="pi pi-user"></i>
                                     </span>
-                                    <InputText id="nombre" value={user.nombre} onChange={(e) => onInputChangeNombre(e, 'nombre')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.nombre })} />
+                                    <InputText id="nombre" value={user.nombre} placeholder="Nombre" onChange={(e) => onInputChangeNombre(e, 'nombre')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.nombre })} />
                             </div>       
                         </div>
                         {submitted && !user.nombre && <small className="p-invalid">El nombre es requerido</small>}
 
-                        <div className="p-field">
+                        <div className="p-field mt-2">
                             <div className="p-inputgroup">
                                     <span className="p-inputgroup-addon">
                                         <i className="pi pi-user"></i>
                                     </span>
-                                    <InputText id="apellido" value={user.apellido} onChange={(e) => onInputChangeApellido(e, 'apellido')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.apellido })} />
+                                    <InputText id="apellido" value={user.apellido} placeholder="Apellido" onChange={(e) => onInputChangeApellido(e, 'apellido')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.apellido })} />
                             </div>       
                         </div>
                         {submitted && !user.apellido && <small className="p-invalid">El apelllido es requerido</small>}
 
-                        <div className="p-field">
+                        <div className="p-field mt-2">
                             <div className="p-inputgroup">
                                     <span className="p-inputgroup-addon">
                                         <Avatar image={gmail} style={{'height': '1.2em','width':'1.2em',}}/>   
                                     </span>
-                                    <InputText id="email" value={user.email} onChange={(e) => onInputChangeEmail(e, 'email')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.email })} />
+                                    <InputText id="email" value={user.email} placeholder="Correo electronico" onChange={(e) => onInputChangeEmail(e, 'email')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.email })} />
                             </div>       
                         </div>
                         {submitted && !user.email && <small className="p-invalid">El correo electronico es requerido</small>}
 
-                        <div className="p-field">
+                        <div className="p-field mt-2">
                             <div className="p-inputgroup">
                                     <span className="p-inputgroup-addon">
                                         <Avatar image={password} style={{'height': '1.2em','width':'1.2em',}}/>   
                                     </span>
-                                    <InputText id="password" value={user.password} onChange={(e) => onInputChangePassword(e, 'password')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.password })} />
+                                    <InputText id="password" value={user.password} placeholder="Contraseña" onChange={(e) => onInputChangePassword(e, 'password')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.password })} />
                             </div>       
                         </div>
                         {submitted && !user.password && <small className="p-invalid">La contrasena es requerido</small>}
 
-                        <div className="p-field">
+                        <div className="p-field mt-2">
                             <div className="p-inputgroup">
                                     <span className="p-inputgroup-addon">
                                         <Avatar image={rolImg} style={{'height': '1.2em','width':'1.2em',}}/>   
@@ -374,7 +390,7 @@ export const User = () => {
                     </Dialog>
 
 
-                    <Dialog visible={deleteUserDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteUserDialogFooter} onHide={hideDeleteUserDialog}>
+                    <Dialog className="mt-2" visible={deleteUserDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteUserDialogFooter} onHide={hideDeleteUserDialog}>
                         <div className="confirmation-content">
                             <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
                             {user && <span>¿Estás segura de que quieres eliminar? <b>{user.nombre}</b> <b>{user.apellido}</b>?</span>}

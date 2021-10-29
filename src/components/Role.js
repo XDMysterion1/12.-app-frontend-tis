@@ -199,9 +199,9 @@ export const Role = () => {
 
     let headerGroup = <ColumnGroup>
                         <Row>
-                            <Column header="ID" style={{ 'background-color': '#13af4e' }} />
-                            <Column header="ROL" style={{ 'background-color': '#13af4e' }}/>
-                            <Column header="Editar/Eliminar"style={{ 'background-color': '#13af4e' }}/>
+                            <Column header="ID"                 style={{ 'background-color': '#13af4e', width:'20%'}} />
+                            <Column header="ROL"                style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                            <Column header="Editar/Eliminar"    style={{ 'background-color': '#13af4e', width:'20%'}}/>
                         </Row>
                     </ColumnGroup>;
 
@@ -214,24 +214,24 @@ export const Role = () => {
                     <Toolbar className="p-mb-4" left={leftToolbarTemplate}></Toolbar>
 
                     <DataTable headerColumnGroup={headerGroup} ref={dt} value={roles} selection={selectedRoles}  onSelectionChange={(e) => setSelectedRoles(e.value)}
-                        dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive"
+                        dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive p-datatable-sm"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} roles">
-                    
-                        <Column field="id"   header="ID"  sortable body={idBodyTemplate}></Column>
-                        <Column field="role" header="ROL" sortable body={roleBodyTemplate}></Column>
-                        <Column body={actionBodyTemplate}></Column>
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} roles" resizableColumns columnResizeMode="fit" showGridlines>
+
+                        <Column style={{width:'20%'}} field="id"   header="ID"  sortable body={idBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} field="role" header="ROL" sortable body={roleBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} body={actionBodyTemplate}></Column>
 
                     </DataTable>
 
 
                     <Dialog visible={roleDialog} style={{ width: '450px' }} header="Añadir Rol" modal className="p-fluid" footer={roleDialogFooter} onHide={hideDialog}>
-                        <div className="p-field">
+                        <div className="p-field mt-2">
                             <div className="p-inputgroup">
                                     <span className="p-inputgroup-addon">
                                         <Avatar image={rolImg} style={{'height': '1.2em','width':'1.2em',}}/>   
                                     </span>
-                                    <InputText id="role" value={role.rol} onChange={(e) => onInputChange(e, 'rol')} required autoFocus className={classNames({ 'p-invalid': submitted && !role.rol })} />
+                                    <InputText id="role" value={role.rol} placeholder="Rol" onChange={(e) => onInputChange(e, 'rol')} required autoFocus className={classNames({ 'p-invalid': submitted && !role.rol })} />
                             </div>       
                         </div>
                         {submitted && !role.rol && <small className="p-invalid">El Rol es requerido</small>}
