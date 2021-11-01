@@ -11,6 +11,8 @@ import { ColumnGroup }      from 'primereact/columngroup';
 import { Row }              from 'primereact/row';
 import { Avatar }           from 'primereact/avatar';
 import { Dropdown }         from 'primereact/dropdown';
+import { useFormik }        from "formik";
+import * as Yup             from 'yup';
 
 
 import gmail                from '../icon/gmail.png';
@@ -24,6 +26,68 @@ import { getUsers,getUserID,createUser,updateUserID,deleteUserID } from '../serv
 import { getRoles } from '../service/apiRole';
 
 export const User = () => {
+
+    const validationSchema = Yup.object().shape({
+        nombre: Yup.string().required("Se requiero el nombre")
+        .min(2, "Como minimo 2 caracteres")
+        .max(30, "Como maximo 30 caracteres"),
+        apellido: Yup.string().required("Se requiero el apellido")
+        .min(2, "Como minimo 2 caracteres")
+        .max(30, "Como maximo 30 caracteres"),
+        email: Yup.string().required("Se requiero el correo electronico")
+        .email("Correo electronico no valido")
+        .max(255, "Como maximo 30 caracteres"),
+        password: Yup.string().required("Se requiero el contraseña")
+        .min(6, "Como minimo 6 caracteres")
+        .max(255, "Como maximo 30 caracteres")
+
+      });
+      const formik = useFormik({
+        initialValues: {
+            nombre:    "",
+            apellido:  "",
+            email:     "",
+            password:  "",
+        },
+        validationSchema,
+        onSubmit: (data) => {
+            setSubmitted(true);
+            let _users = [...users];
+            let _user  = {...user };
+            _user['nombre']     = data.nombre;
+            _user['apellido']   = data.apellido;
+            _user['email']      = data.email;
+            _user['password']   = data.password;
+
+            if (_user.nombre.trim()) {
+                if (user.id) {
+
+                    setUser({ ...user });
+                    console.log(user);
+                    const index = findIndexById(user.id);
+                    
+
+                    _users[index] = _user;
+                    _user.rol=rol.id;
+                    updateUserID({nombre:`${_user.nombre}`,apellido:`${_user.apellido}`,email:`${_user.email}`,password:`${_user.password}`,rol:`${rol.id}`},user.id);
+                    toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Usuario Actualizado', life: 3000 });
+                }
+                else {
+
+                    _user.id = uniqid("user-");
+                    _user.rol=rol.id; 
+                    _users.push(_user);
+                    createUser({id:`${_user.id}`,nombre:`${_user.nombre}`,apellido:`${_user.apellido}`,email:`${_user.email}`,password:`${_user.password}`,rol:`${rol.id}`});
+                    toast.current.show({ severity: 'success', summary: 'Successful', detail: 'usuario Creado', life: 3000 });
+                }
+            }
+            setUsers(_users);
+            setUserDialog(false);
+            setUser(emptyUser);
+            formik.resetForm();
+            
+        },
+      });
 
     let emptyUser = {
         id:       null,
@@ -39,7 +103,6 @@ export const User = () => {
     const [users, setUsers]                          = useState(null);
     const [userDialog, setUserDialog]                = useState(false);
     const [deleteUserDialog, setDeleteUserDialog]    = useState(false);
-    const [auxRol, setAuxRol]                        = useState(null);
 
     const [user, setUser]                            = useState(emptyUser);
     const [selectedUsers, setSelectedUsers]          = useState(null);
@@ -80,6 +143,7 @@ export const User = () => {
 
     const openNew = () => {
         setUser(emptyUser);
+        formik.resetForm();
         setSubmitted(false);
         setUserDialog(true);      
     }
@@ -100,6 +164,7 @@ export const User = () => {
             let _users = [...users];
             let _user  = {...user };
             if (user.id) {
+
                 const index = findIndexById(user.id);
                 _users[index] = _user;
                 _user.rol=rol.id;
@@ -123,6 +188,13 @@ export const User = () => {
 
     const editUser = (user) => {
         setUser({ ...user });
+        formik.setValues(
+            {nombre:`${user.nombre}`,
+            apellido:`${user.apellido}`,
+            email:`${user.email}`,
+            password:`${user.password}`
+        });
+        user.rol=`${user.rol}`;
         setUserDialog(true);
     }
 
@@ -142,7 +214,6 @@ export const User = () => {
             }
         }
         setUser(emptyUser);
-        
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Usuario Eliminado', life: 3000 });
     }
 
@@ -157,42 +228,6 @@ export const User = () => {
         }
 
         return index;
-    }
-
-
-    const onInputChangeNombre = (e, name) => {
-        const val = (e.target && e.target.value) || '';
-        let _user = { ...user };
-        _user[`${name}`] = val;
-        setUser(_user);
-    }
-
-    const onInputChangeApellido = (e, name) => {
-        const val = (e.target && e.target.value) || '';
-        let _user = { ...user };
-        _user[`${name}`] = val;
-        setUser(_user);
-    }
-
-    const onInputChangeEmail = (e, name) => {
-        const val = (e.target && e.target.value) || '';
-        let _user = { ...user };
-        _user[`${name}`] = val;
-        setUser(_user);
-    }
-
-    const onInputChangePassword = (e, name) => {
-        const val = (e.target && e.target.value) || '';
-        let _user = { ...user };
-        _user[`${name}`] = val;
-        setUser(_user);
-    }
-
-    const onInputChangeRol = (e, name) => {
-        const val = (e.target && e.target.value) || '';
-        let _user = { ...user };
-        _user[`${name}`] = val;
-        setUser(_user);
     }
 
     const onRolChange = (e) => {
@@ -286,12 +321,6 @@ export const User = () => {
         );
     }
 
-    const userDialogFooter = (
-        <>
-            <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
-            <Button label="Guardar"  icon="pi pi-check" className="p-button-text"  onClick={saveUser} />
-        </>
-    );
     const deleteUserDialogFooter = (
         <>
             <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteUserDialog} />
@@ -336,57 +365,64 @@ export const User = () => {
                     </DataTable>
 
 
-                    <Dialog visible={userDialog} style={{ width: '450px' }} header="Añadir Usuario" modal className="p-fluid" footer={userDialogFooter} onHide={hideDialog}>
-                        <div className="p-field mt-2" >
-                            <div className="p-inputgroup">
-                                    <span className="p-inputgroup-addon">
-                                        <i className="pi pi-user"></i>
-                                    </span>
-                                    <InputText id="nombre" value={user.nombre} type="text" keyfilter={/^[^#<>*!~!@#$%^&+"|:;',.?1234567890/-`-]+$/} minlength="2" maxlength="40" placeholder="Nombre" onChange={(e) => onInputChangeNombre(e, 'nombre')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.nombre })} />
-                            </div>       
-                        </div>
-                        {submitted && !user.nombre && <small className="p-invalid">El nombre es requerido</small>}
+                    <Dialog visible={userDialog} style={{ width: '450px' }} header="Añadir Usuario" modal className="p-fluid" onHide={hideDialog}>
+                        <form onSubmit={formik.handleSubmit}>
+                            <div className="p-field mt-2" >
+                                <div className="p-inputgroup">
+                                        <span className="p-inputgroup-addon">
+                                            <i className="pi pi-user"></i>
+                                        </span>
+                                        <InputText id="nombre" placeholder="Nombre" value={formik.values.nombre} onChange={formik.handleChange} keyfilter={/^[^#<>*!~!@#$%^&+"|:;',.?1234567890/-`-]+$/}/>
+                                </div>       
+                            </div>
+                            <div className="p-invalid">{formik.errors.nombre ? formik.errors.nombre : null}</div>
 
-                        <div className="p-field mt-2">
-                            <div className="p-inputgroup">
-                                    <span className="p-inputgroup-addon">
-                                        <i className="pi pi-user"></i>
-                                    </span>
-                                    <InputText id="apellido" value={user.apellido} type="text" keyfilter={/^[^#<>*!~!@#$%^&+"|:;',.?1234567890/-`-]+$/} minlength="2" maxlength="40" placeholder="Apellido" onChange={(e) => onInputChangeApellido(e, 'apellido')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.apellido })} />
-                            </div>       
-                        </div>
-                        {submitted && !user.apellido && <small className="p-invalid">El apelllido es requerido</small>}
+                            <div className="p-field mt-2">
+                                <div className="p-inputgroup">
+                                        <span className="p-inputgroup-addon">
+                                            <i className="pi pi-user"></i>
+                                        </span>
+                                        <InputText id="apellido" placeholder="Apellido" value={formik.values.apellido} onChange={formik.handleChange} keyfilter={/^[^#<>*!~!@#$%^&+"|:;',.?1234567890/-`-]+$/}/>
+                                </div>       
+                            </div>
+                            <div className="p-invalid">{formik.errors.apellido ? formik.errors.apellido : null}</div>
 
-                        <div className="p-field mt-2">
-                            <div className="p-inputgroup">
-                                    <span className="p-inputgroup-addon">
-                                        <Avatar image={gmail} style={{'height': '1.2em','width':'1.2em',}}/>   
-                                    </span>
-                                    <InputText id="email" value={user.email} type="email" keyfilter="email" placeholder="Correo electronico" onChange={(e) => onInputChangeEmail(e, 'email')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.email })} />
-                            </div>       
-                        </div>
-                        {submitted && !user.email && <small className="p-invalid">El correo electronico es requerido</small>}
+                            <div className="p-field mt-2">
+                                <div className="p-inputgroup">
+                                        <span className="p-inputgroup-addon">
+                                            <Avatar image={gmail} style={{'height': '1.2em','width':'1.2em',}}/>   
+                                        </span>
+                                        <InputText id="email" placeholder="Correo electronico"  value={formik.values.email} onChange={formik.handleChange}/>
+                                </div>       
+                            </div>
+                            <div className="p-invalid">{formik.errors.email ? formik.errors.email : null}</div>
 
-                        <div className="p-field mt-2">
-                            <div className="p-inputgroup">
-                                    <span className="p-inputgroup-addon">
-                                        <Avatar image={password} style={{'height': '1.2em','width':'1.2em',}}/>   
-                                    </span>
-                                    <InputText id="password" value={user.password}  placeholder="Contraseña" minlength="6" maxlength="50" onChange={(e) => onInputChangePassword(e, 'password')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.password })} />
-                            </div>       
-                        </div>
-                        {submitted && !user.password && <small className="p-invalid">La contrasena es requerido</small>}
+                            <div className="p-field mt-2">
+                                <div className="p-inputgroup">
+                                        <span className="p-inputgroup-addon">
+                                            <Avatar image={password} style={{'height': '1.2em','width':'1.2em',}}/>   
+                                        </span>
+                                        <InputText id="password" placeholder="Contraseña"  value={formik.values.password} onChange={formik.handleChange}/>
+                                </div>       
+                            </div>
+                            <div className="p-invalid">{formik.errors.password ? formik.errors.password : null}</div>
 
-                        <div className="p-field mt-2">
-                            <div className="p-inputgroup">
-                                    <span className="p-inputgroup-addon">
-                                        <Avatar image={rolImg} style={{'height': '1.2em','width':'1.2em',}}/>   
-                                    </span>
-                                    <Dropdown value={rol} options={roles} onChange={onRolChange} optionLabel="rol" placeholder="Rol" required autoFocus className={classNames({ 'p-invalid': submitted && !user.rol })}/>
-                                    
-                            </div>       
-                        </div>
-                        {submitted && !user.rol && <small className="p-invalid">El rol es requerido</small>}
+                            <div className="p-field mt-2">
+                                <div className="p-inputgroup">
+                                        <span className="p-inputgroup-addon">
+                                            <Avatar image={rolImg} style={{'height': '1.2em','width':'1.2em',}}/>   
+                                        </span>
+                                        <Dropdown value={rol} options={roles} onChange={onRolChange} optionLabel="rol" placeholder="Rol" required/>
+                                        
+                                </div>       
+                            </div>
+                            <div>
+                                <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
+                            </div>
+                            <div>
+                                <Button label="Guardar"  icon="pi pi-check" type="submit" className="p-button-text"/>
+                            </div>
+                        </form>
                     </Dialog>
 
 
