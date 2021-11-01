@@ -205,10 +205,10 @@ export const User = () => {
 
     const deleteUser = () => {
         let _users = users.filter(val => val.id !== user.id);
-        setUser(_users);
+        setUsers(_users);
         setDeleteUserDialog(false);
 
-        if (user.nombre.trim()) {
+        if (user.email.trim()) {
             if (user.id) {
                 deleteUserID(user.id);
             }
