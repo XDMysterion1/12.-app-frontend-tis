@@ -174,7 +174,6 @@ const App = () => {
             label: 'Gestion de Usuario', icon: 'pi pi-fw pi-sitemap',
             items: [
                 {label: 'Usuarios', icon: 'pi pi-fw pi-user', to: '/User'},
-                {label: 'Empresas', icon: 'pi pi-fw pi-user', to: '/ShowEmpresa'},
             ]
         },
         {

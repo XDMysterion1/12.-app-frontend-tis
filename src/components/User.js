@@ -342,7 +342,7 @@ export const User = () => {
                                     <span className="p-inputgroup-addon">
                                         <i className="pi pi-user"></i>
                                     </span>
-                                    <InputText id="nombre" value={user.nombre} placeholder="Nombre" onChange={(e) => onInputChangeNombre(e, 'nombre')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.nombre })} />
+                                    <InputText id="nombre" value={user.nombre} type="text" keyfilter={/^[^#<>*!~!@#$%^&+"|:;',.?1234567890/-`-]+$/} minlength="2" maxlength="40" placeholder="Nombre" onChange={(e) => onInputChangeNombre(e, 'nombre')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.nombre })} />
                             </div>       
                         </div>
                         {submitted && !user.nombre && <small className="p-invalid">El nombre es requerido</small>}
@@ -352,7 +352,7 @@ export const User = () => {
                                     <span className="p-inputgroup-addon">
                                         <i className="pi pi-user"></i>
                                     </span>
-                                    <InputText id="apellido" value={user.apellido} placeholder="Apellido" onChange={(e) => onInputChangeApellido(e, 'apellido')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.apellido })} />
+                                    <InputText id="apellido" value={user.apellido} type="text" keyfilter={/^[^#<>*!~!@#$%^&+"|:;',.?1234567890/-`-]+$/} minlength="2" maxlength="40" placeholder="Apellido" onChange={(e) => onInputChangeApellido(e, 'apellido')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.apellido })} />
                             </div>       
                         </div>
                         {submitted && !user.apellido && <small className="p-invalid">El apelllido es requerido</small>}
@@ -362,7 +362,7 @@ export const User = () => {
                                     <span className="p-inputgroup-addon">
                                         <Avatar image={gmail} style={{'height': '1.2em','width':'1.2em',}}/>   
                                     </span>
-                                    <InputText id="email" value={user.email} placeholder="Correo electronico" onChange={(e) => onInputChangeEmail(e, 'email')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.email })} />
+                                    <InputText id="email" value={user.email} type="email" keyfilter="email" placeholder="Correo electronico" onChange={(e) => onInputChangeEmail(e, 'email')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.email })} />
                             </div>       
                         </div>
                         {submitted && !user.email && <small className="p-invalid">El correo electronico es requerido</small>}
@@ -372,7 +372,7 @@ export const User = () => {
                                     <span className="p-inputgroup-addon">
                                         <Avatar image={password} style={{'height': '1.2em','width':'1.2em',}}/>   
                                     </span>
-                                    <InputText id="password" value={user.password} placeholder="Contraseña" onChange={(e) => onInputChangePassword(e, 'password')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.password })} />
+                                    <InputText id="password" value={user.password}  placeholder="Contraseña" minlength="6" maxlength="50" onChange={(e) => onInputChangePassword(e, 'password')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.password })} />
                             </div>       
                         </div>
                         {submitted && !user.password && <small className="p-invalid">La contrasena es requerido</small>}

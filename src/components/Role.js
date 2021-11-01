@@ -9,6 +9,8 @@ import { Dialog }           from 'primereact/dialog';
 import { InputText }        from 'primereact/inputtext';
 import { ColumnGroup }      from 'primereact/columngroup';
 import { Row }              from 'primereact/row';
+import { useFormik }        from "formik";
+import * as Yup             from 'yup';
 
 import rolImg          from '../icon/rol.png';
 
@@ -19,6 +21,49 @@ import uniqid               from 'uniqid';
 import { getRoles,createRol,updateRolID,deleteRolID } from '../service/apiRole';
 
 export const Role = () => {
+
+    const validationSchema = Yup.object().shape({
+        rol: Yup.string().required("Se requiero el Rol")
+        .min(2, "Como minimo 2 caracteres")
+        .max(30, "Como maximo 30 caracteres")
+      });
+      const formik = useFormik({
+        initialValues: {
+          rol: ""
+        },
+        validationSchema,
+        onSubmit: (data) => {
+            setSubmitted(true);
+            let _roles = [...roles];
+            let _role  = {...role };
+            _role['rol'] = data.rol;
+
+            if (_role.rol.trim()) {
+                if (role.id) {
+                    setRole({ ...role });
+                    console.log(role);
+                    const index = findIndexById(role.id);
+                    
+                    _roles[index] = _role;
+                    updateRolID({rol:`${_role.rol}`},role.id);
+                    toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Rol Actualizado', life: 3000 });
+                }
+                else {
+
+                    _role.id = uniqid("rol-"); 
+                    _roles.push(_role);
+                    createRol({id:_role.id, rol:`${_role.rol}`});
+                    toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Rol Creado', life: 3000 });
+                }
+            }
+            setRoles(_roles);
+            setRoleDialog(false);
+            setRole(emptyRole);
+            formik.resetForm();
+            
+        },
+      });
+
 
     let emptyRole = {
         id: null,
@@ -54,6 +99,7 @@ export const Role = () => {
 
     const openNew = () => {
         setRole(emptyRole);
+        formik.resetForm();
         setSubmitted(false);
         setRoleDialog(true);      
     }
@@ -68,40 +114,9 @@ export const Role = () => {
     }
 
 
-    const saveRole = () => {
-        setSubmitted(true);
-        if (role.rol.trim()) {
-            let _roles = [...roles];
-            let _role  = {...role };
-            if (role.id) {
-                const index = findIndexById(role.id);
-                _roles[index] = _role;
-                console.log("---indice---");
-                console.log(index);
-                console.log(typeof(index));
-                console.log("---dato---");
-                console.log({rol:`${_role.rol}`});
-                console.log(typeof({rol:`${_role.rol}`}));
-                console.log("---post---");
-                updateRolID({rol:`${_role.rol}`},role.id);
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Rol Actualizado', life: 3000 });
-            }
-            else {
-                _role.id = uniqid("rol-"); 
-                _roles.push(_role);
-                createRol({id:_role.id, rol:`${_role.rol}`});
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Rol Creado', life: 3000 });
-            }
-            setRoles(_roles);
-            setRoleDialog(false);
-            setRole(emptyRole);
-            console.log(roles);
-        }
-    }
-
-
     const editRole = (role) => {
         setRole({ ...role });
+        formik.setValues({rol:`${role.rol}`});
         setRoleDialog(true);
     }
 
@@ -145,9 +160,6 @@ export const Role = () => {
         _role[`${name}`] = val;
         setRole(_role);
     }
-
-
-
     const idBodyTemplate = (rowData) => {
         return (
             <>
@@ -183,12 +195,6 @@ export const Role = () => {
         );
     }
 
-    const roleDialogFooter = (
-        <>
-            <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
-            <Button label="Guardar" icon="pi pi-check" className="p-button-text"  onClick={saveRole} />
-        </>
-    );
     const deleteRoleDialogFooter = (
         <>
             <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteRoleDialog} />
@@ -225,16 +231,26 @@ export const Role = () => {
                     </DataTable>
 
 
-                    <Dialog visible={roleDialog} style={{ width: '450px' }} header="Añadir Rol" modal className="p-fluid" footer={roleDialogFooter} onHide={hideDialog}>
-                        <div className="p-field mt-2">
-                            <div className="p-inputgroup">
-                                    <span className="p-inputgroup-addon">
-                                        <Avatar image={rolImg} style={{'height': '1.2em','width':'1.2em',}}/>   
-                                    </span>
-                                    <InputText id="role" value={role.rol} placeholder="Rol" onChange={(e) => onInputChange(e, 'rol')} required autoFocus className={classNames({ 'p-invalid': submitted && !role.rol })} />
-                            </div>       
-                        </div>
-                        {submitted && !role.rol && <small className="p-invalid">El Rol es requerido</small>}
+                    <Dialog visible={roleDialog} style={{ width: '450px' }} header="Añadir Rol" modal className="p-fluid" onHide={hideDialog}>  
+                        <form onSubmit={formik.handleSubmit}>
+                            <div className="form-group">
+                                <div className="p-field mt-2">
+                                    <div className="p-inputgroup">
+                                            <span className="p-inputgroup-addon">
+                                                <Avatar image={rolImg} style={{'height': '1.2em','width':'1.2em',}}/>   
+                                            </span>
+                                            <InputText id="rol" type="text" keyfilter={/^[^#<>*!~!@#$%^&+"|:;',.?1234567890/-`-]+$/} name="rol" value={formik.values.rol} onChange={formik.handleChange} placeholder="Rol" />
+                                    </div>       
+                                </div>
+                                <div className="p-invalid">{formik.errors.rol ? formik.errors.rol : null}</div>
+                            </div>
+                            <div>
+                                <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
+                            </div>
+                            <div>
+                                <Button label="Guardar"  icon="pi pi-check" type="submit" className="p-button-text"/>
+                            </div>
+                        </form>
                     </Dialog>
 
                     <Dialog visible={deleteRoleDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteRoleDialogFooter} onHide={hideDeleteRoleDialog}>
