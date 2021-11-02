@@ -24,6 +24,7 @@ export const Role = () => {
 
     const validationSchema = Yup.object().shape({
         rol: Yup.string().required("Se requiero el Rol")
+        .matches(/^^[a-zA-Z\s]+$/, "No se permiten numero o caracteres especiales")
         .min(2, "Como minimo 2 caracteres")
         .max(30, "Como maximo 30 caracteres")
       });
@@ -239,10 +240,10 @@ export const Role = () => {
                                             <span className="p-inputgroup-addon">
                                                 <Avatar image={rolImg} style={{'height': '1.2em','width':'1.2em',}}/>   
                                             </span>
-                                            <InputText id="rol" type="text" keyfilter={/^[^#<>*!~!@#$%^&+"|:;',.?1234567890/-`-]+$/} name="rol" value={formik.values.rol} onChange={formik.handleChange} placeholder="Rol" />
+                                            <InputText id="rol" type="text" name="rol" value={formik.values.rol} onChange={formik.handleChange} placeholder="Rol" />
                                     </div>       
                                 </div>
-                                <div className="p-invalid">{formik.errors.rol ? formik.errors.rol : null}</div>
+                                <div className="p-invalid" style={{'color': '#ff0000'}}>{formik.errors.rol ? formik.errors.rol : null}</div>
                             </div>
                             <div>
                                 <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />

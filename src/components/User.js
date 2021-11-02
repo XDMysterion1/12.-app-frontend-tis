@@ -29,9 +29,11 @@ export const User = () => {
 
     const validationSchema = Yup.object().shape({
         nombre: Yup.string().required("Se requiero el nombre")
+        .matches(/^^[a-zA-Z\s]+$/, "No se permiten numero o caracteres especiales")
         .min(2, "Como minimo 2 caracteres")
         .max(30, "Como maximo 30 caracteres"),
         apellido: Yup.string().required("Se requiero el apellido")
+        .matches(/^^[a-zA-Z\s]+$/, "No se permiten numero o caracteres especiales")
         .min(2, "Como minimo 2 caracteres")
         .max(30, "Como maximo 30 caracteres"),
         email: Yup.string().required("Se requiero el correo electronico")
@@ -51,40 +53,41 @@ export const User = () => {
         },
         validationSchema,
         onSubmit: (data) => {
-            setSubmitted(true);
-            let _users = [...users];
-            let _user  = {...user };
-            _user['nombre']     = data.nombre;
-            _user['apellido']   = data.apellido;
-            _user['email']      = data.email;
-            _user['password']   = data.password;
+            if(submitted === true){
+                let _users = [...users];
+                let _user  = {...user };
+                _user['nombre']     = data.nombre;
+                _user['apellido']   = data.apellido;
+                _user['email']      = data.email;
+                _user['password']   = data.password;
 
-            if (_user.nombre.trim()) {
-                if (user.id) {
+                if (_user.nombre.trim()) {
+                    if (user.id) {
 
-                    setUser({ ...user });
-                    console.log(user);
-                    const index = findIndexById(user.id);
-                    
+                        setUser({ ...user });
+                        console.log(user);
+                        const index = findIndexById(user.id);
+                        
 
-                    _users[index] = _user;
-                    _user.rol=rol.id;
-                    updateUserID({nombre:`${_user.nombre}`,apellido:`${_user.apellido}`,email:`${_user.email}`,password:`${_user.password}`,rol:`${rol.id}`},user.id);
-                    toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Usuario Actualizado', life: 3000 });
+                        _users[index] = _user;
+                        _user.rol=rol.id;
+                        updateUserID({nombre:`${_user.nombre}`,apellido:`${_user.apellido}`,email:`${_user.email}`,password:`${_user.password}`,rol:`${rol.id}`},user.id);
+                        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Usuario Actualizado', life: 3000 });
+                    }
+                    else {
+
+                        _user.id = uniqid("user-");
+                        _user.rol=rol.id; 
+                        _users.push(_user);
+                        createUser({id:`${_user.id}`,nombre:`${_user.nombre}`,apellido:`${_user.apellido}`,email:`${_user.email}`,password:`${_user.password}`,rol:`${rol.id}`});
+                        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'usuario Creado', life: 3000 });
+                    }
                 }
-                else {
-
-                    _user.id = uniqid("user-");
-                    _user.rol=rol.id; 
-                    _users.push(_user);
-                    createUser({id:`${_user.id}`,nombre:`${_user.nombre}`,apellido:`${_user.apellido}`,email:`${_user.email}`,password:`${_user.password}`,rol:`${rol.id}`});
-                    toast.current.show({ severity: 'success', summary: 'Successful', detail: 'usuario Creado', life: 3000 });
-                }
-            }
-            setUsers(_users);
-            setUserDialog(false);
-            setUser(emptyUser);
-            formik.resetForm();
+                setUsers(_users);
+                setUserDialog(false);
+                setUser(emptyUser);
+                formik.resetForm();
+        }
             
         },
       });
@@ -153,6 +156,11 @@ export const User = () => {
         setUserDialog(false);
     }
 
+    const showDialog = () => {
+        setSubmitted(true);
+        formik.handleSubmit();
+    }
+
     const hideDeleteUserDialog = () => {
         setDeleteUserDialog(false);
     }
@@ -188,13 +196,18 @@ export const User = () => {
 
     const editUser = (user) => {
         setUser({ ...user });
+        setSubmitted(true);
         formik.setValues(
             {nombre:`${user.nombre}`,
             apellido:`${user.apellido}`,
             email:`${user.email}`,
             password:`${user.password}`
         });
+        let r = findRol(`${user.rol}`);
+        
+        setRol(r);
         user.rol=`${user.rol}`;
+    
         setUserDialog(true);
     }
 
@@ -301,7 +314,7 @@ export const User = () => {
 
         let country = _roles.find(el => el.id === rolFind);
         console.log(country["rol"]);
-
+        return country;
     }
 
     const leftToolbarTemplate = () => {
@@ -372,20 +385,20 @@ export const User = () => {
                                         <span className="p-inputgroup-addon">
                                             <i className="pi pi-user"></i>
                                         </span>
-                                        <InputText id="nombre" placeholder="Nombre" value={formik.values.nombre} onChange={formik.handleChange} keyfilter={/^[^#<>*!~!@#$%^&+"|:;',.?1234567890/-`-]+$/}/>
+                                        <InputText id="nombre" placeholder="Nombre" value={formik.values.nombre} onChange={formik.handleChange}/>
                                 </div>       
                             </div>
-                            <div className="p-invalid">{formik.errors.nombre ? formik.errors.nombre : null}</div>
+                            <div className="p-invalid" style={{'color': '#ff0000'}}>{formik.errors.nombre ? formik.errors.nombre : null}</div>
 
                             <div className="p-field mt-2">
                                 <div className="p-inputgroup">
                                         <span className="p-inputgroup-addon">
                                             <i className="pi pi-user"></i>
                                         </span>
-                                        <InputText id="apellido" placeholder="Apellido" value={formik.values.apellido} onChange={formik.handleChange} keyfilter={/^[^#<>*!~!@#$%^&+"|:;',.?1234567890/-`-]+$/}/>
+                                        <InputText id="apellido" placeholder="Apellido" value={formik.values.apellido} onChange={formik.handleChange}/>
                                 </div>       
                             </div>
-                            <div className="p-invalid">{formik.errors.apellido ? formik.errors.apellido : null}</div>
+                            <div className="p-invalid" style={{'color': '#ff0000'}}>{formik.errors.apellido ? formik.errors.apellido : null}</div>
 
                             <div className="p-field mt-2">
                                 <div className="p-inputgroup">
@@ -395,7 +408,7 @@ export const User = () => {
                                         <InputText id="email" placeholder="Correo electronico"  value={formik.values.email} onChange={formik.handleChange}/>
                                 </div>       
                             </div>
-                            <div className="p-invalid">{formik.errors.email ? formik.errors.email : null}</div>
+                            <div className="p-invalid" style={{'color': '#ff0000'}}>{formik.errors.email ? formik.errors.email : null}</div>
 
                             <div className="p-field mt-2">
                                 <div className="p-inputgroup">
@@ -405,22 +418,22 @@ export const User = () => {
                                         <InputText id="password" placeholder="Contraseña"  value={formik.values.password} onChange={formik.handleChange}/>
                                 </div>       
                             </div>
-                            <div className="p-invalid">{formik.errors.password ? formik.errors.password : null}</div>
+                            <div className="p-invalid" style={{'color': '#ff0000'}}>{formik.errors.password ? formik.errors.password : null}</div>
 
                             <div className="p-field mt-2">
                                 <div className="p-inputgroup">
                                         <span className="p-inputgroup-addon">
                                             <Avatar image={rolImg} style={{'height': '1.2em','width':'1.2em',}}/>   
                                         </span>
-                                        <Dropdown value={rol} options={roles} onChange={onRolChange} optionLabel="rol" placeholder="Rol" required/>
-                                        
+                                        <Dropdown value={rol} options={roles} onChange={onRolChange} optionLabel="rol" placeholder="Rol" required/>   
                                 </div>       
                             </div>
+                            
                             <div>
                                 <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
                             </div>
                             <div>
-                                <Button label="Guardar"  icon="pi pi-check" type="submit" className="p-button-text"/>
+                                <Button label="Guardar"  icon="pi pi-check" type="submit" className="p-button-text" onClick={showDialog}/>
                             </div>
                         </form>
                     </Dialog>
