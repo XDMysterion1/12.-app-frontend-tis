@@ -385,10 +385,10 @@ export const User = () => {
                                         <span className="p-inputgroup-addon">
                                             <i className="pi pi-user"></i>
                                         </span>
-                                        <InputText id="nombre" placeholder="Nombre" value={formik.values.nombre} onChange={formik.handleChange}/>
+                                        <InputText id="nombre" placeholder="Nombre" value={formik.values.nombre} onChange={formik.handleChange} autoFocus/>
                                 </div>       
                             </div>
-                            <div className="p-invalid" style={{'color': '#ff0000'}}>{formik.errors.nombre ? formik.errors.nombre : null}</div>
+                            <small className="p-invalid" style={{'color': '#ff0000'}}>{formik.errors.nombre ? formik.errors.nombre : null}</small>
 
                             <div className="p-field mt-2">
                                 <div className="p-inputgroup">
@@ -398,7 +398,7 @@ export const User = () => {
                                         <InputText id="apellido" placeholder="Apellido" value={formik.values.apellido} onChange={formik.handleChange}/>
                                 </div>       
                             </div>
-                            <div className="p-invalid" style={{'color': '#ff0000'}}>{formik.errors.apellido ? formik.errors.apellido : null}</div>
+                            <small className="p-invalid" style={{'color': '#ff0000'}}>{formik.errors.apellido ? formik.errors.apellido : null}</small>
 
                             <div className="p-field mt-2">
                                 <div className="p-inputgroup">
@@ -408,7 +408,7 @@ export const User = () => {
                                         <InputText id="email" placeholder="Correo electronico"  value={formik.values.email} onChange={formik.handleChange}/>
                                 </div>       
                             </div>
-                            <div className="p-invalid" style={{'color': '#ff0000'}}>{formik.errors.email ? formik.errors.email : null}</div>
+                            <small className="p-invalid" style={{'color': '#ff0000'}}>{formik.errors.email ? formik.errors.email : null}</small>
 
                             <div className="p-field mt-2">
                                 <div className="p-inputgroup">
@@ -418,7 +418,7 @@ export const User = () => {
                                         <InputText id="password" placeholder="Contraseña"  value={formik.values.password} onChange={formik.handleChange}/>
                                 </div>       
                             </div>
-                            <div className="p-invalid" style={{'color': '#ff0000'}}>{formik.errors.password ? formik.errors.password : null}</div>
+                            <small className="p-invalid" style={{'color': '#ff0000'}}>{formik.errors.password ? formik.errors.password : null}</small>
 
                             <div className="p-field mt-2">
                                 <div className="p-inputgroup">

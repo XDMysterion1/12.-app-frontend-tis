@@ -13,6 +13,7 @@ import { useFormik }        from "formik";
 import * as Yup             from 'yup';
 
 import rolImg          from '../icon/rol.png';
+import rolImgDark      from '../icon/rol-dark.png';
 
 import { Avatar }    from 'primereact/avatar';
 
@@ -238,12 +239,12 @@ export const Role = () => {
                                 <div className="p-field mt-2">
                                     <div className="p-inputgroup">
                                             <span className="p-inputgroup-addon">
-                                                <Avatar image={rolImg} style={{'height': '1.2em','width':'1.2em',}}/>   
+                                                <Avatar  image={rolImg} style={{'height': '1.2em','width':'1.2em',}}/>   
                                             </span>
-                                            <InputText id="rol" type="text" name="rol" value={formik.values.rol} onChange={formik.handleChange} placeholder="Rol" />
+                                            <InputText id="rol" type="text" name="rol" value={formik.values.rol} onChange={formik.handleChange} placeholder="Rol" autoFocus/>
                                     </div>       
                                 </div>
-                                <div className="p-invalid" style={{'color': '#ff0000'}}>{formik.errors.rol ? formik.errors.rol : null}</div>
+                                <small className="p-invalid" style={{'color': '#ff0000'}}>{formik.errors.rol ? formik.errors.rol : null}</small>
                             </div>
                             <div>
                                 <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
