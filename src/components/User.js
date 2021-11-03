@@ -7,6 +7,7 @@ import { Button }           from 'primereact/button';
 import { Toolbar }          from 'primereact/toolbar';
 import { Dialog }           from 'primereact/dialog';
 import { InputText }        from 'primereact/inputtext';
+import { Password }         from 'primereact/password';
 import { ColumnGroup }      from 'primereact/columngroup';
 import { Row }              from 'primereact/row';
 import { Avatar }           from 'primereact/avatar';
@@ -320,7 +321,7 @@ export const User = () => {
     const leftToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <Button label="Nuevo" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={openNew} />
+                <Button style={{'background': '#13af4e'}} label="Nuevo" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={openNew} />
             </React.Fragment>
         )
     }
@@ -328,16 +329,16 @@ export const User = () => {
     const actionBodyTemplate = (rowData) => {
         return (
             <div className="actions">
-                <Button icon="pi pi-pencil" className="p-button-rounded p-button-success p-mr-2"   onClick={() => editUser(rowData)} />
-                <Button icon="pi pi-trash"  className="p-button-rounded p-button-warning"          onClick={() => confirmDeleteUser(rowData)} />
+                <Button icon="pi pi-pencil" style={{'background': '#13af4e'}} className="p-button-rounded p-button-success p-mr-2"   onClick={() => editUser(rowData)} />
+                <Button icon="pi pi-trash"  style={{'background': '#eee500'}} className="p-button-rounded p-button-warning"          onClick={() => confirmDeleteUser(rowData)} />
             </div>
         );
     }
 
     const deleteUserDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteUserDialog} />
-            <Button label="Si" icon="pi pi-check" className="p-button-text" onClick={deleteUser} />
+            <Button label="No" icon="pi pi-times" style={{'background': '#d13639','color':'#ffffff'}} className="p-button-text" onClick={hideDeleteUserDialog} />
+            <Button label="Si" icon="pi pi-check" style={{'background': '#13af4e','color':'#ffffff'}} className="p-button-text" onClick={deleteUser} />
         </>
     );
 
@@ -385,7 +386,7 @@ export const User = () => {
                                         <span className="p-inputgroup-addon">
                                             <i className="pi pi-user"></i>
                                         </span>
-                                        <InputText id="nombre" placeholder="Nombre" value={formik.values.nombre} onChange={formik.handleChange} autoFocus/>
+                                        <InputText id="nombre" name='nombre' placeholder="Nombre" value={formik.values.nombre} onChange={formik.handleChange} autoFocus/>
                                 </div>       
                             </div>
                             <small className="p-invalid" style={{'color': '#ff0000'}}>{formik.errors.nombre ? formik.errors.nombre : null}</small>
@@ -395,7 +396,7 @@ export const User = () => {
                                         <span className="p-inputgroup-addon">
                                             <i className="pi pi-user"></i>
                                         </span>
-                                        <InputText id="apellido" placeholder="Apellido" value={formik.values.apellido} onChange={formik.handleChange}/>
+                                        <InputText id="apellido" name='apellido' placeholder="Apellido" value={formik.values.apellido} onChange={formik.handleChange}/>
                                 </div>       
                             </div>
                             <small className="p-invalid" style={{'color': '#ff0000'}}>{formik.errors.apellido ? formik.errors.apellido : null}</small>
@@ -405,7 +406,7 @@ export const User = () => {
                                         <span className="p-inputgroup-addon">
                                             <Avatar image={gmail} style={{'height': '1.2em','width':'1.2em',}}/>   
                                         </span>
-                                        <InputText id="email" placeholder="Correo electronico"  value={formik.values.email} onChange={formik.handleChange}/>
+                                        <InputText id="email" name='email' placeholder="Correo electronico"  value={formik.values.email} onChange={formik.handleChange}/>
                                 </div>       
                             </div>
                             <small className="p-invalid" style={{'color': '#ff0000'}}>{formik.errors.email ? formik.errors.email : null}</small>
@@ -415,7 +416,7 @@ export const User = () => {
                                         <span className="p-inputgroup-addon">
                                             <Avatar image={password} style={{'height': '1.2em','width':'1.2em',}}/>   
                                         </span>
-                                        <InputText id="password" placeholder="Contraseña"  value={formik.values.password} onChange={formik.handleChange}/>
+                                        <Password id="password" name='password' placeholder="Contraseña"  value={formik.values.password} onChange={formik.handleChange} toggleMask  promptLabel="Por favor ingrese una contraseña" weakLabel="Débil" mediumLabel="Medio" strongLabel="Fuerte"/>
                                 </div>       
                             </div>
                             <small className="p-invalid" style={{'color': '#ff0000'}}>{formik.errors.password ? formik.errors.password : null}</small>
@@ -428,12 +429,15 @@ export const User = () => {
                                         <Dropdown value={rol} options={roles} onChange={onRolChange} optionLabel="rol" placeholder="Rol" required/>   
                                 </div>       
                             </div>
-                            
-                            <div>
-                                <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
-                            </div>
-                            <div>
-                                <Button label="Guardar"  icon="pi pi-check" type="submit" className="p-button-text" onClick={showDialog}/>
+                            <div className='mt-2'>
+                                <div className="flex justify-content-center flex-wrap">
+                                    <div className="flex align-items-center justify-content-center  m-2">
+                                        <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} style={{'background': '#d13639','color':'#ffffff'}}/>
+                                    </div>
+                                    <div className="flex align-items-center justify-content-center  m-2">
+                                        <Button label="Guardar"  icon="pi pi-check" type="submit" className="p-button-text" onClick={showDialog} style={{'background': '#13af4e','color':'#ffffff'}}/>  
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     </Dialog>

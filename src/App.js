@@ -11,6 +11,7 @@ import { AppConfig }        from './AppConfig';
 import { Dashboard }             from './components/Dashboard';
 import { Role }                  from './components/Role';
 import { User }                  from './components/User';
+import {LoginApp}                from './components/LoginApp';
 import { RegisterUser }          from './components/RegisterUser';
 import { ShowEmpresa }           from './components/ShowEmpresa';
 import { RegisterEmpresa }       from './components/RegisterEmpresa';
@@ -50,6 +51,7 @@ import 'prismjs/themes/prism-coy.css';
 import './layout/flags/flags.css';
 import './layout/layout.scss';
 import './App.scss';
+
 
 const App = () => {
 
@@ -229,15 +231,17 @@ const App = () => {
 
             <div className="layout-main-container">
                 <div className="layout-main">
-                    <Route path="/" exact component={Dashboard}/>
-                    <Route path="/Role"            component={Role}/>
-                    <Route path="/User"            component={User}/>
-                    <Route path="/RegisterUser"    component={RegisterUser}/>
-                    <Route path="/ShowEmpresa"     component={ShowEmpresa}/>
-                    <Route path="/RegisterEmpresa" component={RegisterEmpresa}/>
-                    <Route path="/Convocatoria"    component={Convocatoria}/>
-                    <Route path="/PliegoEspecificacion"     component={PliegoEspecificacion}/>
-                    <Route path="/Aviso" component={Aviso}/>
+                    <Route path="/"                exact component={Dashboard}/>
+                    <Route path="/Role"                  component={Role}/>
+                    <Route path="/User"                  component={User}/>
+                    <Route path="/LoginApp"              component={LoginApp}/>
+
+                    <Route path="/RegisterUser"          component={RegisterUser}/>
+                    <Route path="/ShowEmpresa"           component={ShowEmpresa}/>
+                    <Route path="/RegisterEmpresa"       component={RegisterEmpresa}/>
+                    <Route path="/Convocatoria"          component={Convocatoria}/>
+                    <Route path="/PliegoEspecificacion"  component={PliegoEspecificacion}/>
+                    <Route path="/Aviso"                 component={Aviso}/>
 
                     <Route path="/formlayout" component={FormLayoutDemo}/>
                     <Route path="/input" component={InputDemo}/>

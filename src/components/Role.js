@@ -183,7 +183,7 @@ export const Role = () => {
     const leftToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <Button label="Nuevo" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={openNew} />
+                <Button style={{'background': '#13af4e'}} label="Nuevo" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={openNew} />
             </React.Fragment>
         )
     }
@@ -191,16 +191,16 @@ export const Role = () => {
     const actionBodyTemplate = (rowData) => {
         return (
             <div className="actions">
-                <Button icon="pi pi-pencil" className="p-button-rounded p-button-success p-mr-2"   onClick={() => editRole(rowData)} />
-                <Button icon="pi pi-trash"  className="p-button-rounded p-button-warning"          onClick={() => confirmDeleteRole(rowData)} />
+                <Button icon="pi pi-pencil" style={{'background': '#13af4e'}} className="p-button-rounded p-button-success p-mr-2"   onClick={() => editRole(rowData)} />
+                <Button icon="pi pi-trash"  style={{'background': '#eee500'}} className="p-button-rounded p-button-warning"          onClick={() => confirmDeleteRole(rowData)} />
             </div>
         );
     }
 
     const deleteRoleDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteRoleDialog} />
-            <Button label="Si" icon="pi pi-check" className="p-button-text" onClick={deleteRole} />
+            <Button label="No" icon="pi pi-times" style={{'background': '#d13639','color':'#ffffff'}} className="p-button-text" onClick={hideDeleteRoleDialog} />
+            <Button label="Si" icon="pi pi-check" style={{'background': '#13af4e','color':'#ffffff'}} className="p-button-text" onClick={deleteRole} />
         </>
     );
 
@@ -246,11 +246,15 @@ export const Role = () => {
                                 </div>
                                 <small className="p-invalid" style={{'color': '#ff0000'}}>{formik.errors.rol ? formik.errors.rol : null}</small>
                             </div>
-                            <div>
-                                <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
-                            </div>
-                            <div>
-                                <Button label="Guardar"  icon="pi pi-check" type="submit" className="p-button-text"/>
+                            <div className='mt-2'>
+                                <div className="flex justify-content-center flex-wrap">
+                                    <div className="flex align-items-center justify-content-center  m-2">
+                                        <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} style={{'background': '#d13639','color':'#ffffff'}}/>
+                                    </div>
+                                    <div className="flex align-items-center justify-content-center  m-2">
+                                        <Button label="Guardar"  icon="pi pi-check" type="submit" className="p-button-text" style={{'background': '#13af4e','color':'#ffffff'}}/>
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     </Dialog>
