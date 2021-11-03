@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import classNames from 'classnames';
-import { Route } from 'react-router-dom';
+import classNames           from 'classnames';
+import { Route}             from 'react-router-dom';
 import { CSSTransition }    from 'react-transition-group';
 
 import { AppTopbar }        from './AppTopbar';
@@ -11,7 +11,6 @@ import { AppConfig }        from './AppConfig';
 import { Dashboard }             from './components/Dashboard';
 import { Role }                  from './components/Role';
 import { User }                  from './components/User';
-import {LoginApp}                from './components/LoginApp';
 import { RegisterUser }          from './components/RegisterUser';
 import { ShowEmpresa }           from './components/ShowEmpresa';
 import { RegisterEmpresa }       from './components/RegisterEmpresa';
@@ -234,7 +233,6 @@ const App = () => {
                     <Route path="/"                exact component={Dashboard}/>
                     <Route path="/Role"                  component={Role}/>
                     <Route path="/User"                  component={User}/>
-                    <Route path="/LoginApp"              component={LoginApp}/>
 
                     <Route path="/RegisterUser"          component={RegisterUser}/>
                     <Route path="/ShowEmpresa"           component={ShowEmpresa}/>

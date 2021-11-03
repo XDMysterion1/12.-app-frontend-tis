@@ -29,15 +29,15 @@ export const LoginApp = () =>{
         },
         validationSchema,
         onSubmit: (data) => {
-
+            console.log(data);
             formik.resetForm();    
         },
       });
 
     return(
         <div className="grid justify-content-evenly">
-            <div className="col-12 lg:col-3"></div>
-            <div className="col-12 lg:col-4">
+            <div className="lg:col-3"></div>
+            <div className=" lg:col-3 md:col-3">
                 <div className="card p-fluid">
                     <form onSubmit={formik.handleSubmit}>
                         <div className='grid flex justify-content-center'>
@@ -51,8 +51,8 @@ export const LoginApp = () =>{
                             </div>
                         </div>
                         <div className='grid flex justify-content-center'>
-                            <div className="flex align-items-center justify-content-center  m-2">
-                                <div className="p-field mt-2 lg:col-12">
+                            <div className="flex align-items-center justify-content-center">
+                                <div className="p-field mt-1 lg:col-11">
                                     <div className="p-inputgroup">
                                             <span className="p-inputgroup-addon">
                                                 <Avatar image={gmail} style={{'height': '1.2em','width':'1.2em',}}/>   
@@ -61,11 +61,12 @@ export const LoginApp = () =>{
                                     </div>       
                                 </div>
                             </div>
-                            <small className="p-invalid" style={{'color': '#ff0000'}}>{formik.errors.email ? formik.errors.email : null}</small>
                         </div>
+                        <small className="p-invalid ml-4" style={{'color': '#ff0000'}}>{formik.errors.email ? formik.errors.email : null}</small>
+                        
                         <div className='grid flex justify-content-center'>
-                            <div className="flex align-items-center justify-content-center  m-2">
-                                <div className="p-field mt-2 lg:col-11">
+                            <div className="flex align-items-center justify-content-center">
+                                <div className="p-field mt-1 lg:col-10">
                                     <div className="p-inputgroup">
                                             <span className="p-inputgroup-addon">
                                                 <Avatar image={password} style={{'height': '1.2em','width':'1.2em',}}/>   
@@ -74,8 +75,9 @@ export const LoginApp = () =>{
                                     </div>       
                                 </div>
                             </div>
-                            <small className="p-invalid" style={{'color': '#ff0000'}}>{formik.errors.password ? formik.errors.password : null}</small>
                         </div>
+                        <small className="p-invalid ml-4" style={{'color': '#ff0000'}}>{formik.errors.password ? formik.errors.password : null}</small>
+                        
                         <div className='grid flex justify-content-center'>
                             <div className="flex align-items-center justify-content-center  m-2">
                                 <Button type="submit" id="buttonSubmit" icon="pi pi-arrow-right"  className="p-button-raised mt-4 p-button-lg"  style={{'fontSize': '1.5em', 'background-color':'#d13639', 'color':'#ffffff', 'border':'1px solid hsl(0deg 0% 100% / 12%)'}}/>
@@ -84,7 +86,7 @@ export const LoginApp = () =>{
                     </form>
                 </div>
             </div>
-            <div className="col-12 lg:col-3"></div>
+            <div className="lg:col-3"></div>
         
         </div>
     )

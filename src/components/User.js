@@ -42,7 +42,9 @@ export const User = () => {
         .max(255, "Como maximo 30 caracteres"),
         password: Yup.string().required("Se requiero el contraseña")
         .min(6, "Como minimo 6 caracteres")
-        .max(255, "Como maximo 30 caracteres")
+        .max(255, "Como maximo 30 caracteres"),
+        confirmPassword:Yup.string().required("Se requiero confirmar la contraseña")
+        .oneOf([Yup.ref("password"), null], "Las contraseñas deben coincidir")
 
       });
       const formik = useFormik({
@@ -51,6 +53,7 @@ export const User = () => {
             apellido:  "",
             email:     "",
             password:  "",
+            confirmPassword : ""
         },
         validationSchema,
         onSubmit: (data) => {
@@ -202,7 +205,8 @@ export const User = () => {
             {nombre:`${user.nombre}`,
             apellido:`${user.apellido}`,
             email:`${user.email}`,
-            password:`${user.password}`
+            password:`${user.password}`,
+            confirmPassword:`${user.password}`,
         });
         let r = findRol(`${user.rol}`);
         
@@ -420,6 +424,16 @@ export const User = () => {
                                 </div>       
                             </div>
                             <small className="p-invalid" style={{'color': '#ff0000'}}>{formik.errors.password ? formik.errors.password : null}</small>
+
+                            <div className="p-field mt-2">
+                                <div className="p-inputgroup">
+                                        <span className="p-inputgroup-addon">
+                                            <Avatar image={password} style={{'height': '1.2em','width':'1.2em',}}/>   
+                                        </span>
+                                        <Password id="confirmPassword" name='confirmPassword' placeholder="Confirmar contraseña"  value={formik.values.confirmPassword} onChange={formik.handleChange} toggleMask  promptLabel="Por favor ingrese una contraseña" weakLabel="Débil" mediumLabel="Medio" strongLabel="Fuerte"/>
+                                </div>       
+                            </div>
+                            <small className="p-invalid" style={{'color': '#ff0000'}}>{formik.errors.confirmPassword ? formik.errors.confirmPassword : null}</small>
 
                             <div className="p-field mt-2">
                                 <div className="p-inputgroup">
