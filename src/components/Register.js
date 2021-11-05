@@ -13,7 +13,7 @@ import { useFormik }        from "formik";
 import * as Yup             from 'yup';
 import uniqid               from 'uniqid';
 
-import { createUser} from '../service/apiUser';
+import { createUser,getUsers} from '../service/apiUser';
 
 export const Register = () =>{
 
@@ -30,7 +30,20 @@ export const Register = () =>{
         .max(30, "Como maximo 30 caracteres"),
         email: Yup.string().required("Se requiero el correo electronico")
         .email("Correo electronico no valido")
-        .max(255, "Como maximo 30 caracteres"),
+        .max(255, "Como maximo 30 caracteres")
+        .test('isEmail','Ya existe el correo electronico',
+        function (value) {
+               var _users = [...users]
+               let res = _users.find(i => (i.email).toLowerCase() === (value).toLowerCase() );
+                if(res === undefined){
+                    return true;
+                }else{
+                    return false;
+                }
+                 
+           }
+           
+       ),
         password: Yup.string().required("Se requiero el contraseña")
         .min(6, "Como minimo 6 caracteres")
         .max(255, "Como maximo 30 caracteres"),
@@ -56,6 +69,23 @@ export const Register = () =>{
             formik.resetForm();    
         },
       });
+    const [users, setUsers]  = useState(null);
+
+
+    useEffect(()=>{
+        fetchUsers();
+    },[])
+
+    const fetchUsers = () =>{
+        getUsers().then(json =>{
+            if(json.error){
+                console.log("Error");
+            }else{
+                console.log("---------Users insertados-----------");
+                setUsers(json.data);
+            }
+        })
+    }
 
     return(
         <div className="grid justify-content-evenly">

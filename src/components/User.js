@@ -28,6 +28,20 @@ import { getRoles } from '../service/apiRole';
 
 export const User = () => {
 
+    const [roles,setRoles]                           = useState(null);
+    const [rol, setRol]                              = useState(null);
+    const [users, setUsers]                          = useState(null);
+    const [userDialog, setUserDialog]                = useState(false);
+    const [deleteUserDialog, setDeleteUserDialog]    = useState(false);
+
+    const [user, setUser]                            = useState(emptyUser);
+    const [selectedUsers, setSelectedUsers]          = useState(null);
+    const [submitted, setSubmitted]                  = useState(false);
+    const toast                                      = useRef(null);
+    const dt                                         = useRef(null);
+    const [stateUser,setStateUser]                   = useState(false);
+
+
     const validationSchema = Yup.object().shape({
         nombre: Yup.string().required("Se requiero el nombre")
         .matches(/^^[a-zA-Z\s]+$/, "No se permiten numero o caracteres especiales")
@@ -39,7 +53,33 @@ export const User = () => {
         .max(30, "Como maximo 30 caracteres"),
         email: Yup.string().required("Se requiero el correo electronico")
         .email("Correo electronico no valido")
-        .max(255, "Como maximo 30 caracteres"),
+        .max(255, "Como maximo 30 caracteres")
+        .test('is-jimmy','Correo electronico ya existe',(value, context) =>{
+         
+                var _users = [...users]
+                let res = _users.find(i => i.email === value);
+                let aux = res;
+                
+                let state = stateUser;
+            
+                if(state === false){
+                    if(res === undefined){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                }else if(state === true){
+                    if(aux === res){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                }
+                  
+        }
+            
+        ),
+
         password: Yup.string().required("Se requiero el contraseña")
         .min(6, "Como minimo 6 caracteres")
         .max(255, "Como maximo 30 caracteres"),
@@ -47,6 +87,9 @@ export const User = () => {
         .oneOf([Yup.ref("password"), null], "Las contraseñas deben coincidir")
 
       });
+
+
+
       const formik = useFormik({
         initialValues: {
             nombre:    "",
@@ -105,19 +148,6 @@ export const User = () => {
         rol:      ''
     };
 
-    const [roles,setRoles]                           = useState(null);
-    const [rol, setRol]                              = useState(null);
-    const [users, setUsers]                          = useState(null);
-    const [userDialog, setUserDialog]                = useState(false);
-    const [deleteUserDialog, setDeleteUserDialog]    = useState(false);
-
-    const [user, setUser]                            = useState(emptyUser);
-    const [selectedUsers, setSelectedUsers]          = useState(null);
-    const [submitted, setSubmitted]                  = useState(false);
-    const toast                                      = useRef(null);
-    const dt                                         = useRef(null);
-
-
     useEffect(()=>{
         fetchRoles();
     },[])
@@ -152,7 +182,11 @@ export const User = () => {
         setUser(emptyUser);
         formik.resetForm();
         setSubmitted(false);
-        setUserDialog(true);      
+        
+
+        setUserDialog(true);
+        setStateUser(false); 
+        console.log(stateUser);        
     }
 
     const hideDialog = () => {
@@ -169,38 +203,10 @@ export const User = () => {
         setDeleteUserDialog(false);
     }
 
-
-    const saveUser = () => {
-        setSubmitted(true);
-        if (user.nombre.trim()) {
-            let _users = [...users];
-            let _user  = {...user };
-            if (user.id) {
-
-                const index = findIndexById(user.id);
-                _users[index] = _user;
-                _user.rol=rol.id;
-                updateUserID({nombre:`${_user.nombre}`,apellido:`${_user.apellido}`,email:`${_user.email}`,password:`${_user.password}`,rol:`${rol.id}`},user.id);
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Usuario Actualizado', life: 3000 });
-            }
-            else {
-                _user.id = uniqid("user-");
-                _user.rol=rol.id; 
-                _users.push(_user);
-                createUser({id:`${_user.id}`,nombre:`${_user.nombre}`,apellido:`${_user.apellido}`,email:`${_user.email}`,password:`${_user.password}`,rol:`${rol.id}`});
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'usuario Creado', life: 3000 });
-            }
-            setUsers(_users);
-            setUserDialog(false);
-            setUser(emptyUser);
-            console.log(users);
-        }
-    }
-
-
     const editUser = (user) => {
         setUser({ ...user });
         setSubmitted(true);
+        
         formik.setValues(
             {nombre:`${user.nombre}`,
             apellido:`${user.apellido}`,
@@ -212,7 +218,7 @@ export const User = () => {
         
         setRol(r);
         user.rol=`${user.rol}`;
-    
+        setStateUser(true);
         setUserDialog(true);
     }
 
@@ -317,9 +323,9 @@ export const User = () => {
         
         var _roles = [...roles]
 
-        let country = _roles.find(el => el.id === rolFind);
-        console.log(country["rol"]);
-        return country;
+        let res = _roles.find(el => el.id === rolFind);
+        console.log(res["rol"]);
+        return res;
     }
 
     const leftToolbarTemplate = () => {
@@ -359,6 +365,11 @@ export const User = () => {
                         </Row>
                     </ColumnGroup>;
 
+
+    const headerDialog =()=>{
+        return (stateUser)?"Actualizando usuario":"Añadir Usuario"
+    }
+
     return (
         <div className="p-grid crud-demo">
             <div className="p-col-12">
@@ -383,7 +394,7 @@ export const User = () => {
                     </DataTable>
 
 
-                    <Dialog visible={userDialog} style={{ width: '450px' }} header="Añadir Usuario" modal className="p-fluid" onHide={hideDialog}>
+                    <Dialog visible={userDialog} style={{ width: '450px' }} header={headerDialog} modal className="p-fluid" onHide={hideDialog}>
                         <form onSubmit={formik.handleSubmit}>
                             <div className="p-field mt-2" >
                                 <div className="p-inputgroup">

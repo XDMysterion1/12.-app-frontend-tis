@@ -28,6 +28,19 @@ export const Role = () => {
         .matches(/^^[a-zA-Z\s]+$/, "No se permiten numero o caracteres especiales")
         .min(2, "Como minimo 2 caracteres")
         .max(30, "Como maximo 30 caracteres")
+        .test('isRol','Ya existe el rol',
+        function (value) {
+               var _roles = [...roles]
+               let res = _roles.find(i => (i.rol).toLowerCase() === (value).toLowerCase() );
+                if(res === undefined){
+                    return true;
+                }else{
+                    return false;
+                }
+                 
+           }
+           
+       )
       });
       const formik = useFormik({
         initialValues: {
@@ -81,6 +94,7 @@ export const Role = () => {
     const [submitted, setSubmitted]                  = useState(false);
     const toast                                      = useRef(null);
     const dt                                         = useRef(null);
+    const [stateRole,setStateRole]                   = useState(false);
 
 
     useEffect(()=>{
@@ -103,6 +117,7 @@ export const Role = () => {
         setRole(emptyRole);
         formik.resetForm();
         setSubmitted(false);
+        setStateRole(false);
         setRoleDialog(true);      
     }
 
@@ -119,6 +134,7 @@ export const Role = () => {
     const editRole = (role) => {
         setRole({ ...role });
         formik.setValues({rol:`${role.rol}`});
+        setStateRole(true);
         setRoleDialog(true);
     }
 
@@ -213,6 +229,10 @@ export const Role = () => {
                         </Row>
                     </ColumnGroup>;
 
+const headerDialog =()=>{
+    return (stateRole)?"Actualizando Rol":"Añadir Rol"
+}
+
     return (
         <div className="p-grid crud-demo">
             <div className="p-col-12">
@@ -233,7 +253,7 @@ export const Role = () => {
                     </DataTable>
 
 
-                    <Dialog visible={roleDialog} style={{ width: '450px' }} header="Añadir Rol" modal className="p-fluid" onHide={hideDialog}>  
+                    <Dialog visible={roleDialog} style={{ width: '450px' }} header={headerDialog} modal className="p-fluid" onHide={hideDialog}>  
                         <form onSubmit={formik.handleSubmit}>
                             <div className="form-group">
                                 <div className="p-field mt-2">
