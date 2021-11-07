@@ -10,45 +10,58 @@ import { InputText }        from 'primereact/inputtext';
 import { ColumnGroup }      from 'primereact/columngroup';
 import { Row }              from 'primereact/row';
 import { useFormik }        from "formik";
-import * as Yup             from 'yup';
-
-import rolImg          from '../icon/rol.png';
-import rolImgDark      from '../icon/rol-dark.png';
-
-import { Avatar }    from 'primereact/avatar';
 
 import uniqid               from 'uniqid';
 
 import { getRoles,createRol,updateRolID,deleteRolID } from '../service/apiRole';
 
-export const Role = () => {
+export const Role = (props) => {
 
-    const validationSchema = Yup.object().shape({
-        rol: Yup.string().required("Se requiero el Rol")
-        .matches(/^^[a-zA-Z\s]+$/, "No se permiten numero o caracteres especiales")
-        .min(2, "Como minimo 2 caracteres")
-        .max(30, "Como maximo 30 caracteres")
-        .test('isRol','Ya existe el rol',
-        function (value) {
-               var _roles = [...roles]
-               let res = _roles.find(i => (i.rol).toLowerCase() === (value).toLowerCase() );
-                if(res === undefined){
-                    return true;
-                }else{
-                    return false;
-                }
-                 
-           }
-           
-       )
-      });
-      const formik = useFormik({
+    
+    let emptyRole = {
+        id: null,
+        rol: ''
+    };
+
+    const [roles, setRoles]                          = useState(null);
+    const [roleDialog, setRoleDialog]                = useState(false);
+    const [deleteRoleDialog, setDeleteRoleDialog]    = useState(false);
+
+    const [role, setRole]                            = useState(emptyRole);
+    const [selectedRoles, setSelectedRoles]          = useState(null);
+    const [submitted, setSubmitted]                  = useState(false);
+    const toast                                      = useRef(null);
+    const dt                                         = useRef(null);
+    const [stateRole,setStateRole]                   = useState(false);
+    const [showMessage, setShowMessage]              = useState(false);
+    const [rolUpdate, setRolUpdate]                  = useState("");
+
+    const formik = useFormik({
         initialValues: {
           rol: ""
         },
-        validationSchema,
+        validate: (data) => {
+            let errors = {};
+
+            if (!data.rol) {
+                errors.rol = "Se requiero el Rol";
+            } else if (data.rol.length < 2) {
+                errors.rol = "Como minimo 2 caracteres";
+            } else if (data.rol.length > 30) {
+                errors.rol = "Como maximo 30 caracteres";
+            } else if (!/^^[a-zA-Z\s]+$/i.test(data.rol)) {
+                errors.rol = "No se permiten numero o caracteres especiales";
+            }else if(!esRepetidoUpdate(data.rol,rolUpdate)&&stateRole === true){
+                errors.rol = "Ya existe el rol";  
+            }else if(!esRepetido(data.rol)&&stateRole === false){
+                errors.rol = "Ya existe el rol";
+            }
+
+            return errors;
+        },
         onSubmit: (data) => {
             setSubmitted(true);
+            setShowMessage(true);
             let _roles = [...roles];
             let _role  = {...role };
             _role['rol'] = data.rol;
@@ -79,22 +92,30 @@ export const Role = () => {
         },
       });
 
-
-    let emptyRole = {
-        id: null,
-        rol: ''
+    const isFormFieldValid = (name) => !!(formik.touched[name] && formik.errors[name]);
+    const getFormErrorMessage = (name) => {
+         return isFormFieldValid(name) && <small className="ml-1 p-error" style={{'color': '#ff0000'}}>{formik.errors[name]}</small>;
     };
 
-    const [roles, setRoles]                          = useState(null);
-    const [roleDialog, setRoleDialog]                = useState(false);
-    const [deleteRoleDialog, setDeleteRoleDialog]    = useState(false);
-
-    const [role, setRole]                            = useState(emptyRole);
-    const [selectedRoles, setSelectedRoles]          = useState(null);
-    const [submitted, setSubmitted]                  = useState(false);
-    const toast                                      = useRef(null);
-    const dt                                         = useRef(null);
-    const [stateRole,setStateRole]                   = useState(false);
+    const esRepetido =(value)=>{
+        var _roles = [...roles];
+        let res = _roles.find(i => (i.rol).toLowerCase() === (value).toLowerCase() );
+         if(res === undefined){
+             return true;
+         }else{
+             return false;
+         }
+    }
+    const esRepetidoUpdate =(value,original)=>{
+        var _roles = [...roles];
+        let aux = _roles.filter(i =>(i.rol).toLowerCase() != (original).toLowerCase())
+        let res = aux.find(i => (i.rol).toLowerCase() === (value).toLowerCase() );
+         if(res === undefined || res === original){
+             return true;
+         }else{
+             return false;
+         }
+    }
 
 
     useEffect(()=>{
@@ -115,9 +136,9 @@ export const Role = () => {
 
     const openNew = () => {
         setRole(emptyRole);
-        formik.resetForm();
         setSubmitted(false);
         setStateRole(false);
+        formik.resetForm();
         setRoleDialog(true);      
     }
 
@@ -133,7 +154,9 @@ export const Role = () => {
 
     const editRole = (role) => {
         setRole({ ...role });
+        formik.setValues({rol:''});
         formik.setValues({rol:`${role.rol}`});
+        setRolUpdate(`${role.rol}`);
         setStateRole(true);
         setRoleDialog(true);
     }
@@ -172,12 +195,6 @@ export const Role = () => {
     }
 
 
-    const onInputChange = (e, name) => {
-        const val = (e.target && e.target.value) || '';
-        let _role = { ...role };
-        _role[`${name}`] = val;
-        setRole(_role);
-    }
     const idBodyTemplate = (rowData) => {
         return (
             <>
@@ -259,12 +276,13 @@ const headerDialog =()=>{
                                 <div className="p-field mt-2">
                                     <div className="p-inputgroup">
                                             <span className="p-inputgroup-addon">
-                                                <Avatar  image={rolImg} style={{'height': '1.2em','width':'1.2em',}}/>   
+                                                <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/rol.png' : 'assets/layout/images/rol-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>   
+                                                
                                             </span>
                                             <InputText id="rol" type="text" name="rol" value={formik.values.rol} onChange={formik.handleChange} placeholder="Rol" autoFocus/>
                                     </div>       
                                 </div>
-                                <small className="p-invalid" style={{'color': '#ff0000'}}>{formik.errors.rol ? formik.errors.rol : null}</small>
+                                {getFormErrorMessage('rol')}
                             </div>
                             <div className='mt-2'>
                                 <div className="flex justify-content-center flex-wrap">

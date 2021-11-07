@@ -1,7 +1,4 @@
 import React,{useEffect,useState,useRef}   from 'react';
-import avatar          from '../icon/avatar.png';
-import gmail                from '../icon/gmail.png';
-import password             from '../icon/password.png';
 
 import { Avatar }           from 'primereact/avatar';
 import { InputText }        from 'primereact/inputtext';
@@ -10,49 +7,17 @@ import { Button }           from 'primereact/button';
 import { Toast }            from 'primereact/toast';
 
 import { useFormik }        from "formik";
-import * as Yup             from 'yup';
 import uniqid               from 'uniqid';
 
 import { createUser,getUsers} from '../service/apiUser';
 
-export const Register = () =>{
+export const Register = (props) =>{
 
     const toast                           = useRef(null);
+    const [users, setUsers]               = useState(null);
+    const [emailUpdate, setEmailUpdate]   = useState("");
 
-    const validationSchema = Yup.object().shape({
-        nombre: Yup.string().required("Se requiero el nombre")
-        .matches(/^^[a-zA-Z\s]+$/, "No se permiten numero o caracteres especiales")
-        .min(2, "Como minimo 2 caracteres")
-        .max(30, "Como maximo 30 caracteres"),
-        apellido: Yup.string().required("Se requiero el apellido")
-        .matches(/^^[a-zA-Z\s]+$/, "No se permiten numero o caracteres especiales")
-        .min(2, "Como minimo 2 caracteres")
-        .max(30, "Como maximo 30 caracteres"),
-        email: Yup.string().required("Se requiero el correo electronico")
-        .email("Correo electronico no valido")
-        .max(255, "Como maximo 30 caracteres")
-        .test('isEmail','Ya existe el correo electronico',
-        function (value) {
-               var _users = [...users]
-               let res = _users.find(i => (i.email).toLowerCase() === (value).toLowerCase() );
-                if(res === undefined){
-                    return true;
-                }else{
-                    return false;
-                }
-                 
-           }
-           
-       ),
-        password: Yup.string().required("Se requiero el contraseña")
-        .min(6, "Como minimo 6 caracteres")
-        .max(255, "Como maximo 30 caracteres"),
-        confirmPassword:Yup.string().required("Se requiero confirmar la contraseña")
-        .oneOf([Yup.ref("password"), null], "Las contraseñas deben coincidir")
-
-      });
-
-      const formik = useFormik({
+    const formik = useFormik({
         initialValues: {
             nombre:    "",
             apellido:  "",
@@ -60,7 +25,56 @@ export const Register = () =>{
             password:  "",
             confirmPassword : ""
         },
-        validationSchema,
+        validate: (data) => {
+            let errors = {};
+
+            if (!data.nombre) {
+                errors.nombre = "Se requiero el nombre";
+            } else if (data.nombre.length < 2) {
+                errors.nombre = "Como minimo 2 caracteres";
+            } else if (data.nombre.length > 30) {
+                errors.nombre = "Como maximo 30 caracteres";
+            } else if (!/^^[a-zA-Z\s]+$/i.test(data.nombre)) {
+                errors.nombre = "No se permiten numero o caracteres especiales";
+            }
+
+            if (!data.apellido) {
+                errors.apellido = "Se requiero el apellido";
+            } else if (data.apellido.length < 2) {
+                errors.apellido = "Como minimo 2 caracteres";
+            } else if (data.apellido.length > 30) {
+                errors.apellido = "Como maximo 30 caracteres";
+            }else if (!/^^[a-zA-Z\s]+$/i.test(data.apellido)) {
+                errors.apellido = "No se permiten numero o caracteres especiales";
+            }
+
+            if (!data.email) {
+                errors.email = "Se requiero el correo electronico";
+            } else if (data.email.length > 255) {
+                errors.email = "Como maximo 255 caracteres";
+            } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(data.email)) {
+                errors.email = 'Dirección de correo electrónico inválida. P.ej. ejemplo@email.com';
+            }else if(!esRepetido(data.email)){
+                errors.email = "Ya existe el correo electronico";
+            }
+
+            if (!data.password) {
+                errors.password = "Se requiero el contraseña";
+            } else if (data.password.length < 6) {
+                errors.password = "Como minimo 6 caracteres";
+            } else if (data.password.length > 255) {
+                errors.password = "Como maximo 255 caracteres";
+            }
+
+            if (!data.confirmPassword) {
+                errors.confirmPassword = "Se requiero la confirmacion de la contraseña";
+            }else if (data.confirmPassword != data.password) {
+                errors.confirmPassword = "Las contraseñas deben coincidir";
+            } 
+
+            return errors;
+        },
+
         onSubmit: (data) => {
             let idUser = uniqid("user-");
             let rolUser= "rol-kvjva7f6"; 
@@ -69,8 +83,23 @@ export const Register = () =>{
             formik.resetForm();    
         },
       });
-    const [users, setUsers]  = useState(null);
 
+
+    const isFormFieldValid = (name) => !!(formik.touched[name] && formik.errors[name]);
+    const getFormErrorMessage = (name) => {
+        return isFormFieldValid(name) && <small className="ml-2 p-error" style={{'color': '#ff0000'}}>{formik.errors[name]}</small>;
+    };
+
+
+    const esRepetido =(value)=>{
+        var _users = [...users];
+        let res = _users.find(i => (i.email).toLowerCase() === (value).toLowerCase() );
+         if(res === undefined){
+             return true;
+         }else{
+             return false;
+         }
+    }
 
     useEffect(()=>{
         fetchUsers();
@@ -92,7 +121,7 @@ export const Register = () =>{
             <Toast ref={toast} />
             <div className="lg:col-3"></div>
             <div className=" lg:col-3 md:col-3">
-                <div className="card p-fluid">
+                <div className="card p-fluid" style={props.layoutColorMode === 'light' ?{ 'border': 'black 2px outset' }:{ 'border': 'white 2px outset' }}>
                     <form onSubmit={formik.handleSubmit}>
                         <div className='grid flex justify-content-center'>
                             <div className="flex align-items-center justify-content-center  ">
@@ -111,7 +140,7 @@ export const Register = () =>{
                                 </div>
                             </div>   
                         </div>
-                        <small className="p-invalid ml-3" style={{'color': '#ff0000'}}>{formik.errors.nombre ? formik.errors.nombre : null}</small>
+                        {getFormErrorMessage('nombre')}
                         
                         <div className='grid flex justify-content-center'>
                             <div className="flex align-items-center justify-content-center  ">
@@ -125,49 +154,49 @@ export const Register = () =>{
                                 </div>
                             </div>
                         </div>
-                        <small className="p-invalid ml-3" style={{'color': '#ff0000'}}>{formik.errors.apellido ? formik.errors.apellido : null}</small>
+                        {getFormErrorMessage('apellido')}
                         
                         <div className='grid flex justify-content-center'>
                             <div className="flex align-items-center justify-content-center  ">
                                 <div className="p-field mt-1 lg:col-12">
                                     <div className="p-inputgroup">
                                             <span className="p-inputgroup-addon">
-                                                <Avatar image={gmail} style={{'height': '1.2em','width':'1.2em',}}/>   
+                                                <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/gmail.png' : 'assets/layout/images/gmail-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>   
                                             </span>
                                             <InputText id="email" name='email' placeholder="Correo electronico" value={formik.values.email} onChange={formik.handleChange}/>
                                     </div>       
                                 </div>
                             </div>
                         </div>
-                        <small className="p-invalid ml-3" style={{'color': '#ff0000'}}>{formik.errors.email ? formik.errors.email : null}</small>
+                        {getFormErrorMessage('email')}
 
                         <div className='grid flex justify-content-center'>
                             <div className="flex align-items-center justify-content-center  ">
                                 <div className="p-field mt-1 lg:col-11">
                                     <div className="p-inputgroup">
                                             <span className="p-inputgroup-addon">
-                                                <Avatar image={password} style={{'height': '1.2em','width':'1.2em',}}/>   
+                                                <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/password.png' : 'assets/layout/images/password-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>   
                                             </span>
                                             <Password id="password" name='password' placeholder="Contraseña" value={formik.values.password} onChange={formik.handleChange} toggleMask  promptLabel="Por favor ingrese una contraseña" weakLabel="Débil" mediumLabel="Medio" strongLabel="Fuerte"/>
                                     </div>       
                                 </div>
                             </div>
                         </div>
-                        <small className="p-invalid ml-3" style={{'color': '#ff0000'}}>{formik.errors.password ? formik.errors.password : null}</small>
+                        {getFormErrorMessage('password')}
 
                         <div className='grid flex justify-content-center'>
                             <div className="flex align-items-center justify-content-center  ">
                                 <div className="p-field mt-1 lg:col-11">
                                     <div className="p-inputgroup">
                                             <span className="p-inputgroup-addon">
-                                                <Avatar image={password} style={{'height': '1.2em','width':'1.2em',}}/>   
+                                                <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/password.png' : 'assets/layout/images/password-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>   
                                             </span>
                                             <Password id="confirmPassword" name='confirmPassword' placeholder="Repite la contraseña" value={formik.values.confirmPassword} onChange={formik.handleChange} toggleMask  promptLabel="Por favor ingrese una contraseña" weakLabel="Débil" mediumLabel="Medio" strongLabel="Fuerte"/>
                                     </div>       
                                 </div>
                             </div>
                         </div>
-                        <small className="p-invalid ml-3" style={{'color': '#ff0000'}}>{formik.errors.confirmPassword ? formik.errors.confirmPassword : null}</small>
+                        {getFormErrorMessage('confirmPassword')}
                        
                         <div className='grid flex justify-content-center'>
                             <div className="flex align-items-center justify-content-center  ">

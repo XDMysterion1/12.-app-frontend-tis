@@ -1,7 +1,10 @@
 import React,{useEffect,useState}   from 'react';
-import avatar          from '../icon/avatar.png';
+import avatar               from '../icon/avatar.png';
+import avatarDark           from '../icon/avatar-dark.png';
 import gmail                from '../icon/gmail.png';
 import password             from '../icon/password.png';
+import gmailDark            from '../icon/gmail-dark.png';
+import passwordDark         from '../icon/password-dark.png';
 
 import { Avatar }           from 'primereact/avatar';
 import { InputText }        from 'primereact/inputtext';
@@ -11,34 +14,50 @@ import { Button }           from 'primereact/button';
 import { useFormik }        from "formik";
 import * as Yup             from 'yup';
 
-export const LoginApp = () =>{
-
-    const validationSchema = Yup.object().shape({
-        email: Yup.string().required("Se requiero el correo electronico")
-        .email("Correo electronico no valido")
-        .max(255, "Como maximo 30 caracteres"),
-        password: Yup.string().required("Se requiero el contraseña")
-        .min(6, "Como minimo 6 caracteres")
-        .max(255, "Como maximo 30 caracteres")
-      });
+export const LoginApp = (props) =>{
 
       const formik = useFormik({
         initialValues: {
             email:     "",
             password:  ""
         },
-        validationSchema,
+        validate: (data) => {
+            let errors = {};
+
+            if (!data.email) {
+                errors.email = "Se requiero el correo electronico";
+            } else if (data.email.length > 255) {
+                errors.email = "Como maximo 255 caracteres";
+            } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(data.email)) {
+                errors.email = 'Dirección de correo electrónico inválida. P.ej. ejemplo@email.com';
+            }
+
+            if (!data.password) {
+                errors.password = "Se requiero el contraseña";
+            } else if (data.password.length < 6) {
+                errors.password = "Como minimo 6 caracteres";
+            } else if (data.password.length > 255) {
+                errors.password = "Como maximo 255 caracteres";
+            }
+
+            return errors;
+        },
         onSubmit: (data) => {
             console.log(data);
             formik.resetForm();    
         },
       });
 
+    const isFormFieldValid = (name) => !!(formik.touched[name] && formik.errors[name]);
+    const getFormErrorMessage = (name) => {
+        return isFormFieldValid(name) && <small className="ml-3 p-error" style={{'color': '#ff0000'}}>{formik.errors[name]}</small>;
+    };
+
     return(
         <div className="grid justify-content-evenly">
             <div className="lg:col-3"></div>
             <div className=" lg:col-3 md:col-3">
-                <div className="card p-fluid">
+                <div className="card p-fluid" style={props.layoutColorMode === 'light' ?{ 'border': 'black 2px outset' }:{ 'border': 'white 2px outset' }}>
                     <form onSubmit={formik.handleSubmit}>
                         <div className='grid flex justify-content-center'>
                             <div className="flex align-items-center justify-content-center  m-2">
@@ -47,7 +66,7 @@ export const LoginApp = () =>{
                         </div>
                         <div className='grid flex justify-content-center'>
                             <div className="flex align-items-center justify-content-center  m-2">
-                                <Avatar image={avatar} className="p-avatar-xl"  shape="circle"  size="xlarge" style={{'height': '4em','width':'4em',}}/>               
+                                <img src={props.layoutColorMode === 'light' ? 'assets/layout/images/avatar.png' : 'assets/layout/images/avatar-dark.png'} className="p-avatar-xl"  shape="circle"  size="xlarge" style={{'height': '8em','width':'8em',}}/>               
                             </div>
                         </div>
                         <div className='grid flex justify-content-center'>
@@ -55,28 +74,28 @@ export const LoginApp = () =>{
                                 <div className="p-field mt-1 lg:col-11">
                                     <div className="p-inputgroup">
                                             <span className="p-inputgroup-addon">
-                                                <Avatar image={gmail} style={{'height': '1.2em','width':'1.2em',}}/>   
+                                                <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/gmail.png' : 'assets/layout/images/gmail-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>   
                                             </span>
                                             <InputText id="email" name='email' placeholder="Correo electronico" value={formik.values.email} onChange={formik.handleChange} autoFocus/>
                                     </div>       
                                 </div>
                             </div>
                         </div>
-                        <small className="p-invalid ml-4" style={{'color': '#ff0000'}}>{formik.errors.email ? formik.errors.email : null}</small>
+                        {getFormErrorMessage('email')}
                         
                         <div className='grid flex justify-content-center'>
                             <div className="flex align-items-center justify-content-center">
                                 <div className="p-field mt-1 lg:col-10">
                                     <div className="p-inputgroup">
                                             <span className="p-inputgroup-addon">
-                                                <Avatar image={password} style={{'height': '1.2em','width':'1.2em',}}/>   
+                                                <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/password.png' : 'assets/layout/images/password-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>      
                                             </span>
                                             <Password id="password" name='password' placeholder="Contraseña" value={formik.values.password} onChange={formik.handleChange} toggleMask  promptLabel="Por favor ingrese una contraseña" weakLabel="Débil" mediumLabel="Medio" strongLabel="Fuerte"/>
                                     </div>       
                                 </div>
                             </div>
                         </div>
-                        <small className="p-invalid ml-4" style={{'color': '#ff0000'}}>{formik.errors.password ? formik.errors.password : null}</small>
+                        {getFormErrorMessage('password')}
                         
                         <div className='grid flex justify-content-center'>
                             <div className="flex align-items-center justify-content-center  m-2">

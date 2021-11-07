@@ -94,12 +94,12 @@ export const AppTopbar = (props) => {
                 }
                 {         
                     <Sidebar visible={visibleRight} fullScreen onHide={() => setVisibleRight(false)} icons={customIconsRight} showCloseIcon={false}>
-                        <LoginApp/>
+                        <LoginApp {...props}/>
                     </Sidebar>
                 }
                 {
                     <Sidebar visible={visibleLeft} fullScreen  onHide={() => setVisibleLeft(false)} icons={customIconsLeft} showCloseIcon={false}>
-                        <Register/>
+                        <Register {...props}/>
                     </Sidebar>
                 }
 

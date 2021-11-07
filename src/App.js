@@ -231,8 +231,8 @@ const App = () => {
             <div className="layout-main-container">
                 <div className="layout-main">
                     <Route path="/"                exact component={Dashboard}/>
-                    <Route path="/Role"                  component={Role}/>
-                    <Route path="/User"                  component={User}/>
+                    <Route path="/Role"            exact={true} render={props => <Role layoutColorMode={layoutColorMode} {...props} />}/>
+                    <Route path="/User"            exact={true} render={props => <User layoutColorMode={layoutColorMode} {...props} />}/>
 
                     <Route path="/RegisterUser"          component={RegisterUser}/>
                     <Route path="/ShowEmpresa"           component={ShowEmpresa}/>
