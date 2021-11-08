@@ -50,3 +50,12 @@ export const updateUserID =(data,id) =>{
 export const deleteUserID =(id) =>{
     return axios.delete(`https://magic-tech-backend.herokuapp.com/api/deleteUserId/${id}`);
 }
+
+export async function login(data){
+
+  return await axios.post('https://magic-tech-backend.herokuapp.com/api/login', 
+  {
+     email:     `${data.email}`,
+     password:  `${data.password}`
+  })
+}

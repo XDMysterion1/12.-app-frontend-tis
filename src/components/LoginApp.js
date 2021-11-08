@@ -1,22 +1,22 @@
 import React,{useEffect,useState}   from 'react';
-import avatar               from '../icon/avatar.png';
-import avatarDark           from '../icon/avatar-dark.png';
-import gmail                from '../icon/gmail.png';
-import password             from '../icon/password.png';
-import gmailDark            from '../icon/gmail-dark.png';
-import passwordDark         from '../icon/password-dark.png';
 
-import { Avatar }           from 'primereact/avatar';
 import { InputText }        from 'primereact/inputtext';
 import { Password }         from 'primereact/password';
 import { Button }           from 'primereact/button';
 
 import { useFormik }        from "formik";
-import * as Yup             from 'yup';
+import { useHistory }       from 'react-router-dom';
+
+import { login,getUsers }         from '../service/apiUser';
 
 export const LoginApp = (props) =>{
 
-      const formik = useFormik({
+    const [search,setSearch] = useState(null);
+    const [users, setUsers]  = useState(null);
+    const history            = useHistory();
+
+
+    const formik = useFormik({
         initialValues: {
             email:     "",
             password:  ""
@@ -43,15 +43,71 @@ export const LoginApp = (props) =>{
             return errors;
         },
         onSubmit: (data) => {
-            console.log(data);
-            formik.resetForm();    
+            if(Search(data)){
+                history.push('/');
+            }else{
+                formik.resetForm();  
+            }
         },
       });
+
+    const Search=(data)=>{
+        let res;
+        if (users?.length) {
+            users.map((u) => {
+               if (u.email.toLowerCase() === data.email.toLowerCase() && u.password === data.password) {
+                    res = true;
+               }else{
+                    res = false;
+                }
+            })
+        }  
+        return res;  
+    }
+
+
+    const  fetchSearch = (data) =>{
+        login( {
+                email:     `${data.email}`,
+                password:  `${data.password}`
+        })
+        .then(json =>{
+            if(json.error){
+                console.log("Error");
+            }else{
+                setSearch(json.data);
+                console.log('-----------------data search-----------');
+                console.log(search);
+                console.log('-----------------1 search-----------');
+                console.log(search.id);
+                console.log(search.nombre);
+                console.log(search.apellido);
+                console.log(search.email);
+                console.log(search.password);
+                console.log(search.rol);
+            }
+        })
+    } 
 
     const isFormFieldValid = (name) => !!(formik.touched[name] && formik.errors[name]);
     const getFormErrorMessage = (name) => {
         return isFormFieldValid(name) && <small className="ml-3 p-error" style={{'color': '#ff0000'}}>{formik.errors[name]}</small>;
     };
+
+    useEffect(()=>{
+        fetchUsers();
+    },[])
+
+    const fetchUsers = () =>{
+        getUsers().then(json =>{
+            if(json.error){
+                console.log("Error");
+            }else{
+                console.log("---------Users insertados-----------");
+                setUsers(json.data);
+            }
+        })
+    }
 
     return(
         <div className="grid justify-content-evenly">

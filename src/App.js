@@ -157,6 +157,15 @@ const App = () => {
         return window.innerWidth >= 992;
     }
 
+    const menu0 = [
+        {
+            label: 'Home',
+            items: [{
+                label: 'Tablero', icon: 'pi pi-fw pi-home', to: '/'
+            }]
+        }
+    ];
+
     const menu = [
         {
             label: 'Home',
@@ -190,8 +199,6 @@ const App = () => {
                 {label: 'Avisos', icon: 'pi pi-fw pi-id-card', to: '/Aviso'}
             ]
         },
- 
-    
     ];
 
     const addClass = (element, className) => {

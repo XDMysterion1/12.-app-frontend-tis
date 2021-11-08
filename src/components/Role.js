@@ -53,7 +53,7 @@ export const Role = (props) => {
                 errors.rol = "No se permiten numero o caracteres especiales";
             }else if(!esRepetidoUpdate(data.rol,rolUpdate)&&stateRole === true){
                 errors.rol = "Ya existe el rol";  
-            }else if(!esRepetido(data.rol)&&stateRole === false){
+            }else if(!esRepetido(data.rol)){
                 errors.rol = "Ya existe el rol";
             }
 

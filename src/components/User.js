@@ -81,7 +81,7 @@ export const User = (props) => {
                 errors.email = "Como maximo 255 caracteres";
             } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(data.email)) {
                 errors.email = 'Dirección de correo electrónico inválida. P.ej. ejemplo@email.com';
-            }else if(!esRepetido(data.email)&&stateUser === false){
+            }else if(!esRepetido(data.email)){
                 errors.email = "Ya existe el correo electronico";
             } else if(!esRepetidoUpdate(data.email,emailUpdate) && stateUser === true){
                 errors.email = "Ya existe el correo electronico";  
