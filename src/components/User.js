@@ -336,8 +336,6 @@ export const User = (props) => {
             <>
                 <span className="p-column-title">Rol</span>
                 {rowData.rol}
-               
-
             </>
         );
     }

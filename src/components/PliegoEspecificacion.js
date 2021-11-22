@@ -7,6 +7,7 @@ import { Button }           from 'primereact/button';
 import { Toolbar }          from 'primereact/toolbar';
 import { Dialog }           from 'primereact/dialog';
 import { InputText }        from 'primereact/inputtext';
+import { InputTextarea }    from 'primereact/inputtextarea';
 import { Password }         from 'primereact/password';
 import { ColumnGroup }      from 'primereact/columngroup';
 import { Row }              from 'primereact/row';
@@ -68,7 +69,7 @@ export const PliegoEspecificacion = (props) => {
                 errors.titulo = "Como minimo 2 caracteres";
             } else if (data.titulo.length > 30) {
                 errors.titulo = "Como maximo 30 caracteres";
-            } else if (!/^^[a-zA-Z\s]+$/i.test(data.titulo)) {
+            } else if (!/^^[a-zA-Z0-9\s]+$/i.test(data.titulo)) {
                 errors.titulo = "No se permiten numero o caracteres especiales";
             }
 
@@ -97,8 +98,6 @@ export const PliegoEspecificacion = (props) => {
                 errors.link = "Se requiero el link";
             }else if (data.link.length > 500) {
                 errors.link = "Como maximo 500 caracteres";
-            }else if (!/^((http|https):\/\/)?(www.)?(?!.*(http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+(\/)?.([\w\?[a-zA-Z-_%\/@?]+)*([^\/\w\?[a-zA-Z0-9_-]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?$/.test(data.link)) {
-                errors.link = "El link no es valido";
             }
 
             if (!data.user) {
@@ -424,7 +423,7 @@ export const PliegoEspecificacion = (props) => {
                                         <span className="p-inputgroup-addon">
                                             <i className="pi pi-link"></i>
                                         </span>
-                                        <InputText id="link" name='link' placeholder="Link"  value={formik.values.link} onChange={formik.handleChange}/>
+                                        <InputTextarea id="link" name='link' placeholder="Link"  value={formik.values.link} onChange={formik.handleChange}/>
                                 </div>       
                             </div>
                             {getFormErrorMessage('link')}
