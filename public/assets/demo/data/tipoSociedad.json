@@ -1,0 +1,9 @@
+{
+    "data": [
+        { "nombre": "Sociedad de Responsabilidad Limitada"       , "tipoSociedad":"S.R.L."},
+        { "nombre": "Sociedad Anónima"                           , "tipoSociedad":"S.A."},
+        { "nombre": "Sociedad Colectiva"                         , "tipoSociedad":"S.C."},
+        { "nombre": "Sociedad Anónima Mixta o de Economía Mixta" , "tipoSociedad":"S.A.M."},
+        { "nombre": "Sociedad en Comandita Simple"               , "tipoSociedad":"S.C.S."}
+    ]
+}

@@ -11,35 +11,11 @@ import { AppConfig }        from './AppConfig';
 import { Dashboard }             from './components/Dashboard';
 import { Role }                  from './components/Role';
 import { User }                  from './components/User';
-import { RegisterUser }          from './components/RegisterUser';
-import { ShowEmpresa }           from './components/ShowEmpresa';
-import { RegisterEmpresa }       from './components/RegisterEmpresa';
+import {Empresa}                 from './components/Empresa';
 import { Convocatoria }          from './components/Convocatoria';
 import { PliegoEspecificacion }  from './components/PliegoEspecificacion';
 import { Aviso }                 from './components/Aviso';
 
-
-
-import { ButtonDemo }       from './components/ButtonDemo';
-import { ChartDemo }        from './components/ChartDemo';
-import { Documentation }    from './components/Documentation';
-import { FileDemo }         from './components/FileDemo';
-import { FloatLabelDemo }   from './components/FloatLabelDemo';
-import { FormLayoutDemo }   from './components/FormLayoutDemo';
-import { InputDemo }        from './components/InputDemo';
-import { ListDemo }         from './components/ListDemo';
-import { MenuDemo }         from './components/MenuDemo';
-import { MessagesDemo }     from './components/MessagesDemo';
-import { MiscDemo }         from './components/MiscDemo';
-import { OverlayDemo }      from './components/OverlayDemo';
-import { PanelDemo }        from './components/PanelDemo';
-import { TableDemo }        from './components/TableDemo';
-import { TreeDemo }         from './components/TreeDemo';
-import { InvalidStateDemo } from './components/InvalidStateDemo';
-
-import { Crud }             from './pages/Crud';
-import { EmptyPage }        from './pages/EmptyPage';
-import { TimelineDemo }     from './pages/TimelineDemo';
 
 import PrimeReact           from 'primereact/api';
 
@@ -187,6 +163,12 @@ const App = () => {
             ]
         },
         {
+            label: 'Gestion de Empresa', icon: 'pi pi-fw pi-sitemap',
+            items: [
+                {label: 'Empresas', icon: 'pi pi-fw pi-user', to: '/Empresa'},
+            ]
+        },
+        {
             label: 'Gestion Publicacion', icon: 'pi pi-fw pi-sitemap',
             items: [
                 {label: 'Convocatoria', icon: 'pi pi-fw pi-id-card', to: '/Convocatoria'},
@@ -237,36 +219,14 @@ const App = () => {
 
             <div className="layout-main-container">
                 <div className="layout-main">
-                    <Route path="/"                exact component={Dashboard}/>
-                    <Route path="/Role"            exact={true} render={props => <Role layoutColorMode={layoutColorMode} {...props} />}/>
-                    <Route path="/User"            exact={true} render={props => <User layoutColorMode={layoutColorMode} {...props} />}/>
-
-                    <Route path="/RegisterUser"          component={RegisterUser}/>
-                    <Route path="/ShowEmpresa"           component={ShowEmpresa}/>
-                    <Route path="/RegisterEmpresa"       component={RegisterEmpresa}/>
-                    <Route path="/Convocatoria"          component={Convocatoria}/>
-                    <Route path="/PliegoEspecificacion"  component={PliegoEspecificacion}/>
+                    <Route path="/"                      exact component={Dashboard}/>
+                    <Route path="/Role"                  exact={true} render={props => <Role                 layoutColorMode={layoutColorMode} {...props} />}/>
+                    <Route path="/User"                  exact={true} render={props => <User                 layoutColorMode={layoutColorMode} {...props} />}/>
+                    <Route path="/Empresa"               exact={true} render={props => <Empresa              layoutColorMode={layoutColorMode} {...props} />}/>
+                    <Route path="/Convocatoria"          exact={true} render={props => <Convocatoria         layoutColorMode={layoutColorMode} {...props} />}/>
+                    <Route path="/PliegoEspecificacion"  exact={true} render={props => <PliegoEspecificacion layoutColorMode={layoutColorMode} {...props} />}/>
                     <Route path="/Aviso"                 component={Aviso}/>
 
-                    <Route path="/formlayout" component={FormLayoutDemo}/>
-                    <Route path="/input" component={InputDemo}/>
-                    <Route path="/floatlabel" component={FloatLabelDemo}/>
-                    <Route path="/invalidstate" component={InvalidStateDemo}/>
-                    <Route path="/button" component={ButtonDemo}/>
-                    <Route path="/table" component={TableDemo}/>
-                    <Route path="/list" component={ListDemo}/>
-                    <Route path="/tree" component={TreeDemo}/>
-                    <Route path="/panel" component={PanelDemo}/>
-                    <Route path="/overlay" component={OverlayDemo}/>
-                    <Route path="/menu" component={MenuDemo}/>
-                    <Route path="/messages" component={MessagesDemo}/>
-                    <Route path="/file" component={FileDemo}/>
-                    <Route path="/chart" component={ChartDemo}/>
-                    <Route path="/misc" component={MiscDemo}/>
-                    <Route path="/timeline" component={TimelineDemo}/>
-                    <Route path="/crud" component={Crud}/>
-                    <Route path="/empty" component={EmptyPage}/>
-                    <Route path="/documentation" component={Documentation}/>
                 </div>
 
                 <AppFooter layoutColorMode={layoutColorMode}/>

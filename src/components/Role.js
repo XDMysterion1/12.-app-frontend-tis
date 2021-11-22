@@ -99,7 +99,7 @@ export const Role = (props) => {
 
     const esRepetido =(value)=>{
         var _roles = [...roles];
-        let res = _roles.find(i => (i.rol).toLowerCase() === (value).toLowerCase() );
+        let res = _roles.find(i => (i.rol).toLowerCase().trim() === (value).toLowerCase().trim() );
          if(res === undefined){
              return true;
          }else{
@@ -109,7 +109,7 @@ export const Role = (props) => {
     const esRepetidoUpdate =(value,original)=>{
         var _roles = [...roles];
         let aux = _roles.filter(i =>(i.rol).toLowerCase() != (original).toLowerCase())
-        let res = aux.find(i => (i.rol).toLowerCase() === (value).toLowerCase() );
+        let res = aux.find(i => (i.rol).toLowerCase().trim() === (value).toLowerCase().trim() );
          if(res === undefined || res === original){
              return true;
          }else{
@@ -233,7 +233,7 @@ export const Role = (props) => {
     const deleteRoleDialogFooter = (
         <>
             <Button label="No" icon="pi pi-times" style={{'background': '#d13639','color':'#ffffff'}} className="p-button-text" onClick={hideDeleteRoleDialog} />
-            <Button label="Si" icon="pi pi-check" style={{'background': '#13af4e','color':'#ffffff'}} className="p-button-text" onClick={deleteRole} />
+            <Button label="Si" icon="pi pi-check" style={props.layoutColorMode === 'light' ? {'color':'#13af4e','border-color':'#13af4e'} : {'color':'#13af4e','border-color':'#13af4e'}} className="p-button-text" onClick={deleteRole} />
         </>
     );
 
@@ -287,7 +287,7 @@ const headerDialog =()=>{
                             <div className='mt-2'>
                                 <div className="flex justify-content-center flex-wrap">
                                     <div className="flex align-items-center justify-content-center  m-2">
-                                        <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} style={{'background': '#d13639','color':'#ffffff'}}/>
+                                        <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} style={props.layoutColorMode === 'light' ? {'color':'#d13639','border-color':'#d13639'} : {'color':'#d13639','border-color':'#d13639'}}/>
                                     </div>
                                     <div className="flex align-items-center justify-content-center  m-2">
                                         <Button label="Guardar"  icon="pi pi-check" type="submit" className="p-button-text" style={{'background': '#13af4e','color':'#ffffff'}}/>

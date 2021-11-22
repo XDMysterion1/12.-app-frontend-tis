@@ -10,7 +10,6 @@ import { InputText }        from 'primereact/inputtext';
 import { Password }         from 'primereact/password';
 import { ColumnGroup }      from 'primereact/columngroup';
 import { Row }              from 'primereact/row';
-import { Avatar }           from 'primereact/avatar';
 import { Dropdown }         from 'primereact/dropdown';
 import { useFormik }        from "formik";
 
@@ -372,7 +371,7 @@ export const User = (props) => {
     const deleteUserDialogFooter = (
         <>
             <Button label="No" icon="pi pi-times" style={{'background': '#d13639','color':'#ffffff'}} className="p-button-text" onClick={hideDeleteUserDialog} />
-            <Button label="Si" icon="pi pi-check" style={{'background': '#13af4e','color':'#ffffff'}} className="p-button-text" onClick={deleteUser} />
+            <Button label="Si" icon="pi pi-check" style={props.layoutColorMode === 'light' ? {'color':'#13af4e','border-color':'#13af4e'} : {'color':'#13af4e','border-color':'#13af4e'}} className="p-button-text" onClick={deleteUser} />
         </>
     );
 
@@ -481,7 +480,7 @@ export const User = (props) => {
                             <div className='mt-2'>
                                 <div className="flex justify-content-center flex-wrap">
                                     <div className="flex align-items-center justify-content-center  m-2">
-                                        <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} style={{'background': '#d13639','color':'#ffffff'}}/>
+                                        <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} style={props.layoutColorMode === 'light' ? {'color':'#d13639','border-color':'#d13639'} : {'color':'#d13639','border-color':'#d13639'}}/>
                                     </div>
                                     <div className="flex align-items-center justify-content-center  m-2">
                                         <Button label="Guardar"  icon="pi pi-check" type="submit" className="p-button-text" onClick={showDialog} style={{'background': '#13af4e','color':'#ffffff'}}/>  
