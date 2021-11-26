@@ -44,7 +44,7 @@ export const Role = (props) => {
             let errors = {};
 
             if (!data.rol) {
-                errors.rol = "Se requiero el Rol";
+                errors.rol = "Se requiere el rol";
             } else if (data.rol.length < 2) {
                 errors.rol = "Como minimo 2 caracteres";
             } else if (data.rol.length > 30) {
@@ -216,7 +216,8 @@ export const Role = (props) => {
     const leftToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <Button style={{'background': '#13af4e'}} label="Nuevo" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={openNew} />
+                <Button style={props.layoutColorMode === 'light' ? {'color':'#ffffff','background': '#13af4e'} : {'color':'#ffffff','background': '#13af4e'}} label="Nuevo" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={openNew} />
+                
             </React.Fragment>
         )
     }

@@ -55,7 +55,7 @@ export const User = (props) => {
             let errors = {};
 
             if (!data.nombre) {
-                errors.nombre = "Se requiero el nombre";
+                errors.nombre = "Se requiere el nombre";
             } else if (data.nombre.length < 2) {
                 errors.nombre = "Como minimo 2 caracteres";
             } else if (data.nombre.length > 30) {
@@ -65,7 +65,7 @@ export const User = (props) => {
             }
 
             if (!data.apellido) {
-                errors.apellido = "Se requiero el apellido";
+                errors.apellido = "Se requiere el apellido";
             } else if (data.apellido.length < 2) {
                 errors.apellido = "Como minimo 2 caracteres";
             } else if (data.apellido.length > 30) {
@@ -75,7 +75,7 @@ export const User = (props) => {
             }
 
             if (!data.email) {
-                errors.email = "Se requiero el correo electronico";
+                errors.email = "Se requiere el correo electronico";
             } else if (data.email.length > 255) {
                 errors.email = "Como maximo 255 caracteres";
             } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(data.email)) {
@@ -87,7 +87,7 @@ export const User = (props) => {
             }
 
             if (!data.password) {
-                errors.password = "Se requiero el contraseña";
+                errors.password = "Se requiere la contraseña";
             } else if (data.password.length < 6) {
                 errors.password = "Como minimo 6 caracteres";
             } else if (data.password.length > 255) {
@@ -95,7 +95,7 @@ export const User = (props) => {
             }
 
             if (!data.confirmPassword) {
-                errors.confirmPassword = "Se requiero la confirmacion de la contraseña";
+                errors.confirmPassword = "Se requiere la confirmacion de la contraseña";
             }else if (data.confirmPassword != data.password) {
                 errors.confirmPassword = "Las contraseñas deben coincidir";
             } 
@@ -352,7 +352,7 @@ export const User = (props) => {
     const leftToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <Button style={{'background': '#13af4e'}} label="Nuevo" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={openNew} />
+                <Button style={props.layoutColorMode === 'light' ? {'color':'#ffffff','background': '#13af4e'} : {'color':'#ffffff','background': '#13af4e'}} label="Nuevo" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={openNew} />
             </React.Fragment>
         )
     }

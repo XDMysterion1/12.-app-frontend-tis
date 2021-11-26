@@ -64,17 +64,17 @@ export const Convocatoria = (props) => {
             let errors = {};
 
             if (!data.titulo) {
-                errors.titulo = "Se requiero el titulo";
+                errors.titulo = "Se requiere el titulo";
             } else if (data.titulo.length < 2) {
                 errors.titulo = "Como minimo 2 caracteres";
-            } else if (data.titulo.length > 30) {
-                errors.titulo = "Como maximo 30 caracteres";
+            } else if (data.titulo.length > 50) {
+                errors.titulo = "Como maximo 50 caracteres";
             } else if (!/^^[a-zA-Z0-9\s]+$/i.test(data.titulo)) {
                 errors.titulo = "No se permiten numero o caracteres especiales";
             }
 
             if (!data.codigo) {
-                errors.codigo = "Se requiero el codigo";
+                errors.codigo = "Se requiere el codigo";
             } else if (data.codigo.length < 2) {
                 errors.codigo = "Como minimo 2 caracteres";
             } else if (data.codigo.length > 30) {
@@ -85,7 +85,7 @@ export const Convocatoria = (props) => {
 
             
             if (!data.semestre) {
-                errors.semestre = "Se requiero el semestre";
+                errors.semestre = "Se requiere el semestre";
             } else if (data.semestre.length < 2) {
                 errors.semestre = "Como minimo 2 caracteres";
             } else if (data.semestre.length > 30) {
@@ -95,7 +95,7 @@ export const Convocatoria = (props) => {
             }
 
             if (!data.link) {
-                errors.link = "Se requiero el link";
+                errors.link = "Se requiere el link";
             }else if (data.link.length > 500) {
                 errors.link = "Como maximo 500 caracteres";
             }
@@ -104,7 +104,7 @@ export const Convocatoria = (props) => {
             //}
 
             if (!data.user) {
-                errors.user = "Se requiero el user";
+                errors.user = "Se requiere el usuario";
             } else if (data.user.length < 2) {
                 errors.user = "Como minimo 2 caracteres";
             } else if (data.user.length > 30) {
@@ -326,7 +326,7 @@ export const Convocatoria = (props) => {
     const leftToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <Button style={{'background': '#13af4e'}} label="Nuevo" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={openNew} />
+                <Button style={props.layoutColorMode === 'light' ? {'color':'#ffffff','background': '#13af4e'} : {'color':'#ffffff','background': '#13af4e'}} label="Nuevo" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={openNew} />
             </React.Fragment>
         )
     }

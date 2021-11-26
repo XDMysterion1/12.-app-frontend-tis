@@ -226,7 +226,6 @@ const App = () => {
                     <Route path="/Convocatoria"          exact={true} render={props => <Convocatoria         layoutColorMode={layoutColorMode} {...props} />}/>
                     <Route path="/PliegoEspecificacion"  exact={true} render={props => <PliegoEspecificacion layoutColorMode={layoutColorMode} {...props} />}/>
                     <Route path="/Aviso"                 component={Aviso}/>
-
                 </div>
 
                 <AppFooter layoutColorMode={layoutColorMode}/>

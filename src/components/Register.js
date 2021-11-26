@@ -1,10 +1,12 @@
 import React,{useEffect,useState,useRef}   from 'react';
-
-import { Avatar }           from 'primereact/avatar';
+import axios                from 'axios';
+import { Link }             from 'react-router-dom';
 import { InputText }        from 'primereact/inputtext';
 import { Password }         from 'primereact/password';
 import { Button }           from 'primereact/button';
 import { Toast }            from 'primereact/toast';
+import { ProgressSpinner }  from 'primereact/progressspinner';
+import { useHistory }       from 'react-router-dom';
 
 import { useFormik }        from "formik";
 import uniqid               from 'uniqid';
@@ -15,7 +17,9 @@ export const Register = (props) =>{
 
     const toast                           = useRef(null);
     const [users, setUsers]               = useState(null);
+    const history                         = useHistory();
     const [emailUpdate, setEmailUpdate]   = useState("");
+    const [isPush,setIsPush]              = useState(true);
 
     const formik = useFormik({
         initialValues: {
@@ -29,7 +33,7 @@ export const Register = (props) =>{
             let errors = {};
 
             if (!data.nombre) {
-                errors.nombre = "Se requiero el nombre";
+                errors.nombre = "Se requiere el nombre";
             } else if (data.nombre.length < 2) {
                 errors.nombre = "Como minimo 2 caracteres";
             } else if (data.nombre.length > 30) {
@@ -39,7 +43,7 @@ export const Register = (props) =>{
             }
 
             if (!data.apellido) {
-                errors.apellido = "Se requiero el apellido";
+                errors.apellido = "Se requiere el apellido";
             } else if (data.apellido.length < 2) {
                 errors.apellido = "Como minimo 2 caracteres";
             } else if (data.apellido.length > 30) {
@@ -49,7 +53,7 @@ export const Register = (props) =>{
             }
 
             if (!data.email) {
-                errors.email = "Se requiero el correo electronico";
+                errors.email = "Se requiere el correo electronico";
             } else if (data.email.length > 255) {
                 errors.email = "Como maximo 255 caracteres";
             } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(data.email)) {
@@ -59,7 +63,7 @@ export const Register = (props) =>{
             }
 
             if (!data.password) {
-                errors.password = "Se requiero el contraseña";
+                errors.password = "Se requiere la contraseña";
             } else if (data.password.length < 6) {
                 errors.password = "Como minimo 6 caracteres";
             } else if (data.password.length > 255) {
@@ -67,7 +71,7 @@ export const Register = (props) =>{
             }
 
             if (!data.confirmPassword) {
-                errors.confirmPassword = "Se requiero la confirmacion de la contraseña";
+                errors.confirmPassword = "Se requiere la confirmacion de la contraseña";
             }else if (data.confirmPassword != data.password) {
                 errors.confirmPassword = "Las contraseñas deben coincidir";
             } 
@@ -77,10 +81,35 @@ export const Register = (props) =>{
 
         onSubmit: (data) => {
             let idUser = uniqid("user-");
-            let rolUser= "rol-kvjva7f6"; 
-            createUser({id:`${idUser}`,nombre:`${data.nombre}`,apellido:`${data.apellido}`,email:`${data.email}`,password:`${data.password}`,rol:`${rolUser}`});
-            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Registrado Exitosamente', life: 3000 });
-            formik.resetForm();    
+            let rolUser= "rol-kvjva7f6";
+            setIsPush(false); 
+            const timeout = setTimeout(() => {}, 10000);
+
+            axios.post('https://magic-tech-backend.herokuapp.com/api/createUser', 
+            {
+                id:         `${idUser}`,
+                nombre:     `${data.nombre}`,
+                apellido:   `${data.apellido}`,
+                email:      `${data.email}`,
+                password:   `${data.password}`,
+                rol:        `${rolUser}` 
+            }
+            )
+            .then(function (response) {
+                if(response.status === 200){
+                    clearTimeout(timeout);
+                    toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Registrado Exitosamente', life: 3000 });
+                    
+                }
+                formik.resetForm();
+                setIsPush(true);
+            })
+            .catch(function (error) {
+                clearTimeout(timeout);
+                setIsPush(true);
+                formik.resetForm();
+            });
+
         },
       });
 
@@ -117,7 +146,7 @@ export const Register = (props) =>{
     }
 
     return(
-        <div className="grid justify-content-evenly">
+        <div className="grid justify-content-evenly mt-6">
             <Toast ref={toast} />
             <div className="lg:col-3"></div>
             <div className=" lg:col-3 md:col-3">
@@ -197,14 +226,38 @@ export const Register = (props) =>{
                             </div>
                         </div>
                         {getFormErrorMessage('confirmPassword')}
-                       
-                        <div className='grid flex justify-content-center'>
-                            <div className="flex align-items-center justify-content-center  ">
-                                <div className="p-field mt-3 lg:col-11">
-                                    <Button label="Registrar"  icon="pi pi-check" type="submit" className="p-button-text"  style={{'background': '#13af4e','color':'#ffffff'}}/>  
+
+                        {
+                            (isPush)?
+                            <div className='grid flex justify-content-center'>
+                                <div className="flex align-items-center justify-content-center  ">
+                                    <div className="p-field mt-3 lg:col-11">
+                                        <Button label="Registrar"  icon="pi pi-check" type="submit" className="p-button-text"  style={{'background': '#13af4e','color':'#ffffff'}}/>  
+                                    </div>
                                 </div>
                             </div>
-                        </div>      
+                            :
+                            <div className='grid flex justify-content-center'>
+                                <div className="flex align-items-center justify-content-center  m-4">
+                                    <ProgressSpinner style={{width: '50px', height: '50px', stroke: '#d62d20'}} strokeWidth="8" fill="var(--surface-ground)" animationDuration="10s"/>
+                                </div>
+                            </div>  
+                        }
+
+                        <div className='grid flex justify-content-center mt-3'>
+                            <div className="flex align-items-center justify-content-center">
+                                <Link to="/Login" >
+                                    <Button label="Iniciar sesion" className="p-button-link" style={props.layoutColorMode === 'light' ? {'color':'#000000', 'font-weight': 'bold'} : {'color':'#ffffff', 'font-weight': 'bold'}}/>
+                                </Link>
+                            </div>
+                        </div>
+                        <div className='grid flex justify-content-center'>
+                            <div className="flex align-items-center justify-content-center">
+                                <Link to="/" >
+                                    <Button label="Pagina principal" className="p-button-link" style={props.layoutColorMode === 'light' ? {'color':'#000000', 'font-weight': 'bold'} : {'color':'#ffffff', 'font-weight': 'bold'}}/>
+                                </Link>
+                            </div>
+                        </div>        
                     </form>
                 </div>
             </div>

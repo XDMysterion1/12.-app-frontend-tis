@@ -74,7 +74,7 @@ export const Empresa = (props) => {
             let errors = {};
 
             if (!data.nombre) {
-                errors.nombre = "Se requiero el nombre";
+                errors.nombre = "Se requiere el nombre";
             } else if (data.nombre.length < 2) {
                 errors.nombre = "Como minimo 2 caracteres";
             } else if (data.nombre.length > 30) {
@@ -84,7 +84,7 @@ export const Empresa = (props) => {
             }
 
             if (!data.nombreCorto) {
-                errors.nombreCorto = "Se requiero el nombre corto";
+                errors.nombreCorto = "Se requiere el nombre corto";
             } else if (data.nombreCorto.length < 2) {
                 errors.nombreCorto = "Como minimo 2 caracteres";
             } else if (data.nombreCorto.length > 30) {
@@ -94,17 +94,17 @@ export const Empresa = (props) => {
             }
 
             if (!data.nombreLargo) {
-                errors.nombreLargo = "Se requiero el nombre largo";
+                errors.nombreLargo = "Se requiere el nombre largo";
             } else if (data.nombreLargo.length < 2) {
                 errors.nombreLargo = "Como minimo 2 caracteres";
-            } else if (data.nombreLargo.length > 30) {
-                errors.nombreLargo = "Como maximo 30 caracteres";
+            } else if (data.nombreLargo.length > 50) {
+                errors.nombreLargo = "Como maximo 50 caracteres";
             } else if (!/^^[a-zA-Z\s]+$/i.test(data.nombreLargo)) {
                 errors.nombreLargo = "No se permiten numero o caracteres especiales";
             }
 
             if (!data.tipoSociedad) {
-                errors.tipoSociedad = "Se requiero el tipo de sociedad";
+                errors.tipoSociedad = "Se requiere el tipo de sociedad";
             } else if (data.tipoSociedad.length < 2) {
                 errors.tipoSociedad = "Como minimo 2 caracteres";
             } else if (data.tipoSociedad.length > 30) {
@@ -114,7 +114,7 @@ export const Empresa = (props) => {
             }
 
             if (!data.direccion) {
-                errors.direccion = "Se requiero la direccion";
+                errors.direccion = "Se requiere la direccion";
             } else if (data.direccion.length < 2) {
                 errors.direccion = "Como minimo 2 caracteres";
             } else if (data.direccion.length > 50) {
@@ -124,7 +124,7 @@ export const Empresa = (props) => {
             }
 
             if (!data.email) {
-                errors.email = "Se requiero el correo electronico";
+                errors.email = "Se requiere el correo electronico";
             } else if (data.email.length > 255) {
                 errors.email = "Como maximo 255 caracteres";
             } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(data.email)) {
@@ -136,7 +136,7 @@ export const Empresa = (props) => {
             }
 
             if (!data.password) {
-                errors.password = "Se requiero el contraseña";
+                errors.password = "Se requiere la contraseña";
             } else if (data.password.length < 6) {
                 errors.password = "Como minimo 6 caracteres";
             } else if (data.password.length > 255) {
@@ -144,23 +144,23 @@ export const Empresa = (props) => {
             }
 
             if (!data.confirmPassword) {
-                errors.confirmPassword = "Se requiero la confirmacion de la contraseña";
+                errors.confirmPassword = "Se requiere la confirmacion de la contraseña";
             }else if (data.confirmPassword != data.password) {
                 errors.confirmPassword = "Las contraseñas deben coincidir";
             } 
 
             if (!data.informacion) {
-                errors.informacion = "Se requiero la informacion de la empresa";
+                errors.informacion = "Se requiere la informacion de la empresa";
             } else if (data.informacion.length < 2) {
                 errors.informacion = "Como minimo 2 caracteres";
             } else if (data.informacion.length > 255) {
-                errors.informacion = "Como maximo 30 caracteres";
+                errors.informacion = "Como maximo 255 caracteres";
             } else if (!/^^[a-zA-Z0-9.\s]+$/i.test(data.informacion)) {
                 errors.informacion = "No se permiten numero o caracteres especiales";
             }
 
             if (!data.user) {
-                errors.user = "Se requiero el user";
+                errors.user = "Se requiere el user";
             } else if (data.user.length < 2) {
                 errors.user = "Como minimo 2 caracteres";
             } else if (data.user.length > 30) {
@@ -338,7 +338,7 @@ export const Empresa = (props) => {
             }
         }
         setEmpresa(emptyEmpresa);
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Usuario Eliminado', life: 3000 });
+        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Empresa Eliminada', life: 3000 });
     }
 
     const findIndexById = (id) => {
@@ -462,7 +462,7 @@ export const Empresa = (props) => {
     const leftToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <Button style={{'background': '#13af4e'}} label="Nuevo" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={openNew} />
+                <Button style={props.layoutColorMode === 'light' ? {'color':'#ffffff','background': '#13af4e'} : {'color':'#ffffff','background': '#13af4e'}} label="Nuevo" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={openNew} />
             </React.Fragment>
         )
     }
