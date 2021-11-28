@@ -53,7 +53,7 @@ export const Role = (props) => {
                 errors.rol = "No se permiten numero o caracteres especiales";
             }else if(!esRepetidoUpdate(data.rol,rolUpdate)&&stateRole === true){
                 errors.rol = "Ya existe el rol";  
-            }else if(!esRepetido(data.rol)){
+            }else if(!esRepetido(data.rol)&&stateRole === false){
                 errors.rol = "Ya existe el rol";
             }
 
@@ -154,7 +154,7 @@ export const Role = (props) => {
 
     const editRole = (role) => {
         setRole({ ...role });
-        formik.setValues({rol:''});
+        formik.resetForm();
         formik.setValues({rol:`${role.rol}`});
         setRolUpdate(`${role.rol}`);
         setStateRole(true);

@@ -13,6 +13,7 @@ import { ColumnGroup }      from 'primereact/columngroup';
 import { Row }              from 'primereact/row';
 import { Dropdown }         from 'primereact/dropdown';
 import { useFormik }        from "formik";
+import { Link }             from 'react-router-dom';
 
 import uniqid               from 'uniqid';
 
@@ -98,7 +99,9 @@ export const PliegoEspecificacion = (props) => {
                 errors.link = "Se requiere el link";
             }else if (data.link.length > 500) {
                 errors.link = "Como maximo 500 caracteres";
-            }
+            }else if (!/^(ftp|http|https):\/\/[^ "]+$/.test(data.link)) {
+                errors.link = "El link no es valido";
+             }
 
             if (!data.user) {
                 errors.user = "Se requiere el usuario";
@@ -299,8 +302,7 @@ export const PliegoEspecificacion = (props) => {
         return (
             <>
                 <span className="p-column-title">Link</span>
-                {rowData.link}
-                
+                <Button label={`${rowData.link}`} className="p-button-link" onClick={() => window.open(`${rowData.link}`)} style={props.layoutColorMode === 'light' ? {'color':'#495057', 'font-weight': 'bold' , 'text-align': 'justify'} : {'color':'#ffffff', 'font-weight': 'bold' , 'text-align': 'justify'}}/>      
             </>
         );
     }
@@ -358,7 +360,7 @@ export const PliegoEspecificacion = (props) => {
 
 
     const headerDialog =()=>{
-        return (statePliego)?"Actualizando convocatoria":"Añadir convocatoria"
+        return (statePliego)?"Actualizando pliego de espeficiciones":"Añadir pliego de espeficiciones"
     }
 
     return (

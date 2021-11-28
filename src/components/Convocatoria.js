@@ -13,6 +13,7 @@ import { ColumnGroup }      from 'primereact/columngroup';
 import { Row }              from 'primereact/row';
 import { Dropdown }         from 'primereact/dropdown';
 import { useFormik }        from "formik";
+import { Link }             from 'react-router-dom';
 
 import uniqid               from 'uniqid';
 
@@ -98,6 +99,8 @@ export const Convocatoria = (props) => {
                 errors.link = "Se requiere el link";
             }else if (data.link.length > 500) {
                 errors.link = "Como maximo 500 caracteres";
+            }else if (!/^(ftp|http|https):\/\/[^ "]+$/.test(data.link)) {
+               errors.link = "El link no es valido";
             }
             //else if (!/^((http|https):\/\/)?(www.)?(?!.*(http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+(\/)?.([\w\?[a-zA-Z-_%\/@?]+)*([^\/\w\?[a-zA-Z0-9_-]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?$/.test(data.link)) {
             //    errors.link = "El link no es valido";
@@ -303,8 +306,7 @@ export const Convocatoria = (props) => {
         return (
             <>
                 <span className="p-column-title">Link</span>
-                {rowData.link}
-                
+                <Button label={`${rowData.link}`} className="p-button-link" onClick={() => window.open(`${rowData.link}`)} style={props.layoutColorMode === 'light' ? {'color':'#495057', 'font-weight': 'bold' , 'text-align': 'justify'} : {'color':'#ffffff', 'font-weight': 'bold' , 'text-align': 'justify'}}/>      
             </>
         );
     }

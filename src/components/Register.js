@@ -10,6 +10,7 @@ import { useHistory }       from 'react-router-dom';
 
 import { useFormik }        from "formik";
 import uniqid               from 'uniqid';
+import Cookies              from 'universal-cookie';
 
 import { createUser,getUsers} from '../service/apiUser';
 
@@ -20,6 +21,7 @@ export const Register = (props) =>{
     const history                         = useHistory();
     const [emailUpdate, setEmailUpdate]   = useState("");
     const [isPush,setIsPush]              = useState(true);
+    const cookies                         = new Cookies();
 
     const formik = useFormik({
         initialValues: {
@@ -150,7 +152,7 @@ export const Register = (props) =>{
             <Toast ref={toast} />
             <div className="lg:col-3"></div>
             <div className=" lg:col-3 md:col-3">
-                <div className="card p-fluid" style={props.layoutColorMode === 'light' ?{ 'border': 'black 2px outset' }:{ 'border': 'white 2px outset' }}>
+                <div className="card p-fluid" style={cookies.get('theme') === 'light' ?{ 'border': 'black 2px outset' }:{ 'border': 'white 2px outset' }}>
                     <form onSubmit={formik.handleSubmit}>
                         <div className='grid flex justify-content-center'>
                             <div className="flex align-items-center justify-content-center  ">
@@ -190,7 +192,7 @@ export const Register = (props) =>{
                                 <div className="p-field mt-1 lg:col-12">
                                     <div className="p-inputgroup">
                                             <span className="p-inputgroup-addon">
-                                                <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/gmail.png' : 'assets/layout/images/gmail-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>   
+                                                <img   src={cookies.get('theme') === 'light' ? 'assets/layout/images/gmail.png' : 'assets/layout/images/gmail-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>   
                                             </span>
                                             <InputText id="email" name='email' placeholder="Correo electronico" value={formik.values.email} onChange={formik.handleChange}/>
                                     </div>       
@@ -204,7 +206,7 @@ export const Register = (props) =>{
                                 <div className="p-field mt-1 lg:col-11">
                                     <div className="p-inputgroup">
                                             <span className="p-inputgroup-addon">
-                                                <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/password.png' : 'assets/layout/images/password-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>   
+                                                <img   src={cookies.get('theme') === 'light' ? 'assets/layout/images/password.png' : 'assets/layout/images/password-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>   
                                             </span>
                                             <Password id="password" name='password' placeholder="Contraseña" value={formik.values.password} onChange={formik.handleChange} toggleMask  promptLabel="Por favor ingrese una contraseña" weakLabel="Débil" mediumLabel="Medio" strongLabel="Fuerte"/>
                                     </div>       
@@ -218,7 +220,7 @@ export const Register = (props) =>{
                                 <div className="p-field mt-1 lg:col-11">
                                     <div className="p-inputgroup">
                                             <span className="p-inputgroup-addon">
-                                                <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/password.png' : 'assets/layout/images/password-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>   
+                                                <img   src={cookies.get('theme') === 'light' ? 'assets/layout/images/password.png' : 'assets/layout/images/password-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>   
                                             </span>
                                             <Password id="confirmPassword" name='confirmPassword' placeholder="Repite la contraseña" value={formik.values.confirmPassword} onChange={formik.handleChange} toggleMask  promptLabel="Por favor ingrese una contraseña" weakLabel="Débil" mediumLabel="Medio" strongLabel="Fuerte"/>
                                     </div>       
@@ -247,14 +249,14 @@ export const Register = (props) =>{
                         <div className='grid flex justify-content-center mt-3'>
                             <div className="flex align-items-center justify-content-center">
                                 <Link to="/Login" >
-                                    <Button label="Iniciar sesion" className="p-button-link" style={props.layoutColorMode === 'light' ? {'color':'#000000', 'font-weight': 'bold'} : {'color':'#ffffff', 'font-weight': 'bold'}}/>
+                                    <Button label="Iniciar sesion" className="p-button-link" style={cookies.get('theme') === 'light' ? {'color':'#000000', 'font-weight': 'bold'} : {'color':'#ffffff', 'font-weight': 'bold'}}/>
                                 </Link>
                             </div>
                         </div>
                         <div className='grid flex justify-content-center'>
                             <div className="flex align-items-center justify-content-center">
                                 <Link to="/" >
-                                    <Button label="Pagina principal" className="p-button-link" style={props.layoutColorMode === 'light' ? {'color':'#000000', 'font-weight': 'bold'} : {'color':'#ffffff', 'font-weight': 'bold'}}/>
+                                    <Button label="Pagina principal" className="p-button-link" style={cookies.get('theme') === 'light' ? {'color':'#000000', 'font-weight': 'bold'} : {'color':'#ffffff', 'font-weight': 'bold'}}/>
                                 </Link>
                             </div>
                         </div>        

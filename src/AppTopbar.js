@@ -2,11 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link }          from 'react-router-dom';
 import classNames        from 'classnames';
 import { useHistory }    from 'react-router-dom';
-
+import Cookies           from 'universal-cookie';
 
 export const AppTopbar = (props) => {
     const [login, setLogin]    = useState(false);
     const history              = useHistory();
+    const cookies              = new Cookies();
     
     
     return (
@@ -23,6 +24,7 @@ export const AppTopbar = (props) => {
 
             <Link to="/login" className="layout-topbar-logo ml-6 ">
                 <img src={props.layoutColorMode === 'light' ? 'assets/layout/images/MagicTech.png' : 'assets/layout/images/MagicTech.png'} alt="logo" style={{'height': '1.8em','width':'2.0em',}}/>
+                {(props.layoutColorMode === 'light')?cookies.set('theme', 'light'):cookies.set('theme', 'dark')}
                 <span>MAGIC TECH</span>
             </Link>
                 {(login)? 

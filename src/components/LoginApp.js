@@ -9,12 +9,14 @@ import { Toast }            from 'primereact/toast';
 
 import { useFormik }        from "formik";
 import { useHistory }       from 'react-router-dom';
+import Cookies              from 'universal-cookie';
 
 export const LoginApp = (props) =>{
 
     const history            = useHistory();
     const [isPush,setIsPush] = useState(true);
     const toast              = useRef(null);
+    const cookies            = new Cookies();
 
     const formik = useFormik({
         initialValues: {
@@ -49,11 +51,21 @@ export const LoginApp = (props) =>{
                 email:     `${data.email}`,
                 password:  `${data.password}`
             }).then(function (response) {
-                console.log(response.data.id);
-                console.log(response.data.nombre);
-                console.log(response.data.apellido);
-                console.log(response.data.email);
-                console.log(response.data.rol);
+
+                cookies.set('id'        , response.data.id        , {path: "/"});
+                cookies.set('nombre'    , response.data.nombre    , {path: "/"});
+                cookies.set('apellido'  , response.data.apellido  , {path: "/"});
+                cookies.set('email'     , response.data.email     , {path: "/"});
+                cookies.set('rol'       , response.data.rol       , {path: "/"});
+                cookies.set('isLogin'   , true);
+
+                console.log('id:        '+cookies.get('id'));
+                console.log('nombre:    '+cookies.get('nombre'));
+                console.log('apellido:  '+cookies.get('apellido'));
+                console.log('email:     '+cookies.get('email'));
+                console.log('rol:       '+cookies.get('rol'));
+                console.log('isLogin:   '+cookies.get('isLogin'));
+
                 if(response.status === 200){
                     clearTimeout(timeout);
                     history.push('/');
@@ -62,7 +74,7 @@ export const LoginApp = (props) =>{
                 setIsPush(true);
             })
             .catch(function (error) {
-                toast.current.show({severity:'error', summary: 'Error Message', detail:'El correo electronico o la contraseña son incorrecas', life: 3000});
+                toast.current.show({severity:'error', summary: 'Error Message', detail:'El correo electronico o la contraseña son incorrectas', life: 3000});
                 clearTimeout(timeout);
                 setIsPush(true);
                 formik.setValues({
@@ -87,7 +99,7 @@ export const LoginApp = (props) =>{
             <Toast ref={toast} />
             <div className="lg:col-3"></div>
             <div className=" lg:col-3 md:col-3">
-                <div className="card p-fluid" style={props.layoutColorMode === 'light' ?{ 'border': 'black 2px outset' }:{ 'border': 'white 2px outset' }}>
+                <div className="card p-fluid" style={cookies.get('theme') === 'light' ?{ 'border': 'black 2px outset' }:{ 'border': 'white 2px outset' }}>
                     <form onSubmit={formik.handleSubmit}>
                         <div className='grid flex justify-content-center'>
                             <div className="flex align-items-center justify-content-center  m-2">
@@ -96,7 +108,7 @@ export const LoginApp = (props) =>{
                         </div>
                         <div className='grid flex justify-content-center'>
                             <div className="flex align-items-center justify-content-center  m-2">
-                                <img src={props.layoutColorMode === 'light' ? 'assets/layout/images/avatar.png' : 'assets/layout/images/avatar-dark.png'} className="p-avatar-xl"  shape="circle"  size="xlarge" style={{'height': '8em','width':'8em',}}/>               
+                                <img src={cookies.get('theme') === 'light' ? 'assets/layout/images/avatar.png' : 'assets/layout/images/avatar-dark.png'} className="p-avatar-xl"  shape="circle"  size="xlarge" style={{'height': '8em','width':'8em',}}/>               
                             </div>
                         </div>
                         <div className='grid flex justify-content-center'>
@@ -104,7 +116,7 @@ export const LoginApp = (props) =>{
                                 <div className="p-field mt-1 lg:col-11">
                                     <div className="p-inputgroup">
                                             <span className="p-inputgroup-addon">
-                                                <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/gmail.png' : 'assets/layout/images/gmail-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>   
+                                                <img   src={cookies.get('theme') === 'light' ? 'assets/layout/images/gmail.png' : 'assets/layout/images/gmail-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>   
                                             </span>
                                             <InputText id="email" name='email' placeholder="Correo electronico" value={formik.values.email} onChange={formik.handleChange} autoFocus/>
                                     </div>       
@@ -118,7 +130,7 @@ export const LoginApp = (props) =>{
                                 <div className="p-field mt-1 lg:col-10">
                                     <div className="p-inputgroup">
                                             <span className="p-inputgroup-addon">
-                                                <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/password.png' : 'assets/layout/images/password-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>      
+                                                <img   src={cookies.get('theme') === 'light' ? 'assets/layout/images/password.png' : 'assets/layout/images/password-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>      
                                             </span>
                                             <Password id="password" name='password' placeholder="Contraseña" value={formik.values.password} onChange={formik.handleChange} toggleMask  feedback={false}/>
                                     </div>       
@@ -143,14 +155,14 @@ export const LoginApp = (props) =>{
                         <div className='grid flex justify-content-center'>
                             <div className="flex align-items-center justify-content-center  mt-3">
                                 <Link to="/Register" >
-                                    <Button label="Crear una cuenta" className="p-button-link" style={props.layoutColorMode === 'light' ? {'color':'#000000', 'font-weight': 'bold'} : {'color':'#ffffff', 'font-weight': 'bold'}}/>
+                                    <Button label="Crear una cuenta" className="p-button-link" style={cookies.get('theme') === 'light' ? {'color':'#000000', 'font-weight': 'bold'} : {'color':'#ffffff', 'font-weight': 'bold'}}/>
                                 </Link>
                             </div>
                         </div>
                         <div className='grid flex justify-content-center'>
                             <div className="flex align-items-center justify-content-center">
                                 <Link to="/" >
-                                    <Button label="Pagina principal" className="p-button-link" style={props.layoutColorMode === 'light' ? {'color':'#000000', 'font-weight': 'bold'} : {'color':'#ffffff', 'font-weight': 'bold'}}/>
+                                    <Button label="Pagina principal" className="p-button-link" style={cookies.get('theme') === 'light' ? {'color':'#000000', 'font-weight': 'bold'} : {'color':'#ffffff', 'font-weight': 'bold'}}/>
                                 </Link>
                             </div>
                         </div>        

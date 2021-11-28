@@ -3,6 +3,7 @@ import { RadioButton } from 'primereact/radiobutton';
 import { InputSwitch } from 'primereact/inputswitch';
 import classNames from 'classnames';
 import {Button} from "primereact/button";
+import Cookies  from 'universal-cookie';
 
 export const AppConfig = (props) => {
 
@@ -13,6 +14,7 @@ export const AppConfig = (props) => {
     const [themeColor, setThemeColor] = useState('blue');
     const config = useRef(null);
     let outsideClickListener = useRef(null);
+    const cookies  = new Cookies();
 
     const unbindOutsideClickListener = useCallback(() => {
         if (outsideClickListener.current) {
@@ -114,6 +116,12 @@ export const AppConfig = (props) => {
     const changeThemeScheme = (e, theme) => {
         props.onColorModeChange(e.value);
         setThemeScheme(theme);
+        if(theme === 'saga'){
+            cookies.set('theme', 'light');
+        }else{
+            cookies.set('theme', 'dark');
+        }
+        
     }
 
     const changeThemeColor = (e, color) => {

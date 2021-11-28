@@ -13,6 +13,7 @@ import { Row }              from 'primereact/row';
 import { Dropdown }         from 'primereact/dropdown';
 import { useFormik }        from "formik";
 
+
 import uniqid               from 'uniqid';
 
 import { getUsers,getUserID,createUser,updateUserID,deleteUserID } from '../service/apiUser';
@@ -42,18 +43,20 @@ export const User = (props) => {
     const dt                                         = useRef(null);
     const [stateUser,setStateUser]                   = useState(false);
     const [emailUpdate, setEmailUpdate]              = useState("");
-
+  
     const formik = useFormik({
         initialValues: {
             nombre:    "",
             apellido:  "",
             email:     "",
             password:  "",
-            confirmPassword : ""
+            confirmPassword : "",
+            rol: ''
         },
+        
          validate: (data) => {
+            
             let errors = {};
-
             if (!data.nombre) {
                 errors.nombre = "Se requiere el nombre";
             } else if (data.nombre.length < 2) {
@@ -80,7 +83,7 @@ export const User = (props) => {
                 errors.email = "Como maximo 255 caracteres";
             } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(data.email)) {
                 errors.email = 'Dirección de correo electrónico inválida. P.ej. ejemplo@email.com';
-            }else if(!esRepetido(data.email)){
+            }else if(!esRepetido(data.email) && stateUser === false){
                 errors.email = "Ya existe el correo electronico";
             } else if(!esRepetidoUpdate(data.email,emailUpdate) && stateUser === true){
                 errors.email = "Ya existe el correo electronico";  
@@ -100,10 +103,16 @@ export const User = (props) => {
                 errors.confirmPassword = "Las contraseñas deben coincidir";
             } 
 
+            if (!data.rol) {
+                errors.rol = "Se requiere el rol";
+            }
             return errors;
+    
         },
+        
+        onSubmit: (data ) => {
 
-        onSubmit: (data) => {
+        
             if(submitted === true){
                 let _users = [...users];
                 let _user  = {...user };
@@ -111,26 +120,23 @@ export const User = (props) => {
                 _user['apellido']   = data.apellido;
                 _user['email']      = data.email;
                 _user['password']   = data.password;
+                _user['rol']        = data.rol;
 
                 if (_user.nombre.trim()) {
                     if (user.id) {
-
                         setUser({ ...user });
-                        console.log(user);
                         const index = findIndexById(user.id);
-                        
-
                         _users[index] = _user;
-                        _user.rol=rol.id;
-                        updateUserID({nombre:`${_user.nombre}`,apellido:`${_user.apellido}`,email:`${_user.email}`,password:`${_user.password}`,rol:`${rol.id}`},user.id);
+                        
+                        updateUserID({nombre:`${_user.nombre}`,apellido:`${_user.apellido}`,email:`${_user.email}`,password:`${_user.password}`,rol:`${_user.rol}`},user.id);
                         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Usuario Actualizado', life: 3000 });
                     }
                     else {
 
                         _user.id = uniqid("user-");
-                        _user.rol=rol.id; 
+                        
                         _users.push(_user);
-                        createUser({id:`${_user.id}`,nombre:`${_user.nombre}`,apellido:`${_user.apellido}`,email:`${_user.email}`,password:`${_user.password}`,rol:`${rol.id}`});
+                        createUser({id:`${_user.id}`,nombre:`${_user.nombre}`,apellido:`${_user.apellido}`,email:`${_user.email}`,password:`${_user.password}`,rol:`${_user.rol}`});
                         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'usuario Creado', life: 3000 });
                     }
                 }
@@ -159,7 +165,7 @@ export const User = (props) => {
     }
     const esRepetidoUpdate =(value,original)=>{
         var _users = [...users];
-        let aux = _users.filter(i =>(i.email).toLowerCase() != (original).toLowerCase())
+        let aux = _users.filter(i =>(i.email).toLowerCase() != (original).toLowerCase());
         let res = aux.find(i => (i.email).toLowerCase() === (value).toLowerCase() );
          if(res === undefined || res === original){
              return true;
@@ -199,10 +205,6 @@ export const User = (props) => {
         })
     }
 
-    useEffect(() => {
-        console.log(stateUser); //esta línea se ejecuta la primera vez que se renderiza y en todos los cambios que location tenga, aqui siempre tendrás el ultimo valor de location
-     }, [stateUser])
-
     const openNew = () => {
         setUser(emptyUser);
         formik.resetForm();
@@ -228,19 +230,16 @@ export const User = (props) => {
     const editUser = (user) => {
         setUser({ ...user });
         setSubmitted(true);
-        
+        formik.resetForm();
         formik.setValues(
-            {nombre:`${user.nombre}`,
-            apellido:`${user.apellido}`,
-            email:`${user.email}`,
-            password:`${user.password}`,
+            {nombre:        `${user.nombre}`,
+            apellido:       `${user.apellido}`,
+            email:          `${user.email}`,
+            password:       `${user.password}`,
             confirmPassword:`${user.password}`,
+            rol:            `${user.rol}`
         });
-        let r = findRol(`${user.rol}`);
-
         setEmailUpdate(`${user.email}`);
-        setRol(r);
-        user.rol=`${user.rol}`;
         setStateUser(true);
         setUserDialog(true);
     }
@@ -277,11 +276,7 @@ export const User = (props) => {
         return index;
     }
 
-    const onRolChange = (e) => {
-        setRol(e.value);
-    }
-
-
+  
     const idBodyTemplate = (rowData) => {
         return (
             <>
@@ -352,7 +347,7 @@ export const User = (props) => {
     const leftToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <Button style={props.layoutColorMode === 'light' ? {'color':'#ffffff','background': '#13af4e'} : {'color':'#ffffff','background': '#13af4e'}} label="Nuevo" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={openNew} />
+                <Button style={props.layoutColorMode === 'light' ? {'color':'#ffffff','background': '#13af4e'} : {'color':'#ffffff','background': '#13af4e'}} label="Nuevo" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={openNew}/>
             </React.Fragment>
         )
     }
@@ -388,14 +383,14 @@ export const User = (props) => {
 
 
     const headerDialog =()=>{
-        return (stateUser)?"Actualizando usuario":"Añadir Usuario"
+        return (stateUser?"Actualizando usuario":"Añadir Usuario")
     }
 
     return (
+        
         <div className="p-grid crud-demo">
             <div className="p-col-12">
                 <div className="card">
-                
                     <Toast ref={toast} />
                     <Toolbar className="" left={leftToolbarTemplate}></Toolbar>
 
@@ -462,7 +457,7 @@ export const User = (props) => {
                                         <span className="p-inputgroup-addon">
                                             <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/password.png' : 'assets/layout/images/password-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>   
                                         </span>
-                                        <Password id="confirmPassword" name='confirmPassword' placeholder="Confirmar contraseña"  value={formik.values.confirmPassword} onChange={formik.handleChange} toggleMask  promptLabel="Por favor ingrese una contraseña" weakLabel="Débil" mediumLabel="Medio" strongLabel="Fuerte"/>
+                                        <Password id="rol" name='confirmPassword' placeholder="Confirmar contraseña"  value={formik.values.confirmPassword} onChange={formik.handleChange} toggleMask  promptLabel="Por favor ingrese una contraseña" weakLabel="Débil" mediumLabel="Medio" strongLabel="Fuerte"/>
                                 </div>       
                             </div>
                             {getFormErrorMessage('confirmPassword')}
@@ -472,9 +467,11 @@ export const User = (props) => {
                                         <span className="p-inputgroup-addon">
                                             <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/rol.png' : 'assets/layout/images/rol-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>   
                                         </span>
-                                        <Dropdown value={rol} options={roles} onChange={onRolChange} optionLabel="rol" placeholder="Rol" required/>   
+                                        <Dropdown id="rol" name="rol" placeholder="Seleccione un rol" value={formik.values.rol} onChange={formik.handleChange} options={roles} optionLabel="rol"  optionValue="id"/>   
                                 </div>       
                             </div>
+                            {getFormErrorMessage('rol')}
+
                             <div className='mt-2'>
                                 <div className="flex justify-content-center flex-wrap">
                                     <div className="flex align-items-center justify-content-center  m-2">
@@ -485,6 +482,7 @@ export const User = (props) => {
                                     </div>
                                 </div>
                             </div>
+
                         </form>
                     </Dialog>
 

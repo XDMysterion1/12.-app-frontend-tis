@@ -55,6 +55,7 @@ export const Empresa = (props) => {
     const dt                                            = useRef(null);
     const [stateEmpresa,setStateEmpresa]                = useState(false);
     const [emailUpdate, setEmailUpdate]                 = useState("");
+    const [empresaUpdate, setEmpresaUpdate]             = useState("");
 
     const formik = useFormik({
         initialValues: {
@@ -81,7 +82,12 @@ export const Empresa = (props) => {
                 errors.nombre = "Como maximo 30 caracteres";
             } else if (!/^^[a-zA-Z\s]+$/i.test(data.nombre)) {
                 errors.nombre = "No se permiten numero o caracteres especiales";
+            }else if(!esRepetidoEmpresa(data.nombre) && stateEmpresa === false){
+                errors.nombre = "Ya existe el nombre de la empresa";
+            } else if(!esRepetidoUpdateEmpresa(data.nombre,empresaUpdate) && stateEmpresa === true){
+                errors.nombre = "Ya existe el nombre de la empresa";  
             }
+
 
             if (!data.nombreCorto) {
                 errors.nombreCorto = "Se requiere el nombre corto";
@@ -129,7 +135,7 @@ export const Empresa = (props) => {
                 errors.email = "Como maximo 255 caracteres";
             } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(data.email)) {
                 errors.email = 'Dirección de correo electrónico inválida. P.ej. ejemplo@email.com';
-            }else if(!esRepetido(data.email)){
+            }else if(!esRepetido(data.email) && stateEmpresa === false){
                 errors.email = "Ya existe el correo electronico";
             } else if(!esRepetidoUpdate(data.email,emailUpdate) && stateEmpresa === true){
                 errors.email = "Ya existe el correo electronico";  
@@ -242,6 +248,26 @@ export const Empresa = (props) => {
          }
     }
 
+    const esRepetidoEmpresa =(value)=>{
+        var _empresas = [...empresas];
+        let res = _empresas.find(i => (i.nombre).toLowerCase() === (value).toLowerCase() );
+         if(res === undefined){
+             return true;
+         }else{
+             return false;
+         }
+    }
+    const esRepetidoUpdateEmpresa =(value,original)=>{
+        var _empresas = [...empresas];
+        let aux = _empresas.filter(i =>(i.nombre).toLowerCase() != (original).toLowerCase())
+        let res = aux.find(i => (i.nombre).toLowerCase() === (value).toLowerCase() );
+         if(res === undefined || res === original){
+             return true;
+         }else{
+             return false;
+         }
+    }
+
 
     useEffect(()=>{
         fetchUsers();
@@ -302,7 +328,7 @@ export const Empresa = (props) => {
     const editEmpresa = (empresa) => {
         setEmpresa({ ...empresa });
         setSubmitted(true);
-        
+        formik.resetForm();
         formik.setValues(
         {
             nombre:         `${empresa.nombre}`,
@@ -318,6 +344,7 @@ export const Empresa = (props) => {
         });
 
         setEmailUpdate(`${empresa.email}`);
+        setEmpresaUpdate(`${empresa.nombre}`);
         setStateEmpresa(true);
         setEmpresaDialog(true);
     }

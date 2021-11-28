@@ -15,6 +15,7 @@ import {Empresa}                 from './components/Empresa';
 import { Convocatoria }          from './components/Convocatoria';
 import { PliegoEspecificacion }  from './components/PliegoEspecificacion';
 import { Aviso }                 from './components/Aviso';
+import Cookies                   from 'universal-cookie';
 
 
 import PrimeReact           from 'primereact/api';
@@ -30,13 +31,13 @@ import './App.scss';
 
 const App = () => {
 
-    const [layoutMode, setLayoutMode] = useState('static');
-    const [layoutColorMode, setLayoutColorMode] = useState('light')
-    const [inputStyle, setInputStyle] = useState('outlined');
-    const [ripple, setRipple] = useState(true);
-    const [staticMenuInactive, setStaticMenuInactive] = useState(false);
-    const [overlayMenuActive, setOverlayMenuActive] = useState(false);
-    const [mobileMenuActive, setMobileMenuActive] = useState(false);
+    const [layoutMode, setLayoutMode]                         = useState('static');
+    const [layoutColorMode, setLayoutColorMode]               = useState('light')
+    const [inputStyle, setInputStyle]                         = useState('outlined');
+    const [ripple, setRipple]                                 = useState(true);
+    const [staticMenuInactive, setStaticMenuInactive]         = useState(false);
+    const [overlayMenuActive, setOverlayMenuActive]           = useState(false);
+    const [mobileMenuActive, setMobileMenuActive]             = useState(false);
     const [mobileTopbarMenuActive, setMobileTopbarMenuActive] = useState(false);
 
     PrimeReact.ripple = true;

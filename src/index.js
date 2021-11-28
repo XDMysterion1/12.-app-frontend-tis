@@ -7,9 +7,16 @@ import { HashRouter, Switch ,Route} from 'react-router-dom'
 import ScrollToTop                  from './ScrollToTop';
 import { LoginApp }                 from './components/LoginApp';
 import { Register }                 from './components/Register';
+import Cookies                   from 'universal-cookie';
+
+
+{const cookies  = new Cookies()
+    cookies.set('isLogin', false);
+}
 
 
 ReactDOM.render(
+
     <HashRouter>
         <Switch>
             <Route path="/Login"    exact={true} render={props => <LoginApp layoutColorMode={'light'} {...props} />} />
