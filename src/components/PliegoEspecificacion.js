@@ -240,7 +240,7 @@ export const PliegoEspecificacion = (props) => {
     const editPliego = (pliego) => {
         setPliego({ ...pliego });
         setSubmitted(true);
-        
+        formik.resetForm();
         formik.setValues(
         {
             titulo:    `${pliego.titulo}`,

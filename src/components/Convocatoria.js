@@ -244,7 +244,7 @@ export const Convocatoria = (props) => {
     const editConvocatoria = (convocatoria) => {
         setConvocatoria({ ...convocatoria });
         setSubmitted(true);
-        
+        formik.resetForm();
         formik.setValues(
         {
             titulo:    `${convocatoria.titulo}`,
