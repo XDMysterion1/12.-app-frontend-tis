@@ -82,6 +82,10 @@ export const PliegoEspecificacion = (props) => {
                 errors.codigo = "Como maximo 30 caracteres";
             }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.codigo)) {
                 errors.codigo = "No se permiten numero o caracteres especiales";
+            }else if(!esRepetido(data.codigo) && statePliego === false){
+                errors.codigo = "Ya existe el codigo";
+            } else if(!esRepetidoUpdate(data.codigo,pliegoUpdate) && statePliego === true){
+                errors.codigo = "Ya existe el codigo";  
             }
 
             
@@ -151,6 +155,26 @@ export const PliegoEspecificacion = (props) => {
             
         },
       });
+
+    const esRepetido =(value)=>{
+        var _pliegos = [...pliegos];
+        let res = _pliegos.find(i => (i.codigo).toLowerCase().trim() === (value).toLowerCase().trim() );
+         if(res === undefined){
+             return true;
+         }else{
+             return false;
+         }
+    }
+    const esRepetidoUpdate =(value,original)=>{
+        var _pliegos = [...pliegos];
+        let aux = _pliegos.filter(i =>(i.codigo).toLowerCase().trim() != (original).toLowerCase().trim())
+        let res = aux.find(i => (i.codigo).toLowerCase().trim() === (value).toLowerCase().trim() );
+         if(res === undefined || res === original){
+             return true;
+         }else{
+             return false;
+         }
+    }
 
     const isFormFieldValid = (name) => !!(formik.touched[name] && formik.errors[name]);
     const getFormErrorMessage = (name) => {
@@ -225,7 +249,7 @@ export const PliegoEspecificacion = (props) => {
             link:      `${pliego.link}`,
             user:      `${pliego.user}`
         });
-        //setConvocatoriaUpdate(`${user.email}`);
+        setPliegoUpdate(`${pliego.codigo}`);
         setStatePliego(true);
         setPliegoDialog(true);
     }

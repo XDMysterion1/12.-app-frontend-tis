@@ -82,6 +82,10 @@ export const Convocatoria = (props) => {
                 errors.codigo = "Como maximo 30 caracteres";
             }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.codigo)) {
                 errors.codigo = "No se permiten numero o caracteres especiales";
+            }else if(!esRepetido(data.codigo) && stateConvocatoria === false){
+                errors.codigo = "Ya existe el codigo";
+            } else if(!esRepetidoUpdate(data.codigo,convocatoriaUpdate) && stateConvocatoria === true){
+                errors.codigo = "Ya existe el codigo";  
             }
 
             
@@ -156,6 +160,26 @@ export const Convocatoria = (props) => {
         },
       });
 
+      const esRepetido =(value)=>{
+        var _convocatorias = [...convocatorias];
+        let res = _convocatorias.find(i => (i.codigo).toLowerCase().trim() === (value).toLowerCase().trim() );
+         if(res === undefined){
+             return true;
+         }else{
+             return false;
+         }
+    }
+    const esRepetidoUpdate =(value,original)=>{
+        var _convocatorias = [...convocatorias];
+        let aux = _convocatorias.filter(i =>(i.codigo).toLowerCase().trim() != (original).toLowerCase().trim())
+        let res = aux.find(i => (i.codigo).toLowerCase().trim() === (value).toLowerCase().trim() );
+         if(res === undefined || res === original){
+             return true;
+         }else{
+             return false;
+         }
+    }
+
     const isFormFieldValid = (name) => !!(formik.touched[name] && formik.errors[name]);
     const getFormErrorMessage = (name) => {
         return isFormFieldValid(name) && <small className="ml-1 p-error" style={{'color': '#ff0000'}}>{formik.errors[name]}</small>;
@@ -229,7 +253,7 @@ export const Convocatoria = (props) => {
             link:      `${convocatoria.link}`,
             user:      `${convocatoria.user}`
         });
-        //setConvocatoriaUpdate(`${user.email}`);
+        setConvocatoriaUpdate(`${convocatoria.codigo}`);
         setStateConvocatoria(true);
         setConvocatoriaDialog(true);
     }

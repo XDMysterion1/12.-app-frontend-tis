@@ -22,7 +22,7 @@ export const AppTopbar = (props) => {
                 <i className="pi pi-ellipsis-v" />
             </button>
 
-            <Link to="/login" className="layout-topbar-logo ml-6 ">
+            <Link to="/" className="layout-topbar-logo ml-6 ">
                 <img src={props.layoutColorMode === 'light' ? 'assets/layout/images/MagicTech.png' : 'assets/layout/images/MagicTech.png'} alt="logo" style={{'height': '1.8em','width':'2.0em',}}/>
                 {(props.layoutColorMode === 'light')?cookies.set('theme', 'light'):cookies.set('theme', 'dark')}
                 <span>MAGIC TECH</span>

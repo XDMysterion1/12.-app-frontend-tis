@@ -166,7 +166,7 @@ export const Empresa = (props) => {
             }
 
             if (!data.user) {
-                errors.user = "Se requiere el user";
+                errors.user = "Se requiere el usuario";
             } else if (data.user.length < 2) {
                 errors.user = "Como minimo 2 caracteres";
             } else if (data.user.length > 30) {
@@ -250,7 +250,7 @@ export const Empresa = (props) => {
 
     const esRepetidoEmpresa =(value)=>{
         var _empresas = [...empresas];
-        let res = _empresas.find(i => (i.nombre).toLowerCase() === (value).toLowerCase() );
+        let res = _empresas.find(i => (i.nombre).toLowerCase().trim() === (value).toLowerCase().trim() );
          if(res === undefined){
              return true;
          }else{
@@ -259,8 +259,8 @@ export const Empresa = (props) => {
     }
     const esRepetidoUpdateEmpresa =(value,original)=>{
         var _empresas = [...empresas];
-        let aux = _empresas.filter(i =>(i.nombre).toLowerCase() != (original).toLowerCase())
-        let res = aux.find(i => (i.nombre).toLowerCase() === (value).toLowerCase() );
+        let aux = _empresas.filter(i =>(i.nombre).toLowerCase().trim() != (original).toLowerCase().trim())
+        let res = aux.find(i => (i.nombre).toLowerCase().trim() === (value).toLowerCase().trim() );
          if(res === undefined || res === original){
              return true;
          }else{
