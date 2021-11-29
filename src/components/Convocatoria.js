@@ -171,7 +171,7 @@ export const Convocatoria = (props) => {
     }
     const esRepetidoUpdate =(value,original)=>{
         var _convocatorias = [...convocatorias];
-        let aux = _convocatorias.filter(i =>(i.codigo).toLowerCase().trim() != (original).toLowerCase().trim())
+        let aux = _convocatorias.filter(i =>(i.codigo).toLowerCase()!= (original).toLowerCase())
         let res = aux.find(i => (i.codigo).toLowerCase().trim() === (value).toLowerCase().trim() );
          if(res === undefined || res === original){
              return true;

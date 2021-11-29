@@ -77,6 +77,7 @@ export const LoginApp = (props) =>{
                 toast.current.show({severity:'error', summary: 'Error Message', detail:'El correo electronico o la contraseña son incorrectas', life: 3000});
                 clearTimeout(timeout);
                 setIsPush(true);
+                formik.resetForm();
                 formik.setValues({
                     email:`${data.email}`,
                     password:''
