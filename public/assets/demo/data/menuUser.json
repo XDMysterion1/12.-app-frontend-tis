@@ -1,0 +1,12 @@
+ 
+{
+    "data": [
+        {
+            "label": "Home", "icon": "pi pi-fw pi-home",
+            "items": [{
+                "label": "Tablero", "icon": "pi pi-fw pi-home", "to": "/"
+            }]
+        }
+
+    ]
+}

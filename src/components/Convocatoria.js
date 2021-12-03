@@ -28,6 +28,7 @@ export const Convocatoria = (props) => {
         codigo:    '',
         semestre:  '',
         link:      '',
+        estado:    '',
         user:      ''
     };
 
@@ -38,6 +39,11 @@ export const Convocatoria = (props) => {
         { name: "II-2021"},
         { name: "I-2022"},
         { name: "II-2022"}
+    ];
+
+    const publicacion = [
+        { name: "Publicar"     },
+        { name: "No publicado" }
     ];
 
     const [convocatorias, setConvocatorias]                          = useState(null);
@@ -59,6 +65,7 @@ export const Convocatoria = (props) => {
             codigo:    '',
             semestre:  '',
             link:      '',
+            estado:    '',
             user:      ''
         },
          validate: (data) => {
@@ -106,9 +113,10 @@ export const Convocatoria = (props) => {
             }else if (!/^(ftp|http|https):\/\/[^ "]+$/.test(data.link)) {
                errors.link = "El link no es valido";
             }
-            //else if (!/^((http|https):\/\/)?(www.)?(?!.*(http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+(\/)?.([\w\?[a-zA-Z-_%\/@?]+)*([^\/\w\?[a-zA-Z0-9_-]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?$/.test(data.link)) {
-            //    errors.link = "El link no es valido";
-            //}
+ 
+            if (!data.estado) {
+                errors.estado = "Se requiere el estado";
+            } 
 
             if (!data.user) {
                 errors.user = "Se requiere el usuario";
@@ -131,6 +139,7 @@ export const Convocatoria = (props) => {
                 _convocatoria['codigo']     = data.codigo;
                 _convocatoria['semestre']   = data.semestre;
                 _convocatoria['link']       = data.link;
+                _convocatoria['estado']     = data.estado;
                 _convocatoria['user']       = data.user;
 
                 if (_convocatoria.titulo.trim()) {
@@ -139,15 +148,15 @@ export const Convocatoria = (props) => {
                         setConvocatoria({ ...convocatoria });
                         const index = findIndexById(convocatoria.id);
                         _convocatorias[index] = _convocatoria;
-                        updateConvocatoriaID({titulo:`${_convocatoria.titulo}`,codigo:`${_convocatoria.codigo}`,semestre:`${_convocatoria.semestre}`,link:`${_convocatoria.link}`,user:`${_convocatoria.user}`},convocatoria.id);
+                        updateConvocatoriaID({titulo:`${_convocatoria.titulo}`,codigo:`${_convocatoria.codigo}`,semestre:`${_convocatoria.semestre}`,link:`${_convocatoria.link}`,estado:`${_convocatoria.estado}`,user:`${_convocatoria.user}`},convocatoria.id);
                         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Convocatoria Actualizada', life: 3000 });
                     }
                     else {
 
                         _convocatoria.id = uniqid("conv-");
                         _convocatorias.push(_convocatoria);
-                        console.log({id:`${_convocatoria.id}`,titulo:`${_convocatoria.titulo}`,codigo:`${_convocatoria.codigo}`,semestre:`${_convocatoria.semestre}`,link:`${_convocatoria.link}`,user:`${_convocatoria.user}`});
-                        createConvocatoria({id:`${_convocatoria.id}`,titulo:`${_convocatoria.titulo}`,codigo:`${_convocatoria.codigo}`,semestre:`${_convocatoria.semestre}`,link:`${_convocatoria.link}`,user:`${_convocatoria.user}`});
+                        console.log({id:`${_convocatoria.id}`,titulo:`${_convocatoria.titulo}`,codigo:`${_convocatoria.codigo}`,semestre:`${_convocatoria.semestre}`,link:`${_convocatoria.link}`,estado:`${_convocatoria.estado}`,user:`${_convocatoria.user}`});
+                        createConvocatoria({id:`${_convocatoria.id}`,titulo:`${_convocatoria.titulo}`,codigo:`${_convocatoria.codigo}`,semestre:`${_convocatoria.semestre}`,link:`${_convocatoria.link}`,estado:`${_convocatoria.estado}`,user:`${_convocatoria.user}`});
                         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Convocatoria Creada', life: 3000 });
                     }
                 }
@@ -251,6 +260,7 @@ export const Convocatoria = (props) => {
             codigo:    `${convocatoria.codigo}`,
             semestre:  `${convocatoria.semestre}`,
             link:      `${convocatoria.link}`,
+            estado:    `${convocatoria.estado}`,
             user:      `${convocatoria.user}`
         });
         setConvocatoriaUpdate(`${convocatoria.codigo}`);
@@ -330,7 +340,16 @@ export const Convocatoria = (props) => {
         return (
             <>
                 <span className="p-column-title">Link</span>
-                <Button label={`${rowData.link}`} className="p-button-link" onClick={() => window.open(`${rowData.link}`)} style={props.layoutColorMode === 'light' ? {'color':'#495057', 'font-weight': 'bold' , 'text-align': 'justify'} : {'color':'#ffffff', 'font-weight': 'bold' , 'text-align': 'justify'}}/>      
+                <Button label="Ver documento" className="p-button-link" onClick={() => window.open(`${rowData.link}`)} style={props.layoutColorMode === 'light' ? {'color':'#495057', 'font-weight': 'bold' , 'text-align': 'justify'} : {'color':'#ffffff', 'font-weight': 'bold' , 'text-align': 'justify'}}/>      
+            </>
+        );
+    }
+
+    const estadoBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Estado</span>
+                {rowData.estado}
             </>
         );
     }
@@ -376,11 +395,12 @@ export const Convocatoria = (props) => {
 
     let headerGroup = <ColumnGroup>
                         <Row>
-                            <Column header="ID"                 style={{ 'background-color': '#13af4e', width:'20%'}} />
+                            <Column header="ID"                 style={{ 'background-color': '#13af4e', width:'20%'}}/>
                             <Column header="TITULO"             style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                            <Column header="CODIGO"             style={{ 'background-color': '#13af4e', width:'20%'}} />
+                            <Column header="CODIGO"             style={{ 'background-color': '#13af4e', width:'20%'}}/>
                             <Column header="SEMESTRE"           style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                            <Column header="LINK"               style={{ 'background-color': '#13af4e', width:'40%'}} />
+                            <Column header="LINK"               style={{ 'background-color': '#13af4e', width:'40%'}}/>
+                            <Column header="ESTADO"             style={{ 'background-color': '#13af4e', width:'20%'}}/>
                             <Column header="USER"               style={{ 'background-color': '#13af4e', width:'20%'}}/>
                             <Column header="Editar/Eliminar"    style={{ 'background-color': '#13af4e', width:'20%'}}/>
                         </Row>
@@ -409,6 +429,7 @@ export const Convocatoria = (props) => {
                         <Column style={{width:'20%'}} field="codigo"   header="CODIGO"   sortable body={codigoBodyTemplate}></Column>
                         <Column style={{width:'20%'}} field="semestre" header="SEMESTRE" sortable body={semestreBodyTemplate}></Column>
                         <Column style={{width:'40%'}} field="link"     header="LINK"     sortable body={linkBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} field="estado"   header="ESTADO"   sortable body={estadoBodyTemplate}></Column>
                         <Column style={{width:'20%'}} field="user"     header="USER"     sortable body={userBodyTemplate}></Column>
                         <Column style={{width:'20%'}} body={actionBodyTemplate}></Column>
 
@@ -457,6 +478,16 @@ export const Convocatoria = (props) => {
                                 </div>       
                             </div>
                             {getFormErrorMessage('link')}
+
+                            <div className="p-field mt-2">
+                                <div className="p-inputgroup">
+                                        <span className="p-inputgroup-addon">
+                                            <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/post.png' : 'assets/layout/images/post-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>  
+                                        </span>
+                                        <Dropdown id="estado" name="estado" placeholder="Seleccione un estado" value={formik.values.estado} onChange={formik.handleChange} options={publicacion} optionLabel="name"  optionValue="name"/>
+                                </div>       
+                            </div>
+                            {getFormErrorMessage('estado')}
 
                             <div className="p-field mt-2">
                                 <div className="p-inputgroup">

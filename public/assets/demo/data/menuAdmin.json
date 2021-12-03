@@ -1,0 +1,61 @@
+ 
+{
+    "data": [
+        {
+            "label": "Home", "icon": "pi pi-fw pi-home",
+            "items": [{
+                "label": "Tablero", "icon": "pi pi-fw pi-home", "to": "/"
+            }]
+        },
+        {
+            "label": "Gestion de Roles", "icon": "pi pi-fw pi-sitemap",
+            "items": [
+                {"label": "Roles", "icon": "pi pi-fw pi-users", "to": "/Role"}
+               
+            ]
+        },
+        {
+            "label": "Gestion de Usuario", "icon": "pi pi-fw pi-sitemap",
+            "items": [
+                {"label": "Usuarios", "icon": "pi pi-fw pi-user", "to": "/User"}
+            ]
+        },
+        {
+            "label": "Gestion de Empresa", "icon": "pi pi-fw pi-briefcase",
+            "items": [
+                {"label": "Empresas", "icon": "pi pi-fw pi-briefcase", "to": "/Empresa"}
+            ]
+        },
+        {
+            "label": "Gestion Publicacion", "icon": "pi pi-fw pi-sitemap",
+            "items": [
+                {"label": "Convocatoria"              , "icon": "pi pi-fw pi-id-card"     , "to": "/Convocatoria"},
+                {"label": "Pliego de Especificaciones", "icon": "pi pi-fw pi-check-square", "to": "/PliegoEspecificacion"}
+            ]
+        },
+        {
+            "label": "Gestion Avisos", "icon": "pi pi-fw pi-sitemap",
+            "items": [
+                {"label": "Avisos", "icon": "pi pi-fw pi-id-card", "to": "/Aviso"}
+            ]
+        },
+        {
+            "label": "Lista de empresas", "icon": "pi pi-fw pi-briefcase",
+            "items": [
+                {"label": "Empresas", "icon": "pi pi-fw pi-briefcase", "to": "/ListEmpresa"}
+            ]
+        },
+        {
+            "label": "Lista de Publicaciones", "icon": "pi pi-fw pi-sitemap",
+            "items": [
+                {"label": "Convocatoria"              , "icon": "pi pi-fw pi-id-card"     , "to": "/ListConvocatoria"},
+                {"label": "Pliego de Especificaciones", "icon": "pi pi-fw pi-check-square", "to": "/ListPliego"}
+            ]
+        }
+
+
+    ]
+}
+
+
+    

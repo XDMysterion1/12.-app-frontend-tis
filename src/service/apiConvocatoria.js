@@ -18,6 +18,7 @@ import axios from 'axios';
          codigo:    `${data.codigo}`,
          semestre:  `${data.semestre}`,
          link:      `${data.link}`,
+         estado:    `${data.estado}`,
          user:      `${data.user}`     
       }
       )
@@ -36,6 +37,7 @@ export const updateConvocatoriaID =(data,id) =>{
         codigo:    `${data.codigo}`,
         semestre:  `${data.semestre}`,
         link:      `${data.link}`,
+        estado:    `${data.estado}`,
         user:      `${data.user}`
     }
     )
@@ -49,4 +51,8 @@ export const updateConvocatoriaID =(data,id) =>{
 
 export const deleteConvocatoriaID =(id) =>{
     return axios.delete(`https://magic-tech-backend.herokuapp.com/api/deleteConvocatoriaId/${id}`);
+}
+
+export const getConvocatoriasPublicados = () =>{
+  return axios.get('https://magic-tech-backend.herokuapp.com/api/getConvocatoriasPublicados');
 }

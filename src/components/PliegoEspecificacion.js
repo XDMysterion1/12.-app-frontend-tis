@@ -28,6 +28,7 @@ export const PliegoEspecificacion = (props) => {
         codigo:    '',
         semestre:  '',
         link:      '',
+        estado:    '',
         user:      ''
     };
 
@@ -38,6 +39,11 @@ export const PliegoEspecificacion = (props) => {
         { name: "II-2021"},
         { name: "I-2022"},
         { name: "II-2022"}
+    ];
+
+    const publicacion = [
+        { name: "Publicar"     },
+        { name: "No publicado" }
     ];
 
     const [pliegos, setPliegos]                          = useState(null);
@@ -59,6 +65,7 @@ export const PliegoEspecificacion = (props) => {
             codigo:    '',
             semestre:  '',
             link:      '',
+            estado:    '',
             user:      ''
         },
          validate: (data) => {
@@ -105,7 +112,11 @@ export const PliegoEspecificacion = (props) => {
                 errors.link = "Como maximo 500 caracteres";
             }else if (!/^(ftp|http|https):\/\/[^ "]+$/.test(data.link)) {
                 errors.link = "El link no es valido";
-             }
+            }
+
+            if (!data.estado) {
+                errors.estado = "Se requiere el estado";
+            } 
 
             if (!data.user) {
                 errors.user = "Se requiere el usuario";
@@ -128,6 +139,7 @@ export const PliegoEspecificacion = (props) => {
                 _pliego['codigo']     = data.codigo;
                 _pliego['semestre']   = data.semestre;
                 _pliego['link']       = data.link;
+                _pliego['estado']     = data.estado;
                 _pliego['user']       = data.user;
 
                 if (_pliego.titulo.trim()) {
@@ -136,14 +148,14 @@ export const PliegoEspecificacion = (props) => {
                         setPliego({ ...pliego });
                         const index = findIndexById(pliego.id);
                         _pliegos[index] = _pliego;
-                        updatePliegoID({titulo:`${_pliego.titulo}`,codigo:`${_pliego.codigo}`,semestre:`${_pliego.semestre}`,link:`${_pliego.link}`,user:`${_pliego.user}`},pliego.id);
+                        updatePliegoID({titulo:`${_pliego.titulo}`,codigo:`${_pliego.codigo}`,semestre:`${_pliego.semestre}`,link:`${_pliego.link}`,estado:`${_pliego.estado}`,user:`${_pliego.user}`},pliego.id);
                         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Pliego de especificaciones Actualizada', life: 3000 });
                     }
                     else {
 
                         _pliego.id = uniqid("plieg-");
                         _pliegos.push(_pliego);
-                        createPliego({id:`${_pliego.id}`,titulo:`${_pliego.titulo}`,codigo:`${_pliego.codigo}`,semestre:`${_pliego.semestre}`,link:`${_pliego.link}`,user:`${_pliego.user}`});
+                        createPliego({id:`${_pliego.id}`,titulo:`${_pliego.titulo}`,codigo:`${_pliego.codigo}`,semestre:`${_pliego.semestre}`,link:`${_pliego.link}`,estado:`${_pliego.estado}`,user:`${_pliego.user}`});
                         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Pliego de especificaciones Creada', life: 3000 });
                     }
                 }
@@ -247,6 +259,7 @@ export const PliegoEspecificacion = (props) => {
             codigo:    `${pliego.codigo}`,
             semestre:  `${pliego.semestre}`,
             link:      `${pliego.link}`,
+            estado:    `${pliego.estado}`,
             user:      `${pliego.user}`
         });
         setPliegoUpdate(`${pliego.codigo}`);
@@ -326,12 +339,19 @@ export const PliegoEspecificacion = (props) => {
         return (
             <>
                 <span className="p-column-title">Link</span>
-                <Button label={`${rowData.link}`} className="p-button-link" onClick={() => window.open(`${rowData.link}`)} style={props.layoutColorMode === 'light' ? {'color':'#495057', 'font-weight': 'bold' , 'text-align': 'justify'} : {'color':'#ffffff', 'font-weight': 'bold' , 'text-align': 'justify'}}/>      
+                <Button label="Ver documento" className="p-button-link" onClick={() => window.open(`${rowData.link}`)} style={props.layoutColorMode === 'light' ? {'color':'#495057', 'font-weight': 'bold' , 'text-align': 'justify'} : {'color':'#ffffff', 'font-weight': 'bold' , 'text-align': 'justify'}}/>      
             </>
         );
     }
 
-    
+    const estadoBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Estado</span>
+                {rowData.estado}
+            </>
+        );
+    }
 
 
     const userBodyTemplate = (rowData) => {
@@ -372,12 +392,13 @@ export const PliegoEspecificacion = (props) => {
 
     let headerGroup = <ColumnGroup>
                         <Row>
-                            <Column header="ID"                 style={{ 'background-color': '#13af4e', width:'20%'}} />
+                            <Column header="ID"                 style={{ 'background-color': '#13af4e', width:'20%'}}/>
                             <Column header="TITULO"             style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                            <Column header="CODIGO"             style={{ 'background-color': '#13af4e', width:'20%'}} />
+                            <Column header="CODIGO"             style={{ 'background-color': '#13af4e', width:'20%'}}/>
                             <Column header="SEMESTRE"           style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                            <Column header="LINK"               style={{ 'background-color': '#13af4e', width:'40%'}} />
-                            <Column header="USER"               style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                            <Column header="LINK"               style={{ 'background-color': '#13af4e', width:'40%'}}/>
+                            <Column header="ESTADO"             style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                            <Column header="USUARIO"            style={{ 'background-color': '#13af4e', width:'20%'}}/>
                             <Column header="Editar/Eliminar"    style={{ 'background-color': '#13af4e', width:'20%'}}/>
                         </Row>
                     </ColumnGroup>;
@@ -405,6 +426,7 @@ export const PliegoEspecificacion = (props) => {
                         <Column style={{width:'20%'}} field="codigo"   header="CODIGO"   sortable body={codigoBodyTemplate}></Column>
                         <Column style={{width:'20%'}} field="semestre" header="SEMESTRE" sortable body={semestreBodyTemplate}></Column>
                         <Column style={{width:'40%'}} field="link"     header="LINK"     sortable body={linkBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} field="estado"   header="ESTADO"   sortable body={estadoBodyTemplate}></Column>
                         <Column style={{width:'20%'}} field="user"     header="USER"     sortable body={userBodyTemplate}></Column>
                         <Column style={{width:'20%'}} body={actionBodyTemplate}></Column>
 
@@ -454,6 +476,16 @@ export const PliegoEspecificacion = (props) => {
                             </div>
                             {getFormErrorMessage('link')}
 
+                            <div className="p-field mt-2">
+                                <div className="p-inputgroup">
+                                        <span className="p-inputgroup-addon">
+                                            <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/post.png' : 'assets/layout/images/post-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>  
+                                        </span>
+                                        <Dropdown id="estado" name="estado" placeholder="Seleccione un estado" value={formik.values.estado} onChange={formik.handleChange} options={publicacion} optionLabel="name"  optionValue="name"/>
+                                </div>       
+                            </div>
+                            {getFormErrorMessage('estado')}
+                            
                             <div className="p-field mt-2">
                                 <div className="p-inputgroup">
                                         <span className="p-inputgroup-addon">

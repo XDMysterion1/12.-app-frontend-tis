@@ -15,7 +15,12 @@ import {Empresa}                 from './components/Empresa';
 import { Convocatoria }          from './components/Convocatoria';
 import { PliegoEspecificacion }  from './components/PliegoEspecificacion';
 import { Aviso }                 from './components/Aviso';
+import { ListEmpresa }           from './components/ListEmpresa';
+import { ListConvocatoria }      from './components/ListConvocatoria';
+import { ListPliego }            from './components/ListPliego';
+
 import Cookies                   from 'universal-cookie';
+import { MenuService }           from './service/Menu';
 
 
 import PrimeReact           from 'primereact/api';
@@ -39,11 +44,19 @@ const App = () => {
     const [overlayMenuActive, setOverlayMenuActive]           = useState(false);
     const [mobileMenuActive, setMobileMenuActive]             = useState(false);
     const [mobileTopbarMenuActive, setMobileTopbarMenuActive] = useState(false);
+    const [menus, setMenus]                                   = useState(null);
+    const cookies                                             = new Cookies();
+    const menuService = new MenuService();
 
     PrimeReact.ripple = true;
 
     let menuClick = false;
     let mobileTopbarMenuClick = false;
+
+
+    useEffect(()=>{
+        menuService.getMenusAdmin().then(data => setMenus(data));
+    },[])
 
     useEffect(() => {
         if (mobileMenuActive) {
@@ -134,56 +147,6 @@ const App = () => {
         return window.innerWidth >= 992;
     }
 
-    const menu0 = [
-        {
-            label: 'Home',
-            items: [{
-                label: 'Tablero', icon: 'pi pi-fw pi-home', to: '/'
-            }]
-        }
-    ];
-
-    const menu = [
-        {
-            label: 'Home',
-            items: [{
-                label: 'Tablero', icon: 'pi pi-fw pi-home', to: '/'
-            }]
-        },
-        {
-            label: 'Gestion de Roles', icon: 'pi pi-fw pi-sitemap',
-            items: [
-                {label: 'Roles', icon: 'pi pi-fw pi-users', to: '/Role'},
-               
-            ]
-        },
-        {
-            label: 'Gestion de Usuario', icon: 'pi pi-fw pi-sitemap',
-            items: [
-                {label: 'Usuarios', icon: 'pi pi-fw pi-user', to: '/User'},
-            ]
-        },
-        {
-            label: 'Gestion de Empresa', icon: 'pi pi-fw pi-sitemap',
-            items: [
-                {label: 'Empresas', icon: 'pi pi-fw pi-user', to: '/Empresa'},
-            ]
-        },
-        {
-            label: 'Gestion Publicacion', icon: 'pi pi-fw pi-sitemap',
-            items: [
-                {label: 'Convocatoria', icon: 'pi pi-fw pi-id-card', to: '/Convocatoria'},
-                {label: 'Pliego de Especificaciones', icon: 'pi pi-fw pi-check-square', to: '/PliegoEspecificacion'}
-            ]
-        },
-        {
-            label: 'Gestion Avisos', icon: 'pi pi-fw pi-sitemap',
-            items: [
-                {label: 'Avisos', icon: 'pi pi-fw pi-id-card', to: '/Aviso'}
-            ]
-        },
-    ];
-
     const addClass = (element, className) => {
         if (element.classList)
             element.classList.add(className);
@@ -215,7 +178,7 @@ const App = () => {
                        mobileTopbarMenuActive={mobileTopbarMenuActive} onMobileTopbarMenuClick={onMobileTopbarMenuClick} onMobileSubTopbarMenuClick={onMobileSubTopbarMenuClick}/>
 
             <div className="layout-sidebar" onClick={onSidebarClick}>
-                <AppMenu model={menu} onMenuItemClick={onMenuItemClick} layoutColorMode={layoutColorMode} />
+                <AppMenu model={menus} onMenuItemClick={onMenuItemClick} layoutColorMode={layoutColorMode} />
             </div>
 
             <div className="layout-main-container">
@@ -227,6 +190,9 @@ const App = () => {
                     <Route path="/Convocatoria"          exact={true} render={props => <Convocatoria         layoutColorMode={layoutColorMode} {...props} />}/>
                     <Route path="/PliegoEspecificacion"  exact={true} render={props => <PliegoEspecificacion layoutColorMode={layoutColorMode} {...props} />}/>
                     <Route path="/Aviso"                 component={Aviso}/>
+                    <Route path="/ListEmpresa"           exact={true} render={props => <ListEmpresa          layoutColorMode={layoutColorMode} {...props} />}/>
+                    <Route path="/ListConvocatoria"      exact={true} render={props => <ListConvocatoria     layoutColorMode={layoutColorMode} {...props} />}/>
+                    <Route path="/ListPliego"            exact={true} render={props => <ListPliego           layoutColorMode={layoutColorMode} {...props} />}/>
                 </div>
 
                 <AppFooter layoutColorMode={layoutColorMode}/>

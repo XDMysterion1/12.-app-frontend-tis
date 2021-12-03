@@ -18,6 +18,7 @@ import axios from 'axios';
         codigo:    `${data.codigo}`,
         semestre:  `${data.semestre}`,
         link:      `${data.link}`,
+        estado:    `${data.estado}`,
         user:      `${data.user}` 
       }
       )
@@ -36,6 +37,7 @@ export const updatePliegoID =(data,id) =>{
         codigo:    `${data.codigo}`,
         semestre:  `${data.semestre}`,
         link:      `${data.link}`,
+        estado:    `${data.estado}`,
         user:      `${data.user}` 
     }
     )
@@ -49,4 +51,8 @@ export const updatePliegoID =(data,id) =>{
 
 export const deletePliegoID =(id) =>{
     return axios.delete(`https://magic-tech-backend.herokuapp.com/api/deletePliegoId/${id}`);
+}
+
+export const getPliegosPublicados = () =>{
+  return axios.get('https://magic-tech-backend.herokuapp.com/api/getPliegosPublicados');
 }
