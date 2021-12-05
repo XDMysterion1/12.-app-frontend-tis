@@ -29,16 +29,6 @@ export const ListConvocatoria = (props) => {
         })
     }
 
-  
-    const TableHeader = (
-        <div className="table-header">
-            Lista de convocatorias publicadas
-            <span className="p-input-icon-left">
-                <i className="pi pi-search" />
-                <InputText value={globalFilter} onChange={(e) => setGlobalFilter(e.target.value)} placeholder="Busqueda de convocatorias" />
-            </span>
-        </div>
-    );
     const tituloBodyTemplate = (rowData) => {
         return (
             <>
@@ -75,12 +65,46 @@ export const ListConvocatoria = (props) => {
         );
     }
 
+
+    const renderHeader = () => {
+        return (
+            <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+            <h5 className="m-0">Lista de convocatorias publicadas</h5>
+            <span className="block mt-2 md:mt-0 p-input-icon-left">
+                <i className="pi pi-search" />
+                <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." />
+            </span>
+        </div>
+        )
+    }
+
+    const renderGroup = () => {
+        return (
+            <ColumnGroup>
+                <Row>
+                    <Column header={showHeader} colSpan={4}></Column>
+                </Row>
+                <Row>
+                    <Column header="NOMBRE"     field="TITULO"      sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="SOCIEDAD"   field="CODIGO"      sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="DIRECCION"  field="SEMESTRE"    sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="LINK"       field="LINK"        sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                </Row>
+            </ColumnGroup>
+        )
+    }
+
+
+    const showHeader  = renderHeader();
+    const headerGroup = renderGroup();
+
     return (
         <div className="grid table-demo">
             <div className="col-12">
                 <div className="card">
                     <DataTable value={convocatorias} className="p-datatable-gridlines p-datatable-striped p-datatable-sm p-datatable-customers" dataKey="id" rowHover
-                        paginator rows={10} rowsPerPageOptions={[5, 10, 25]} globalFilter={globalFilter} emptyMessage="No se encontraron empresas" loading={loading} header={TableHeader}>
+                        paginator rows={10} rowsPerPageOptions={[5, 10, 25]} globalFilter={globalFilter} emptyMessage="No se encontraron empresas" loading={loading} 
+                        headerColumnGroup={headerGroup} >
                         <Column style={{width:'20%'}} field="titulo"    header="TITULO"     sortable body={tituloBodyTemplate}    ></Column>
                         <Column style={{width:'20%'}} field="codigo"    header="CODIGO"     sortable body={codigoBodyTemplate}    ></Column>
                         <Column style={{width:'20%'}} field="semestre"  header="SEMESTRE"   sortable body={semestreBodyTemplate}  ></Column>

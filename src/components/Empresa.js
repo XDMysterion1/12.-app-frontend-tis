@@ -46,6 +46,8 @@ export const Empresa = (props) => {
 
     const [empresas, setEmpresas]                       = useState(null);
     const [empresaDialog, setEmpresaDialog]             = useState(false);
+    const [globalFilter, setGlobalFilter]               = useState('');
+    const [loading, setLoading]                         = useState(true);
     const [deleteEmpresaDialog, setDeleteEmpresaDialog] = useState(false);
 
     const [empresa, setEmpresa]                         = useState(emptyEmpresa);
@@ -295,6 +297,7 @@ export const Empresa = (props) => {
             }else{
                 console.log("---------Empresas insertados-----------");
                 setEmpresas(json.data);
+                setLoading(false);
             }
         })
     }
@@ -497,8 +500,8 @@ export const Empresa = (props) => {
     const actionBodyTemplate = (rowData) => {
         return (
             <div className="actions">
-                <Button icon="pi pi-pencil" style={{'background': '#13af4e'}} className="p-button-rounded p-button-success p-mr-2"   onClick={() => editEmpresa(rowData)} />
-                <Button icon="pi pi-trash"  style={{'background': '#eee500'}} className="p-button-rounded p-button-warning"          onClick={() => confirmDeleteEmpresa(rowData)} />
+                <Button icon="pi pi-pencil" style={{'background': '#13af4e'}} className="p-button-rounded p-button-success mr-2"   onClick={() => editEmpresa(rowData)} />
+                <Button icon="pi pi-trash"  style={{'background': '#eee500'}} className="p-button-rounded p-button-warning"        onClick={() => confirmDeleteEmpresa(rowData)} />
             </div>
         );
     }
@@ -511,17 +514,40 @@ export const Empresa = (props) => {
     );
 
 
-    let headerGroup = <ColumnGroup>
-                        <Row>
-                            <Column header="ID"                 style={{ 'background-color': '#13af4e', width:'20%'}} />
-                            <Column header="NOMBRE"             style={{ 'background-color': '#13af4e', width:'20%'}} />
-                            <Column header="SOCIEDAD"           style={{ 'background-color': '#13af4e', width:'20%'}} />
-                            <Column header="DIRECCION"          style={{ 'background-color': '#13af4e', width:'20%'}} />
-                            <Column header="CORREO ELECTRONICO" style={{ 'background-color': '#13af4e', width:'25%'}} />
-                            <Column header="USUARIO"            style={{ 'background-color': '#13af4e', width:'20%'}} />
-                            <Column header="Editar/Eliminar"    style={{ 'background-color': '#13af4e', width:'20%'}} />
-                        </Row>
-                    </ColumnGroup>;
+    const renderHeader = () => {
+        return (
+            <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+            <h5 className="m-0">Gestion de empresas</h5>
+            <span className="block mt-2 md:mt-0 p-input-icon-left">
+                <i className="pi pi-search" />
+                <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." />
+            </span>
+        </div>
+        )
+    }
+
+    const renderGroup = () => {
+        return (
+            <ColumnGroup>
+                <Row>
+                    <Column header={showHeader} colSpan={7}></Column>
+                </Row>
+                <Row>
+                    <Column header="ID"                 field="id"           sortable  style={{ 'background-color': '#13af4e', width:'20%'}} />
+                    <Column header="NOMBRE"             field="nombre"       sortable  style={{ 'background-color': '#13af4e', width:'20%'}} />
+                    <Column header="SOCIEDAD"           field="tipoSociedad" sortable  style={{ 'background-color': '#13af4e', width:'20%'}} />
+                    <Column header="DIRECCION"          field="direccion"    sortable  style={{ 'background-color': '#13af4e', width:'20%'}} />
+                    <Column header="CORREO ELECTRONICO" field="email"        sortable  style={{ 'background-color': '#13af4e', width:'25%'}} />
+                    <Column header="USUARIO"            field="user"         sortable  style={{ 'background-color': '#13af4e', width:'20%'}} />
+                    <Column header="Editar/Eliminar"                         style={{ 'background-color': '#13af4e', width:'20%'}} />
+                </Row>
+            </ColumnGroup>
+        )
+    }
+
+
+    const showHeader  = renderHeader();
+    const headerGroup = renderGroup();
 
 
     const headerDialog =()=>{
@@ -536,10 +562,12 @@ export const Empresa = (props) => {
                     <Toast ref={toast} />
                     <Toolbar className="" left={leftToolbarTemplate}></Toolbar>
 
-                    <DataTable headerColumnGroup={headerGroup} ref={dt} value={empresas} selection={selectedEmpresas}  onSelectionChange={(e) => setSelectedEmpresas(e.value)}
-                        dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive p-datatable-sm col-12"
+                    <DataTable ref={dt} value={empresas} selection={selectedEmpresas}  onSelectionChange={(e) => setSelectedEmpresas(e.value)}
+                        dataKey="id" rowHover paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive p-datatable-sm p-datatable-gridlines p-datatable-striped"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} users" resizableColumns columnResizeMode="fit" showGridlines>
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} users" resizableColumns columnResizeMode="fit" showGridlines
+                        globalFilter={globalFilter} emptyMessage="No se encontro el rol" loading={loading} headerColumnGroup={headerGroup}
+                        >
                     
                         <Column style={{width:'20%'}} field="id"              header="ID"                 sortable body={idBodyTemplate}            ></Column>
                         <Column style={{width:'20%'}} field="nombre"          header="NOMBRE"             sortable body={nombreBodyTemplate}        ></Column>
