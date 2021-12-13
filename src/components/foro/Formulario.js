@@ -29,8 +29,8 @@ export class Formulario extends Component {
                <form onSubmit={this.crearPost} className="col-8">
                     <legend className="text-center">Crear Nuevo Foro</legend>
                     <div className="">
-                         <label>Titulo del Post:</label>
-                         <input type="text" ref={this.tituloRef} className="textareaTitle" placeholder="Titulo del Post"/>
+                         <label>Titulo del Foro:</label>
+                         <input type="text" ref={this.tituloRef} className="textareaTitle" placeholder="Titulo del Foro"/>
                     </div>
                     <div className="form-group">
                          <label>Contenido: </label>
