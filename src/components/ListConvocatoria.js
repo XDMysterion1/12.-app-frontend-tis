@@ -85,10 +85,10 @@ export const ListConvocatoria = (props) => {
                     <Column header={showHeader} colSpan={4}></Column>
                 </Row>
                 <Row>
-                    <Column header="NOMBRE"     field="TITULO"      sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                    <Column header="SOCIEDAD"   field="CODIGO"      sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                    <Column header="DIRECCION"  field="SEMESTRE"    sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                    <Column header="LINK"       field="LINK"        sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="TITULO"     field="titulo"      sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="SOCIEDAD"   field="codigo"      sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="DIRECCION"  field="semestre"    sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="LINK"       field="link"        sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
                 </Row>
             </ColumnGroup>
         )

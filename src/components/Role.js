@@ -259,7 +259,7 @@ export const Role = (props) => {
                     <Column header={showHeader} colSpan={3}></Column>
                 </Row>
                 <Row>
-                    <Column header="ID"                field="id"   sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="ID"                field="id"   sortable style={{ 'background-color': '#13af4e', width:'20%'}} />
                     <Column header="ROL"               field="rol"  sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
                     <Column header="Editar/Eliminar"                         style={{ 'background-color': '#13af4e', width:'20%'}}/>
                 </Row>

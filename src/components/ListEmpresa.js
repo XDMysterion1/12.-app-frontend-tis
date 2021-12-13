@@ -88,7 +88,7 @@ export const ListEmpresa = (props) => {
                     <Column header={showHeader} colSpan={4}></Column>
                 </Row>
                 <Row>
-                    <Column header="NOMBRE"                 field="nombre"       sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="TITULO"                 field="titulo"       sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
                     <Column header="SOCIEDAD"               field="tipoSociedad" sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
                     <Column header="DIRECCION"              field="direccion"    sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
                     <Column header="CORREO ELECTRONICO"     field="email"        sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
@@ -110,7 +110,7 @@ export const ListEmpresa = (props) => {
                     <DataTable value={empresas} className="p-datatable-gridlines p-datatable-striped p-datatable-sm p-datatable-customers " dataKey="id" rowHover
                         paginator rows={10} rowsPerPageOptions={[5, 10, 25]} globalFilter={globalFilter} emptyMessage="No se encontraron empresas" loading={loading} 
                         headerColumnGroup={headerGroup} >
-                        <Column style={{width:'20%'}} field="nombre"          header="NOMBRE"             sortable body={nombreBodyTemplate}        ></Column>
+                        <Column style={{width:'20%'}} field="titulo"          header="TITULO"             sortable body={nombreBodyTemplate}        ></Column>
                         <Column style={{width:'20%'}} field="tipoSociedad"    header="SOCIEDAD"           sortable body={tipoSociedadBodyTemplate}  ></Column>
                         <Column style={{width:'20%'}} field="direccion"       header="DIRECCION"          sortable body={direccionBodyTemplate}     ></Column>
                         <Column style={{width:'25%'}} field="email"           header="CORREO ELECTRONICO" sortable body={emailBodyTemplate}         ></Column>
