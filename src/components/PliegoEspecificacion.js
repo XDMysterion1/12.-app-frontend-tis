@@ -441,7 +441,7 @@ export const PliegoEspecificacion = (props) => {
                     <Toast ref={toast} />
                     <Toolbar className="" left={leftToolbarTemplate}></Toolbar>
 
-                    <DataTable headerColumnGroup={headerGroup} ref={dt} value={pliegos} selection={selectedPliegos}  onSelectionChange={(e) => setSelectedPliegos(e.value)}
+                    <DataTable ref={dt} value={pliegos} selection={selectedPliegos}  onSelectionChange={(e) => setSelectedPliegos(e.value)}
                         dataKey="id" rowHover paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive p-datatable-sm p-datatable-gridlines p-datatable-striped"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} users" resizableColumns columnResizeMode="fit" showGridlines
