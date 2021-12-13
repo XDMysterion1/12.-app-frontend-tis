@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './Navegacion.css'
+import './styles.css'
 
 export class Editar extends Component {
 
@@ -32,9 +32,9 @@ export class Editar extends Component {
 
           return(
                <form onSubmit={this.editarPost} className="col-8">
-                    <legend className="text-center">Editar post</legend>
+                    <legend className="text-center">Editar foro</legend>
                     <div className="form-group">
-                         <label>Titulo del Post:</label>
+                         <label>Titulo del Foro:</label>
                          <input  type="text" ref={this.tituloRef} className="textareaTitle" defaultValue={title} />
                     </div>
                     <div className="form-group">

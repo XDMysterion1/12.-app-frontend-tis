@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import axios from 'axios';
 import swal from 'sweetalert2'
-import {Header} from './Header';
+
 import {Navegacion} from './foro/Navegacion';
 import {Posts} from './foro/Posts';
 import {SinglePost} from './foro/SinglePost';
@@ -98,7 +98,7 @@ export class Forum extends Component {
                <BrowserRouter>
                     <div className="container">
                          <div className="row justify-content-center">
-                              <Header />
+                             
                               <Navegacion/>
                               <Switch>
                                    <Route exact path="/" render={ () => {

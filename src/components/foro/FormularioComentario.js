@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './styles.css'
 
-export class Formulario extends Component {
+export class FormularioComentario extends Component {
 
      // crear los refs
      tituloRef = React.createRef();
@@ -12,7 +12,8 @@ export class Formulario extends Component {
 
           // leer los refs
           const post = {
-               title : this.tituloRef.current.value,
+               name:"cesar",
+               email:"cesar@gmail.com",
                body: this.entradaRef.current.value,
                userId: 1
           }
@@ -20,26 +21,22 @@ export class Formulario extends Component {
           // console.log(post);
 
           // enviar por props o petición de axios
-          this.props.crearPost(post);
+          this.props.crearComentario(post);
      }
 
      render() {  
           return ( 
 
                <form onSubmit={this.crearPost} className="col-8">
-                    <legend className="text-center">Crear Nuevo Foro</legend>
-                    <div className="">
-                         <label>Titulo del Post:</label>
-                         <input type="text" ref={this.tituloRef} className="textareaTitle" placeholder="Titulo del Post"/>
-                    </div>
+                    <legend className="text-center">Crear Nuevo Comentario</legend>
                     <div className="form-group">
-                         <label>Contenido: </label>
-                         <textarea className="texarea" ref={this.entradaRef}  placeholder="Contenido..."></textarea>
+                  
+                         <textarea className="texarea" ref={this.entradaRef}  placeholder="Escribe un comentario..."></textarea>
                     </div>
                     
                     <button type="submit" class="p-button p-component p-button-success p-mr-2" style={{'color': 'rgb(255, 255, 255)', 'background': 'rgb(19, 175, 78)'}}>
                          
-                         <span class="p-button-label p-c">Crear</span>
+                         <span class="p-button-label p-c">Comentar</span>
                          <span class="p-ink" style={{'height': '104px', 'width': '104px', 'top': '-31px', 'left': '20px'}}></span>
                          </button>
                </form>

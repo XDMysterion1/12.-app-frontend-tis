@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Comentario } from './Comentario';
-import swal from 'sweetalert2'
+import swal from 'sweetalert2';
+import './styles.css';
 
 import axios from 'axios';
 
@@ -37,44 +38,43 @@ export class SinglePost extends Component {
 
               
      }
+     crearComentario = (comm) => {
+          axios.post(`https://jsonplaceholder.typicode.com/comments`, {comm})
+                 .then(res => {
+                     if(res.status === 201) {
+
+                         let postId = {id: res.data.id};
+                        const nuevoPost = Object.assign({}, res.data.comm, postId);
+  
+                        this.setState(prevState => ({
+                          comment: [...prevState.comment, nuevoPost]
+                        }))
+                     }
+                 })
+      }
 
 
 
 
-     mostrarPost = (props) => {
+     mostrarPost = (props, cc) => {
           if(!props.post) return null;
           const {title, body, userId, id } = this.props.post;
 
           return (
                <React.Fragment>
-                    <h1>{title}</h1>
-                    <p>Autor: {userId}</p>
-                    {body}
-                    <h2>{id}</h2>
+                    <div className='contenedorForo'>
+                         <h1>{title}</h1>
+                         <p>Autor: {userId}</p>
+                         {body}
+
+                    </div>
+
                     
-                    <Comentario comment={this.state.comment} usuario={this.props.post}/>  
+                    <Comentario comment={this.state.comment} usuario={this.props.post} crearComentario={this.crearComentario}/>  
                </React.Fragment>
           )
      }
-     crearPost = (post) => {
-          axios.post(`https://jsonplaceholder.typicode.com/comments`, {post})
-                 .then(res => {
-                     if(res.status === 201) {
-                         swal.fire(
-                             'Post Creado',
-                             'Se creo correctamente',
-                             'success'
-                         
-                         )
-                         let postId = {id: res.data.id};
-                        const nuevoPost = Object.assign({}, res.data.post, postId);
- 
-                        this.setState(prevState => ({
-                            posts: [...prevState.posts, nuevoPost]
-                        }))
-                     }
-                 })
-      }
+
 
      render() { 
 
@@ -82,7 +82,7 @@ export class SinglePost extends Component {
                <>
                     <div className="col-12 col-md-8">
                          
-                         {this.mostrarPost(this.props)}
+                         {this.mostrarPost(this.props, this.crearComentario)}
                          
                     
                     </div>

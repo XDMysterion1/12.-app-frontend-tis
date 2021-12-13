@@ -12,12 +12,16 @@ export class ListadoCometario extends Component {
           return (
                <React.Fragment>
                     {Object.keys(comment).map(comm => (
+                         <>
+                         
                          <MostarComent
                               key={comm}
                               info={this.props.comment[comm]}
                               usuario={this.props.usuario}
                              // borrarPost={this.props.borrarPost}
                          />
+                         </>
+                     
                     ))}
                </React.Fragment>
           )
