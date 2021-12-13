@@ -18,6 +18,9 @@ import { Aviso }                 from './components/Aviso';
 import { ListEmpresa }           from './components/ListEmpresa';
 import { ListConvocatoria }      from './components/ListConvocatoria';
 import { ListPliego }            from './components/ListPliego';
+import { Forum }            from './components/Forum';
+
+
 
 import Cookies                   from 'universal-cookie';
 import { MenuService }           from './service/Menu';
@@ -193,6 +196,8 @@ const App = () => {
                     <Route path="/ListEmpresa"           exact={true} render={props => <ListEmpresa          layoutColorMode={layoutColorMode} {...props} />}/>
                     <Route path="/ListConvocatoria"      exact={true} render={props => <ListConvocatoria     layoutColorMode={layoutColorMode} {...props} />}/>
                     <Route path="/ListPliego"            exact={true} render={props => <ListPliego           layoutColorMode={layoutColorMode} {...props} />}/>
+                    <Route path="/Forum"            exact={true} render={props => <Forum           layoutColorMode={layoutColorMode} {...props} />}/>
+
                 </div>
 
                 <AppFooter layoutColorMode={layoutColorMode}/>

@@ -51,6 +51,12 @@
                 {"label": "Convocatoria"              , "icon": "pi pi-fw pi-id-card"     , "to": "/ListConvocatoria"},
                 {"label": "Pliego de Especificaciones", "icon": "pi pi-fw pi-check-square", "to": "/ListPliego"}
             ]
+        },
+        {
+            "label": "FORO DE DISCUSION", "icon": "pi pi-fw pi-sitemap",
+            "items": [
+                {"label": "Foro", "icon": "pi pi-fw pi-users", "to": "/Forum"}
+            ]
         }
 
 

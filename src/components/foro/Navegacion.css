@@ -1,0 +1,22 @@
+nav {
+    display: flex;
+    justify-content: space-between;
+
+}
+.textareaTitle{
+    display : block;
+    padding : 10px;
+    margin  : 10px;
+    width: 80%;
+    height: 5%;
+}
+.texarea{
+    display : block;
+
+    padding : 10px;
+    margin  : 10px;
+    width   : 100%;
+    height  : 160px;  
+    resize  : none;
+    overflow: auto;
+}

@@ -29,6 +29,7 @@
         "react-scripts": "3.4.1",
         "react-transition-group": "^4.4.1",
         "sass": "^1.32.8",
+        "sweetalert2": "^11.3.0",
         "uniqid": "^5.4.0",
         "universal-cookie": "^4.0.4",
         "yup": "^0.32.11"
