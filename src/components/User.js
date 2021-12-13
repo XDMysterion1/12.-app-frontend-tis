@@ -33,6 +33,8 @@ export const User = (props) => {
     const [roles,setRoles]                           = useState(null);
     const [rol, setRol]                              = useState(null);
     const [users, setUsers]                          = useState(null);
+    const [globalFilter, setGlobalFilter]            = useState('');
+    const [loading, setLoading]                      = useState(true);
     const [userDialog, setUserDialog]                = useState(false);
     const [deleteUserDialog, setDeleteUserDialog]    = useState(false);
 
@@ -201,6 +203,7 @@ export const User = (props) => {
             }else{
                 console.log("---------Users insertados-----------");
                 setUsers(json.data);
+                setLoading(false);
             }
         })
     }
@@ -323,9 +326,6 @@ export const User = (props) => {
         );
     }
 
-    
-
-
     const rolBodyTemplate = (rowData) => {
         return (
             <>
@@ -355,8 +355,8 @@ export const User = (props) => {
     const actionBodyTemplate = (rowData) => {
         return (
             <div className="actions">
-                <Button icon="pi pi-pencil" style={{'background': '#13af4e'}} className="p-button-rounded p-button-success p-mr-2"   onClick={() => editUser(rowData)} />
-                <Button icon="pi pi-trash"  style={{'background': '#eee500'}} className="p-button-rounded p-button-warning"          onClick={() => confirmDeleteUser(rowData)} />
+                <Button icon="pi pi-pencil" style={{'background': '#13af4e'}} className="p-button-rounded p-button-success mr-2"   onClick={() => editUser(rowData)} />
+                <Button icon="pi pi-trash"  style={{'background': '#eee500'}} className="p-button-rounded p-button-warning"        onClick={() => confirmDeleteUser(rowData)} />
             </div>
         );
     }
@@ -368,19 +368,39 @@ export const User = (props) => {
         </>
     );
 
+    const renderHeader = () => {
+        return (
+            <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+            <h5 className="m-0">Gestion de usuarios</h5>
+            <span className="block mt-2 md:mt-0 p-input-icon-left">
+                <i className="pi pi-search" />
+                <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." />
+            </span>
+        </div>
+        )
+    }
 
-    let headerGroup = <ColumnGroup>
-                        <Row>
-                            <Column header="ID"                 style={{ 'background-color': '#13af4e', width:'20%'}} />
-                            <Column header="NOMBRE"             style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                            <Column header="APELLIDO"           style={{ 'background-color': '#13af4e', width:'20%'}} />
-                            <Column header="CORREO ELECTRONICO" style={{ 'background-color': '#13af4e', width:'40%'}}/>
-                            <Column header="CONTRASENA"         style={{ 'background-color': '#13af4e', width:'20%'}} />
-                            <Column header="ROL"                style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                            <Column header="Editar/Eliminar"    style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                        </Row>
-                    </ColumnGroup>;
+    const renderGroup = () => {
+        return (
+            <ColumnGroup>
+                <Row>
+                    <Column header={showHeader} colSpan={6}></Column>
+                </Row>
+                <Row>
+                    <Column header="ID"                 field="id"       sortable style={{ 'background-color': '#13af4e', width:'15%'}} />
+                    <Column header="NOMBRE"             field="nombre"   sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="APELLIDO"           field="apellido" sortable style={{ 'background-color': '#13af4e', width:'20%'}} />
+                    <Column header="CORREO ELECTRONICO" field="email"    sortable style={{ 'background-color': '#13af4e', width:'60%'}}/>
+                    <Column header="ROL"                field="rol"      sortable style={{ 'background-color': '#13af4e', width:'10%'}}/>
+                    <Column header="Editar/Eliminar"                              style={{ 'background-color': '#13af4e', width:'10%'}}/>
+                </Row>
+            </ColumnGroup>
+        )
+    }
 
+
+    const showHeader  = renderHeader();
+    const headerGroup = renderGroup();
 
     const headerDialog =()=>{
         return (stateUser?"Actualizando usuario":"Añadir Usuario")
@@ -392,20 +412,21 @@ export const User = (props) => {
             <div className="p-col-12">
                 <div className="card">
                     <Toast ref={toast} />
-                    <Toolbar className="" left={leftToolbarTemplate}></Toolbar>
+                    <Toolbar className="p-mb-4" left={leftToolbarTemplate}></Toolbar>
 
-                    <DataTable headerColumnGroup={headerGroup} ref={dt} value={users} selection={selectedUsers}  onSelectionChange={(e) => setSelectedUsers(e.value)}
-                        dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive p-datatable-sm col-12"
+                    <DataTable ref={dt} value={users} selection={selectedUsers}  onSelectionChange={(e) => setSelectedUsers(e.value)}
+                        dataKey="id" rowHover paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive p-datatable-sm p-datatable-gridlines p-datatable-striped"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} users" resizableColumns columnResizeMode="fit" showGridlines>
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} users" resizableColumns columnResizeMode="fit" showGridlines
+                        globalFilter={globalFilter} emptyMessage="No se encontro el rol" loading={loading} headerColumnGroup={headerGroup}
+                        >
                     
-                        <Column style={{width:'20%'}} field="id"         header="ID"                 sortable body={idBodyTemplate}></Column>
-                        <Column style={{width:'20%'}} field="apellido"   header="APELLIDO"           sortable body={nombreBodyTemplate}></Column>
-                        <Column style={{width:'20%'}} field="nombre"     header="NOMBRE"             sortable body={apellidoBodyTemplate}></Column>
-                        <Column style={{width:'40%'}} field="email"      header="CORREO ELECTRONICO" sortable body={emailBodyTemplate}></Column>
-                        <Column style={{width:'20%'}} field="password"   header="CONTRASENA"         sortable body={passwordBodyTemplate}></Column>
-                        <Column style={{width:'20%'}} field="rol"        header="ROL"                sortable body={rolBodyTemplate}></Column>
-                        <Column style={{width:'20%'}} body={actionBodyTemplate}></Column>
+                        <Column style={{width:'15%'}} field="id"         header="ID"                 sortable body={idBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} field="nombre"     header="APELLIDO"           sortable body={nombreBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} field="apellido"   header="NOMBRE"             sortable body={apellidoBodyTemplate}></Column>
+                        <Column style={{width:'60%'}} field="email"      header="CORREO ELECTRONICO" sortable body={emailBodyTemplate}></Column>
+                        <Column style={{width:'10%'}} field="rol"        header="ROL"                sortable body={rolBodyTemplate}></Column>
+                        <Column style={{width:'10%'}} body={actionBodyTemplate}></Column>
 
                     </DataTable>
 

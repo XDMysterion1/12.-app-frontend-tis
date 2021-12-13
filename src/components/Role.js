@@ -26,6 +26,8 @@ export const Role = (props) => {
     const [roles, setRoles]                          = useState(null);
     const [roleDialog, setRoleDialog]                = useState(false);
     const [deleteRoleDialog, setDeleteRoleDialog]    = useState(false);
+    const [globalFilter, setGlobalFilter]            = useState('');
+    const [loading, setLoading]                      = useState(true);
 
     const [role, setRole]                            = useState(emptyRole);
     const [selectedRoles, setSelectedRoles]          = useState(null);
@@ -130,6 +132,7 @@ export const Role = (props) => {
             }else{
                 console.log("---------roles insertados-----------");
                 setRoles(json.data);
+                setLoading(false);
             }
         })
     }
@@ -217,7 +220,6 @@ export const Role = (props) => {
         return (
             <React.Fragment>
                 <Button style={props.layoutColorMode === 'light' ? {'color':'#ffffff','background': '#13af4e'} : {'color':'#ffffff','background': '#13af4e'}} label="Nuevo" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={openNew} />
-                
             </React.Fragment>
         )
     }
@@ -225,8 +227,8 @@ export const Role = (props) => {
     const actionBodyTemplate = (rowData) => {
         return (
             <div className="actions">
-                <Button icon="pi pi-pencil" style={{'background': '#13af4e'}} className="p-button-rounded p-button-success p-mr-2"   onClick={() => editRole(rowData)} />
-                <Button icon="pi pi-trash"  style={{'background': '#eee500'}} className="p-button-rounded p-button-warning"          onClick={() => confirmDeleteRole(rowData)} />
+                <Button icon="pi pi-pencil" style={{'background': '#13af4e'}} className="p-button-rounded p-button-success mr-2"   onClick={() => editRole(rowData)} />
+                <Button icon="pi pi-trash"  style={{'background': '#eee500'}} className="p-button-rounded p-button-warning"        onClick={() => confirmDeleteRole(rowData)} />
             </div>
         );
     }
@@ -238,18 +240,40 @@ export const Role = (props) => {
         </>
     );
 
+    const renderHeader = () => {
+        return (
+            <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+            <h5 className="m-0">Gestion de roles</h5>
+            <span className="block mt-2 md:mt-0 p-input-icon-left">
+                <i className="pi pi-search" />
+                <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." />
+            </span>
+        </div>
+        )
+    }
 
-    let headerGroup = <ColumnGroup>
-                        <Row>
-                            <Column header="ID"                 style={{ 'background-color': '#13af4e', width:'20%'}} />
-                            <Column header="ROL"                style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                            <Column header="Editar/Eliminar"    style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                        </Row>
-                    </ColumnGroup>;
+    const renderGroup = () => {
+        return (
+            <ColumnGroup>
+                <Row>
+                    <Column header={showHeader} colSpan={3}></Column>
+                </Row>
+                <Row>
+                    <Column header="ID"                field="id"   sortable style={{ 'background-color': '#13af4e', width:'20%'}} />
+                    <Column header="ROL"               field="rol"  sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="Editar/Eliminar"                         style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                </Row>
+            </ColumnGroup>
+        )
+    }
 
-const headerDialog =()=>{
-    return (stateRole)?"Actualizando Rol":"Añadir Rol"
-}
+
+    const showHeader  = renderHeader();
+    const headerGroup = renderGroup();
+
+    const headerDialog =()=>{
+        return (stateRole)?"Actualizando Rol":"Añadir Rol"
+    }
 
     return (
         <div className="p-grid crud-demo">
@@ -259,13 +283,15 @@ const headerDialog =()=>{
                     <Toast ref={toast} />
                     <Toolbar className="p-mb-4" left={leftToolbarTemplate}></Toolbar>
 
-                    <DataTable headerColumnGroup={headerGroup} ref={dt} value={roles} selection={selectedRoles}  onSelectionChange={(e) => setSelectedRoles(e.value)}
-                        dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive p-datatable-sm"
+                    <DataTable ref={dt} value={roles} selection={selectedRoles}  onSelectionChange={(e) => setSelectedRoles(e.value)}
+                        dataKey="id" rowHover paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive p-datatable-sm p-datatable-gridlines p-datatable-striped"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} roles" resizableColumns columnResizeMode="fit" showGridlines>
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} roles" resizableColumns columnResizeMode="fit" showGridlines
+                        globalFilter={globalFilter} emptyMessage="No se encontro el rol" loading={loading} headerColumnGroup={headerGroup}
+                    >
 
-                        <Column style={{width:'20%'}} field="id"   header="ID"  sortable body={idBodyTemplate}></Column>
-                        <Column style={{width:'20%'}} field="role" header="ROL" sortable body={roleBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} header="ID"  field="id"     sortable body={idBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} header="ROL" field="rol"    sortable body={roleBodyTemplate}></Column>
                         <Column style={{width:'20%'}} body={actionBodyTemplate}></Column>
 
                     </DataTable>
@@ -278,7 +304,6 @@ const headerDialog =()=>{
                                     <div className="p-inputgroup">
                                             <span className="p-inputgroup-addon">
                                                 <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/rol.png' : 'assets/layout/images/rol-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>   
-                                                
                                             </span>
                                             <InputText id="rol" type="text" name="rol" value={formik.values.rol} onChange={formik.handleChange} placeholder="Rol" autoFocus/>
                                     </div>       
