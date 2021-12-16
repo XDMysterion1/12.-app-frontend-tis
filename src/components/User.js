@@ -17,18 +17,24 @@ import { useFormik }        from "formik";
 import uniqid               from 'uniqid';
 
 import { getUsers,getUserID,createUser,updateUserID,deleteUserID } from '../service/apiUser';
-import { getRoles }         from '../service/apiRole';
+import { getRoles,getRolesActivas }         from '../service/apiRole';
 
 export const User = (props) => {
 
     let emptyUser = {
         id:       null,
-        nombre:     '',
-        apellido:     '',
+        nombre:   '',
+        apellido: '',
         email:    '',
         password: '',
+        estado:   '',
         rol:      ''
     };
+
+    const estados = [
+        { name: "Activo"      },
+        { name: "Desactivado" }
+    ];
     
     const [roles,setRoles]                           = useState(null);
     const [rol, setRol]                              = useState(null);
@@ -48,65 +54,128 @@ export const User = (props) => {
   
     const formik = useFormik({
         initialValues: {
-            nombre:    "",
-            apellido:  "",
-            email:     "",
-            password:  "",
+            nombre:           "",
+            apellido:         "",
+            email:            "",
+            password:         "",
             confirmPassword : "",
-            rol: ''
+            estado:           "",
+            rol:              ""
         },
         
          validate: (data) => {
             
             let errors = {};
-            if (!data.nombre) {
-                errors.nombre = "Se requiere el nombre";
-            } else if (data.nombre.length < 2) {
-                errors.nombre = "Como minimo 2 caracteres";
-            } else if (data.nombre.length > 30) {
-                errors.nombre = "Como maximo 30 caracteres";
-            } else if (!/^^[a-zA-Z\s]+$/i.test(data.nombre)) {
-                errors.nombre = "No se permiten numero o caracteres especiales";
-            }
+            if(stateUser){
+                if (!data.nombre) {
+                    errors.nombre = "Se requiere el nombre";
+                } else if (data.nombre.length < 2) {
+                    errors.nombre = "Como minimo 2 caracteres";
+                } else if (data.nombre.length > 30) {
+                    errors.nombre = "Como maximo 30 caracteres";
+                } else if (!/^^[a-zA-Z\s]+$/i.test(data.nombre)) {
+                    errors.nombre = "No se permiten numero o caracteres especiales";
+                }
 
-            if (!data.apellido) {
-                errors.apellido = "Se requiere el apellido";
-            } else if (data.apellido.length < 2) {
-                errors.apellido = "Como minimo 2 caracteres";
-            } else if (data.apellido.length > 30) {
-                errors.apellido = "Como maximo 30 caracteres";
-            }else if (!/^^[a-zA-Z\s]+$/i.test(data.apellido)) {
-                errors.apellido = "No se permiten numero o caracteres especiales";
-            }
+                if (!data.apellido) {
+                    errors.apellido = "Se requiere el apellido";
+                } else if (data.apellido.length < 2) {
+                    errors.apellido = "Como minimo 2 caracteres";
+                } else if (data.apellido.length > 30) {
+                    errors.apellido = "Como maximo 30 caracteres";
+                }else if (!/^^[a-zA-Z\s]+$/i.test(data.apellido)) {
+                    errors.apellido = "No se permiten numero o caracteres especiales";
+                }
 
-            if (!data.email) {
-                errors.email = "Se requiere el correo electronico";
-            } else if (data.email.length > 255) {
-                errors.email = "Como maximo 255 caracteres";
-            } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(data.email)) {
-                errors.email = 'Dirección de correo electrónico inválida. P.ej. ejemplo@email.com';
-            }else if(!esRepetido(data.email) && stateUser === false){
-                errors.email = "Ya existe el correo electronico";
-            } else if(!esRepetidoUpdate(data.email,emailUpdate) && stateUser === true){
-                errors.email = "Ya existe el correo electronico";  
-            }
+                if (!data.email) {
+                    errors.email = "Se requiere el correo electronico";
+                } else if (data.email.length > 255) {
+                    errors.email = "Como maximo 255 caracteres";
+                } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(data.email)) {
+                    errors.email = 'Dirección de correo electrónico inválida. P.ej. ejemplo@email.com';
+                }else if(!esRepetido(data.email) && stateUser === false){
+                    errors.email = "Ya existe el correo electronico";
+                } else if(!esRepetidoUpdate(data.email,emailUpdate) && stateUser === true){
+                    errors.email = "Ya existe el correo electronico";  
+                }
 
-            if (!data.password) {
-                errors.password = "Se requiere la contraseña";
-            } else if (data.password.length < 6) {
-                errors.password = "Como minimo 6 caracteres";
-            } else if (data.password.length > 255) {
-                errors.password = "Como maximo 255 caracteres";
-            }
+                if (!data.password) {
+                    errors.password = "Se requiere la contraseña";
+                } else if (data.password.length < 6) {
+                    errors.password = "Como minimo 6 caracteres";
+                } else if (data.password.length > 255) {
+                    errors.password = "Como maximo 255 caracteres";
+                }
 
-            if (!data.confirmPassword) {
-                errors.confirmPassword = "Se requiere la confirmacion de la contraseña";
-            }else if (data.confirmPassword != data.password) {
-                errors.confirmPassword = "Las contraseñas deben coincidir";
-            } 
+                if (!data.confirmPassword) {
+                    errors.confirmPassword = "Se requiere la confirmacion de la contraseña";
+                }else if (data.confirmPassword != data.password) {
+                    errors.confirmPassword = "Las contraseñas deben coincidir";
+                } 
 
-            if (!data.rol) {
-                errors.rol = "Se requiere el rol";
+                if (!data.rol) {
+                    errors.rol = "Se requiere el rol";
+                }
+
+                if (!data.estado) {
+                    errors.estado = "Se requiere el estado";
+                } else if (data.estado.length < 2) {
+                    errors.estado = "Como minimo 2 caracteres";
+                } else if (data.estado.length > 30) {
+                    errors.estado = "Como maximo 30 caracteres";
+                } else if (!/^^[a-zA-Z\s]+$/i.test(data.estado)) {
+                    errors.estado = "No se permiten numero o caracteres especiales";
+                }
+            }else{
+                if (!data.nombre) {
+                    errors.nombre = "Se requiere el nombre";
+                } else if (data.nombre.length < 2) {
+                    errors.nombre = "Como minimo 2 caracteres";
+                } else if (data.nombre.length > 30) {
+                    errors.nombre = "Como maximo 30 caracteres";
+                } else if (!/^^[a-zA-Z\s]+$/i.test(data.nombre)) {
+                    errors.nombre = "No se permiten numero o caracteres especiales";
+                }
+
+                if (!data.apellido) {
+                    errors.apellido = "Se requiere el apellido";
+                } else if (data.apellido.length < 2) {
+                    errors.apellido = "Como minimo 2 caracteres";
+                } else if (data.apellido.length > 30) {
+                    errors.apellido = "Como maximo 30 caracteres";
+                }else if (!/^^[a-zA-Z\s]+$/i.test(data.apellido)) {
+                    errors.apellido = "No se permiten numero o caracteres especiales";
+                }
+
+                if (!data.email) {
+                    errors.email = "Se requiere el correo electronico";
+                } else if (data.email.length > 255) {
+                    errors.email = "Como maximo 255 caracteres";
+                } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(data.email)) {
+                    errors.email = 'Dirección de correo electrónico inválida. P.ej. ejemplo@email.com';
+                }else if(!esRepetido(data.email) && stateUser === false){
+                    errors.email = "Ya existe el correo electronico";
+                } else if(!esRepetidoUpdate(data.email,emailUpdate) && stateUser === true){
+                    errors.email = "Ya existe el correo electronico";  
+                }
+
+                if (!data.password) {
+                    errors.password = "Se requiere la contraseña";
+                } else if (data.password.length < 6) {
+                    errors.password = "Como minimo 6 caracteres";
+                } else if (data.password.length > 255) {
+                    errors.password = "Como maximo 255 caracteres";
+                }
+
+                if (!data.confirmPassword) {
+                    errors.confirmPassword = "Se requiere la confirmacion de la contraseña";
+                }else if (data.confirmPassword != data.password) {
+                    errors.confirmPassword = "Las contraseñas deben coincidir";
+                } 
+
+                if (!data.rol) {
+                    errors.rol = "Se requiere el rol";
+                }
             }
             return errors;
     
@@ -122,6 +191,7 @@ export const User = (props) => {
                 _user['apellido']   = data.apellido;
                 _user['email']      = data.email;
                 _user['password']   = data.password;
+                _user['estado']     = data.estado;
                 _user['rol']        = data.rol;
 
                 if (_user.nombre.trim()) {
@@ -130,15 +200,16 @@ export const User = (props) => {
                         const index = findIndexById(user.id);
                         _users[index] = _user;
                         
-                        updateUserID({nombre:`${_user.nombre}`,apellido:`${_user.apellido}`,email:`${_user.email}`,password:`${_user.password}`,rol:`${_user.rol}`},user.id);
+                        updateUserID({nombre:`${_user.nombre}`,apellido:`${_user.apellido}`,email:`${_user.email}`,password:`${_user.password}`,estado:`${_user.estado}`,rol:`${_user.rol}`},user.id);
                         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Usuario Actualizado', life: 3000 });
                     }
                     else {
 
                         _user.id = uniqid("user-");
-                        
+                        _user.estado = "Activo"; 
                         _users.push(_user);
-                        createUser({id:`${_user.id}`,nombre:`${_user.nombre}`,apellido:`${_user.apellido}`,email:`${_user.email}`,password:`${_user.password}`,rol:`${_user.rol}`});
+                        
+                        createUser({id:`${_user.id}`,nombre:`${_user.nombre}`,apellido:`${_user.apellido}`,email:`${_user.email}`,password:`${_user.password}`,estado:`${_user.estado}`,rol:`${_user.rol}`});
                         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'usuario Creado', life: 3000 });
                     }
                 }
@@ -182,7 +253,7 @@ export const User = (props) => {
     },[])
 
     const fetchRoles = () =>{
-        getRoles().then(json =>{
+        getRolesActivas().then(json =>{
             if(json.error){
                 console.log("Error");
             }else{
@@ -240,6 +311,7 @@ export const User = (props) => {
             email:          `${user.email}`,
             password:       `${user.password}`,
             confirmPassword:`${user.password}`,
+            estado:         `${user.estado}`,
             rol:            `${user.rol}`
         });
         setEmailUpdate(`${user.email}`);
@@ -253,17 +325,30 @@ export const User = (props) => {
     }
 
     const deleteUser = () => {
-        let _users = users.filter(val => val.id !== user.id);
-        setUsers(_users);
-        setDeleteUserDialog(false);
+        let _users = [...users];
+        let _user  = {...user };
 
         if (user.email.trim()) {
             if (user.id) {
-                deleteUserID(user.id);
+                
+                const index = findIndexById(user.id);
+                _users[index] = _user;
+
+                updateUserID({nombre:`${_user.nombre}`,apellido:`${_user.apellido}`,email:`${_user.email}`,password:`${_user.password}`,estado:"Desactivado" ,rol:`${_user.rol}`},user.id);
+                _user['nombre']     = _user.nombre;
+                _user['apellido']   = _user.apellido;
+                _user['email']      = _user.email;
+                _user['password']   = _user.password;
+                _user['estado']     = "Desactivado";
+                _user['rol']        = _user.rol;
+                setUser({ ...user });
+                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Usuario desactivado', life: 3000 });
             }
         }
+        setUsers(_users);
         setUser(emptyUser);
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Usuario Eliminado', life: 3000 });
+        setDeleteUserDialog(false);
+        
     }
 
     const findIndexById = (id) => {
@@ -322,6 +407,15 @@ export const User = (props) => {
                 <span className="p-column-title">Contrasena</span>
                 {rowData.password}
                 
+            </>
+        );
+    }
+
+    const estadoBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Estado</span>
+                {rowData.estado}
             </>
         );
     }
@@ -391,7 +485,7 @@ export const User = (props) => {
                     <Column header="NOMBRE"             field="nombre"   sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
                     <Column header="APELLIDO"           field="apellido" sortable style={{ 'background-color': '#13af4e', width:'20%'}} />
                     <Column header="CORREO ELECTRONICO" field="email"    sortable style={{ 'background-color': '#13af4e', width:'60%'}}/>
-                    <Column header="ROL"                field="rol"      sortable style={{ 'background-color': '#13af4e', width:'10%'}}/>
+                    <Column header="ESTADO"             field="estado"   sortable style={{ 'background-color': '#13af4e', width:'10%'}}/>
                     <Column header="Editar/Eliminar"                              style={{ 'background-color': '#13af4e', width:'10%'}}/>
                 </Row>
             </ColumnGroup>
@@ -425,7 +519,7 @@ export const User = (props) => {
                         <Column style={{width:'20%'}} field="nombre"     header="APELLIDO"           sortable body={nombreBodyTemplate}></Column>
                         <Column style={{width:'20%'}} field="apellido"   header="NOMBRE"             sortable body={apellidoBodyTemplate}></Column>
                         <Column style={{width:'60%'}} field="email"      header="CORREO ELECTRONICO" sortable body={emailBodyTemplate}></Column>
-                        <Column style={{width:'10%'}} field="rol"        header="ROL"                sortable body={rolBodyTemplate}></Column>
+                        <Column style={{width:'10%'}} field="estado"     header="ESTADO"             sortable body={estadoBodyTemplate}></Column>
                         <Column style={{width:'10%'}} body={actionBodyTemplate}></Column>
 
                     </DataTable>
@@ -482,6 +576,22 @@ export const User = (props) => {
                                 </div>       
                             </div>
                             {getFormErrorMessage('confirmPassword')}
+
+                            {(stateUser)?
+                                <div className="form-group">
+                                    <div className="p-field mt-2">
+                                        <div className="p-inputgroup">
+                                            <span className="p-inputgroup-addon">
+                                                <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/estado.png' : 'assets/layout/images/estado-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>   
+                                            </span>
+                                            <Dropdown id="estado" name="estado" placeholder="Seleccione un estado" value={formik.values.estado} onChange={formik.handleChange} options={estados} optionLabel="name"  optionValue="name"/> 
+                                        </div>       
+                                    </div>
+                                    {getFormErrorMessage('estado')}
+                                </div>
+                            :
+                                null
+                            }
 
                             <div className="p-field mt-2">
                                 <div className="p-inputgroup">

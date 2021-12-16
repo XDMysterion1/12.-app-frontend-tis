@@ -9,6 +9,7 @@ import { Dialog }           from 'primereact/dialog';
 import { InputText }        from 'primereact/inputtext';
 import { ColumnGroup }      from 'primereact/columngroup';
 import { Row }              from 'primereact/row';
+import { Dropdown }         from 'primereact/dropdown';
 import { useFormik }        from "formik";
 
 import uniqid               from 'uniqid';
@@ -19,9 +20,15 @@ export const Role = (props) => {
 
     
     let emptyRole = {
-        id: null,
-        rol: ''
+        id:     null,
+        rol:    '',
+        estado: ''
     };
+
+    const estados = [
+        { name: "Activo"      },
+        { name: "Desactivado" }
+    ];
 
     const [roles, setRoles]                          = useState(null);
     const [roleDialog, setRoleDialog]                = useState(false);
@@ -40,33 +47,64 @@ export const Role = (props) => {
 
     const formik = useFormik({
         initialValues: {
-          rol: ""
+          rol:    "",
+          estado: ""
         },
         validate: (data) => {
             let errors = {};
+            if(stateRole){
+                if (!data.rol) {
+                    errors.rol = "Se requiere el rol";
+                } else if (data.rol.length < 2) {
+                    errors.rol = "Como minimo 2 caracteres";
+                } else if (data.rol.length > 30) {
+                    errors.rol = "Como maximo 30 caracteres";
+                } else if (!/^^[a-zA-Z\s]+$/i.test(data.rol)) {
+                    errors.rol = "No se permiten numero o caracteres especiales";
+                }else if(!esRepetidoUpdate(data.rol,rolUpdate)&&stateRole === true){
+                    errors.rol = "Ya existe el rol";  
+                }else if(!esRepetido(data.rol)&&stateRole === false){
+                    errors.rol = "Ya existe el rol";
+                }
 
-            if (!data.rol) {
-                errors.rol = "Se requiere el rol";
-            } else if (data.rol.length < 2) {
-                errors.rol = "Como minimo 2 caracteres";
-            } else if (data.rol.length > 30) {
-                errors.rol = "Como maximo 30 caracteres";
-            } else if (!/^^[a-zA-Z\s]+$/i.test(data.rol)) {
-                errors.rol = "No se permiten numero o caracteres especiales";
-            }else if(!esRepetidoUpdate(data.rol,rolUpdate)&&stateRole === true){
-                errors.rol = "Ya existe el rol";  
-            }else if(!esRepetido(data.rol)&&stateRole === false){
-                errors.rol = "Ya existe el rol";
+
+                if (!data.estado) {
+                    errors.estado = "Se requiere el estado";
+                } else if (data.estado.length < 2) {
+                    errors.estado = "Como minimo 2 caracteres";
+                } else if (data.estado.length > 30) {
+                    errors.estado = "Como maximo 30 caracteres";
+                } else if (!/^^[a-zA-Z\s]+$/i.test(data.estado)) {
+                    errors.estado = "No se permiten numero o caracteres especiales";
+                }
+                
+            }else{
+                if (!data.rol) {
+                    errors.rol = "Se requiere el rol";
+                } else if (data.rol.length < 2) {
+                    errors.rol = "Como minimo 2 caracteres";
+                } else if (data.rol.length > 30) {
+                    errors.rol = "Como maximo 30 caracteres";
+                } else if (!/^^[a-zA-Z\s]+$/i.test(data.rol)) {
+                    errors.rol = "No se permiten numero o caracteres especiales";
+                }else if(!esRepetidoUpdate(data.rol,rolUpdate)&&stateRole === true){
+                    errors.rol = "Ya existe el rol";  
+                }else if(!esRepetido(data.rol)&&stateRole === false){
+                    errors.rol = "Ya existe el rol";
+                }
+
             }
+
 
             return errors;
         },
         onSubmit: (data) => {
-            setSubmitted(true);
-            setShowMessage(true);
+
+        if(submitted === true){
             let _roles = [...roles];
             let _role  = {...role };
-            _role['rol'] = data.rol;
+            _role['rol']    = data.rol;
+            _role['estado'] = data.estado;
 
             if (_role.rol.trim()) {
                 if (role.id) {
@@ -75,14 +113,15 @@ export const Role = (props) => {
                     const index = findIndexById(role.id);
                     
                     _roles[index] = _role;
-                    updateRolID({rol:`${_role.rol}`},role.id);
+                    updateRolID({rol:`${_role.rol}`,estado:`${_role.estado}`},role.id);
                     toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Rol Actualizado', life: 3000 });
                 }
                 else {
 
-                    _role.id = uniqid("rol-"); 
+                    _role.id     = uniqid("rol-");
+                    _role.estado = "Activo";
                     _roles.push(_role);
-                    createRol({id:_role.id, rol:`${_role.rol}`});
+                    createRol({id:_role.id, rol:`${_role.rol}`,estado:`${_role.estado}`});
                     toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Rol Creado', life: 3000 });
                 }
             }
@@ -90,6 +129,7 @@ export const Role = (props) => {
             setRoleDialog(false);
             setRole(emptyRole);
             formik.resetForm();
+        }
             
         },
       });
@@ -148,6 +188,12 @@ export const Role = (props) => {
     const hideDialog = () => {
         setSubmitted(false);
         setRoleDialog(false);
+        
+    }
+
+    const showDialog = () => {
+        setSubmitted(true);
+        formik.handleSubmit();
     }
 
     const hideDeleteRoleDialog = () => {
@@ -158,7 +204,7 @@ export const Role = (props) => {
     const editRole = (role) => {
         setRole({ ...role });
         formik.resetForm();
-        formik.setValues({rol:`${role.rol}`});
+        formik.setValues({rol:`${role.rol}`,estado:`${role.estado}`});
         setRolUpdate(`${role.rol}`);
         setStateRole(true);
         setRoleDialog(true);
@@ -170,18 +216,28 @@ export const Role = (props) => {
     }
 
     const deleteRole = () => {
-        let _roles = roles.filter(val => val.id !== role.id);
-        setRoles(_roles);
-        setDeleteRoleDialog(false);
+        
+        let _roles = [...roles];
+        let _role  = {...role };
 
-        if (role.rol.trim()) {
+        if (_role.rol.trim()) {
             if (role.id) {
-                deleteRolID(role.id);
+
+                console.log(role);
+                const index = findIndexById(role.id);
+                
+                _roles[index] = _role;
+                updateRolID({rol:`${_role.rol}`,estado:"Desactivado"},role.id);
+                _role['rol']    = _role.rol;
+                _role['estado'] = "Desactivado";
+                setRole({ ...role });
+                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Rol Desactivado', life: 3000 });
             }
         }
+
+        setRoles(_roles);
         setRole(emptyRole);
-        
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Rol Eliminado', life: 3000 });
+        setDeleteRoleDialog(false);
     }
 
     const findIndexById = (id) => {
@@ -215,6 +271,16 @@ export const Role = (props) => {
             </>
         );
     }
+
+    const estadoBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Estado</span>
+                {rowData.estado}
+            </>
+        );
+    }
+    
 
     const leftToolbarTemplate = () => {
         return (
@@ -256,12 +322,13 @@ export const Role = (props) => {
         return (
             <ColumnGroup>
                 <Row>
-                    <Column header={showHeader} colSpan={3}></Column>
+                    <Column header={showHeader} colSpan={4}></Column>
                 </Row>
                 <Row>
-                    <Column header="ID"                field="id"   sortable style={{ 'background-color': '#13af4e', width:'20%'}} />
-                    <Column header="ROL"               field="rol"  sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                    <Column header="Editar/Eliminar"                         style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="ID"                field="id"      sortable style={{ 'background-color': '#13af4e', width:'20%'}} />
+                    <Column header="ROL"               field="rol"     sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="ESTADO"            field="estado"  sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="Editar/Eliminar"                            style={{ 'background-color': '#13af4e', width:'20%'}}/>
                 </Row>
             </ColumnGroup>
         )
@@ -290,8 +357,9 @@ export const Role = (props) => {
                         globalFilter={globalFilter} emptyMessage="No se encontro el rol" loading={loading} headerColumnGroup={headerGroup}
                     >
 
-                        <Column style={{width:'20%'}} header="ID"  field="id"     sortable body={idBodyTemplate}></Column>
-                        <Column style={{width:'20%'}} header="ROL" field="rol"    sortable body={roleBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} header="ID"     field="id"     sortable body={idBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} header="ROL"    field="rol"    sortable body={roleBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} header="ESTADO" field="estado" sortable body={estadoBodyTemplate}></Column>
                         <Column style={{width:'20%'}} body={actionBodyTemplate}></Column>
 
                     </DataTable>
@@ -310,13 +378,28 @@ export const Role = (props) => {
                                 </div>
                                 {getFormErrorMessage('rol')}
                             </div>
+                            {(stateRole)?
+                                <div className="form-group">
+                                    <div className="p-field mt-2">
+                                        <div className="p-inputgroup">
+                                            <span className="p-inputgroup-addon">
+                                                <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/estado.png' : 'assets/layout/images/estado-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>   
+                                            </span>
+                                            <Dropdown id="estado" name="estado" placeholder="Seleccione un estado" value={formik.values.estado} onChange={formik.handleChange} options={estados} optionLabel="name"  optionValue="name"/> 
+                                        </div>       
+                                    </div>
+                                    {getFormErrorMessage('estado')}
+                                </div>
+                            :
+                                null
+                            }
                             <div className='mt-2'>
                                 <div className="flex justify-content-center flex-wrap">
                                     <div className="flex align-items-center justify-content-center  m-2">
                                         <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} style={props.layoutColorMode === 'light' ? {'color':'#d13639','border-color':'#d13639'} : {'color':'#d13639','border-color':'#d13639'}}/>
                                     </div>
                                     <div className="flex align-items-center justify-content-center  m-2">
-                                        <Button label="Guardar"  icon="pi pi-check" type="submit" className="p-button-text" style={{'background': '#13af4e','color':'#ffffff'}}/>
+                                        <Button label="Guardar"  icon="pi pi-check" type="submit" className="p-button-text"  onClick={showDialog} style={{'background': '#13af4e','color':'#ffffff'}}/>
                                     </div>
                                 </div>
                             </div>

@@ -18,7 +18,7 @@ import { Link }             from 'react-router-dom';
 import uniqid               from 'uniqid';
 
 import { getConvocatorias,getConvocatoriaID,createConvocatoria,updateConvocatoriaID,deleteConvocatoriaID} from '../service/apiConvocatoria';
-import { getUsers } from '../service/apiUser';
+import { getUsers,getUsersActivas } from '../service/apiUser';
 
 export const Convocatoria = (props) => {
 
@@ -28,6 +28,7 @@ export const Convocatoria = (props) => {
         codigo:    '',
         semestre:  '',
         link:      '',
+        publicado: '',
         estado:    '',
         user:      ''
     };
@@ -43,7 +44,12 @@ export const Convocatoria = (props) => {
 
     const publicacion = [
         { name: "Publicar"     },
-        { name: "No publicado" }
+        { name: "No publicar" }
+    ];
+
+    const estados = [
+        { name: "Activo"      },
+        { name: "Desactivado" }
     ];
 
     const [convocatorias, setConvocatorias]                          = useState(null);
@@ -67,67 +73,140 @@ export const Convocatoria = (props) => {
             codigo:    '',
             semestre:  '',
             link:      '',
+            publicado: '',
             estado:    '',
             user:      ''
         },
          validate: (data) => {
             let errors = {};
+            if(stateConvocatoria){
+                if (!data.titulo) {
+                    errors.titulo = "Se requiere el titulo";
+                } else if (data.titulo.length < 2) {
+                    errors.titulo = "Como minimo 2 caracteres";
+                } else if (data.titulo.length > 50) {
+                    errors.titulo = "Como maximo 50 caracteres";
+                } else if (!/^^[a-zA-Z0-9\s]+$/i.test(data.titulo)) {
+                    errors.titulo = "No se permiten numero o caracteres especiales";
+                }
 
-            if (!data.titulo) {
-                errors.titulo = "Se requiere el titulo";
-            } else if (data.titulo.length < 2) {
-                errors.titulo = "Como minimo 2 caracteres";
-            } else if (data.titulo.length > 50) {
-                errors.titulo = "Como maximo 50 caracteres";
-            } else if (!/^^[a-zA-Z0-9\s]+$/i.test(data.titulo)) {
-                errors.titulo = "No se permiten numero o caracteres especiales";
-            }
+                if (!data.codigo) {
+                    errors.codigo = "Se requiere el codigo";
+                } else if (data.codigo.length < 2) {
+                    errors.codigo = "Como minimo 2 caracteres";
+                } else if (data.codigo.length > 30) {
+                    errors.codigo = "Como maximo 30 caracteres";
+                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.codigo)) {
+                    errors.codigo = "No se permiten numero o caracteres especiales";
+                }else if(!esRepetido(data.codigo) && stateConvocatoria === false){
+                    errors.codigo = "Ya existe el codigo";
+                } else if(!esRepetidoUpdate(data.codigo,convocatoriaUpdate) && stateConvocatoria === true){
+                    errors.codigo = "Ya existe el codigo";  
+                }
 
-            if (!data.codigo) {
-                errors.codigo = "Se requiere el codigo";
-            } else if (data.codigo.length < 2) {
-                errors.codigo = "Como minimo 2 caracteres";
-            } else if (data.codigo.length > 30) {
-                errors.codigo = "Como maximo 30 caracteres";
-            }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.codigo)) {
-                errors.codigo = "No se permiten numero o caracteres especiales";
-            }else if(!esRepetido(data.codigo) && stateConvocatoria === false){
-                errors.codigo = "Ya existe el codigo";
-            } else if(!esRepetidoUpdate(data.codigo,convocatoriaUpdate) && stateConvocatoria === true){
-                errors.codigo = "Ya existe el codigo";  
-            }
+                
+                if (!data.semestre) {
+                    errors.semestre = "Se requiere el semestre";
+                } else if (data.semestre.length < 2) {
+                    errors.semestre = "Como minimo 2 caracteres";
+                } else if (data.semestre.length > 30) {
+                    errors.semestre = "Como maximo 30 caracteres";
+                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.semestre)) {
+                    errors.semestre = "No se permiten numero o caracteres especiales";
+                }
 
-            
-            if (!data.semestre) {
-                errors.semestre = "Se requiere el semestre";
-            } else if (data.semestre.length < 2) {
-                errors.semestre = "Como minimo 2 caracteres";
-            } else if (data.semestre.length > 30) {
-                errors.semestre = "Como maximo 30 caracteres";
-            }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.semestre)) {
-                errors.semestre = "No se permiten numero o caracteres especiales";
-            }
+                if (!data.link) {
+                    errors.link = "Se requiere el link";
+                }else if (data.link.length > 500) {
+                    errors.link = "Como maximo 500 caracteres";
+                }else if (!/^(ftp|http|https):\/\/[^ "]+$/.test(data.link)) {
+                errors.link = "El link no es valido";
+                }
+    
+                if (!data.publicado) {
+                    errors.publicado = "Se requiere publicar";
+                } else if (data.publicado.length < 2) {
+                    errors.publicado = "Como minimo 2 caracteres";
+                } else if (data.publicado.length > 30) {
+                    errors.publicado = "Como maximo 30 caracteres";
+                } else if (!/^^[a-zA-Z\s]+$/i.test(data.publicado)) {
+                    errors.publicado = "No se permiten numero o caracteres especiales";
+                }
 
-            if (!data.link) {
-                errors.link = "Se requiere el link";
-            }else if (data.link.length > 500) {
-                errors.link = "Como maximo 500 caracteres";
-            }else if (!/^(ftp|http|https):\/\/[^ "]+$/.test(data.link)) {
-               errors.link = "El link no es valido";
-            }
- 
-            if (!data.estado) {
-                errors.estado = "Se requiere el estado";
-            } 
+                if (!data.estado) {
+                    errors.estado = "Se requiere el estado";
+                } else if (data.estado.length < 2) {
+                    errors.estado = "Como minimo 2 caracteres";
+                } else if (data.estado.length > 30) {
+                    errors.estado = "Como maximo 30 caracteres";
+                } else if (!/^^[a-zA-Z\s]+$/i.test(data.estado)) {
+                    errors.estado = "No se permiten numero o caracteres especiales";
+                } 
 
-            if (!data.user) {
-                errors.user = "Se requiere el usuario";
-            } else if (data.user.length < 2) {
-                errors.user = "Como minimo 2 caracteres";
-            } else if (data.user.length > 30) {
-                errors.user = "Como maximo 30 caracteres";
-            }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.user)) {
-                errors.user = "No se permiten numero o caracteres especiales";
+                if (!data.user) {
+                    errors.user = "Se requiere el usuario";
+                } else if (data.user.length < 2) {
+                    errors.user = "Como minimo 2 caracteres";
+                } else if (data.user.length > 30) {
+                    errors.user = "Como maximo 30 caracteres";
+                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.user)) {
+                    errors.user = "No se permiten numero o caracteres especiales";
+                }
+
+            }else{
+                if (!data.titulo) {
+                    errors.titulo = "Se requiere el titulo";
+                } else if (data.titulo.length < 2) {
+                    errors.titulo = "Como minimo 2 caracteres";
+                } else if (data.titulo.length > 50) {
+                    errors.titulo = "Como maximo 50 caracteres";
+                } else if (!/^^[a-zA-Z0-9\s]+$/i.test(data.titulo)) {
+                    errors.titulo = "No se permiten numero o caracteres especiales";
+                }
+
+                if (!data.codigo) {
+                    errors.codigo = "Se requiere el codigo";
+                } else if (data.codigo.length < 2) {
+                    errors.codigo = "Como minimo 2 caracteres";
+                } else if (data.codigo.length > 30) {
+                    errors.codigo = "Como maximo 30 caracteres";
+                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.codigo)) {
+                    errors.codigo = "No se permiten numero o caracteres especiales";
+                }else if(!esRepetido(data.codigo) && stateConvocatoria === false){
+                    errors.codigo = "Ya existe el codigo";
+                } else if(!esRepetidoUpdate(data.codigo,convocatoriaUpdate) && stateConvocatoria === true){
+                    errors.codigo = "Ya existe el codigo";  
+                }
+
+                
+                if (!data.semestre) {
+                    errors.semestre = "Se requiere el semestre";
+                } else if (data.semestre.length < 2) {
+                    errors.semestre = "Como minimo 2 caracteres";
+                } else if (data.semestre.length > 30) {
+                    errors.semestre = "Como maximo 30 caracteres";
+                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.semestre)) {
+                    errors.semestre = "No se permiten numero o caracteres especiales";
+                }
+
+                if (!data.link) {
+                    errors.link = "Se requiere el link";
+                }else if (data.link.length > 500) {
+                    errors.link = "Como maximo 500 caracteres";
+                }else if (!/^(ftp|http|https):\/\/[^ "]+$/.test(data.link)) {
+                errors.link = "El link no es valido";
+                }
+
+                if (!data.user) {
+                    errors.user = "Se requiere el usuario";
+                } else if (data.user.length < 2) {
+                    errors.user = "Como minimo 2 caracteres";
+                } else if (data.user.length > 30) {
+                    errors.user = "Como maximo 30 caracteres";
+                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.user)) {
+                    errors.user = "No se permiten numero o caracteres especiales";
+                }
+
             }
 
             return errors;
@@ -141,6 +220,7 @@ export const Convocatoria = (props) => {
                 _convocatoria['codigo']     = data.codigo;
                 _convocatoria['semestre']   = data.semestre;
                 _convocatoria['link']       = data.link;
+                _convocatoria['publicado']  = data.publicado;
                 _convocatoria['estado']     = data.estado;
                 _convocatoria['user']       = data.user;
 
@@ -150,15 +230,18 @@ export const Convocatoria = (props) => {
                         setConvocatoria({ ...convocatoria });
                         const index = findIndexById(convocatoria.id);
                         _convocatorias[index] = _convocatoria;
-                        updateConvocatoriaID({titulo:`${_convocatoria.titulo}`,codigo:`${_convocatoria.codigo}`,semestre:`${_convocatoria.semestre}`,link:`${_convocatoria.link}`,estado:`${_convocatoria.estado}`,user:`${_convocatoria.user}`},convocatoria.id);
+
+                        updateConvocatoriaID({titulo:`${_convocatoria.titulo}`,codigo:`${_convocatoria.codigo}`,semestre:`${_convocatoria.semestre}`,link:`${_convocatoria.link}`,publicado:`${_convocatoria.publicado}`,estado:`${_convocatoria.estado}`,user:`${_convocatoria.user}`},convocatoria.id);
                         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Convocatoria Actualizada', life: 3000 });
                     }
                     else {
 
-                        _convocatoria.id = uniqid("conv-");
+                        _convocatoria.id        = uniqid("conv-");
+                        _convocatoria.publicado = "No publicar";
+                        _convocatoria.estado    = "Activo"; 
                         _convocatorias.push(_convocatoria);
-                        console.log({id:`${_convocatoria.id}`,titulo:`${_convocatoria.titulo}`,codigo:`${_convocatoria.codigo}`,semestre:`${_convocatoria.semestre}`,link:`${_convocatoria.link}`,estado:`${_convocatoria.estado}`,user:`${_convocatoria.user}`});
-                        createConvocatoria({id:`${_convocatoria.id}`,titulo:`${_convocatoria.titulo}`,codigo:`${_convocatoria.codigo}`,semestre:`${_convocatoria.semestre}`,link:`${_convocatoria.link}`,estado:`${_convocatoria.estado}`,user:`${_convocatoria.user}`});
+                
+                        createConvocatoria({id:`${_convocatoria.id}`,titulo:`${_convocatoria.titulo}`,codigo:`${_convocatoria.codigo}`,semestre:`${_convocatoria.semestre}`,link:`${_convocatoria.link}`,publicado:`${_convocatoria.publicado}`,estado:`${_convocatoria.estado}`,user:`${_convocatoria.user}`});
                         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Convocatoria Creada', life: 3000 });
                     }
                 }
@@ -217,7 +300,7 @@ export const Convocatoria = (props) => {
     },[])
 
     const fetchUsers = () =>{
-        getUsers().then(json =>{
+        getUsersActivas().then(json =>{
             if(json.error){
                 console.log("Error");
             }else{
@@ -226,10 +309,6 @@ export const Convocatoria = (props) => {
             }
         })
     }
-
-    useEffect(() => {
-        console.log(stateConvocatoria); //esta línea se ejecuta la primera vez que se renderiza y en todos los cambios que location tenga, aqui siempre tendrás el ultimo valor de location
-     }, [stateConvocatoria])
 
     const openNew = () => {
         setConvocatoria(emptyConvocatoria);
@@ -263,6 +342,7 @@ export const Convocatoria = (props) => {
             codigo:    `${convocatoria.codigo}`,
             semestre:  `${convocatoria.semestre}`,
             link:      `${convocatoria.link}`,
+            publicado: `${convocatoria.publicado}`,
             estado:    `${convocatoria.estado}`,
             user:      `${convocatoria.user}`
         });
@@ -277,17 +357,32 @@ export const Convocatoria = (props) => {
     }
 
     const deleteConvocatoria = () => {
-        let _convocatorias = convocatorias.filter(val => val.id !== convocatoria.id);
-        setConvocatorias(_convocatorias);
-        setDeleteConvocatoriaDialog(false);
+        let _convocatorias = [...convocatorias];
+        let _convocatoria  = {...convocatoria };
+        
 
         if (convocatoria.titulo.trim()) {
             if (convocatoria.id) {
-                deleteConvocatoriaID(convocatoria.id);
+
+                
+                const index = findIndexById(convocatoria.id);
+                _convocatorias[index] = _convocatoria;
+                updateConvocatoriaID({titulo:`${_convocatoria.titulo}`,codigo:`${_convocatoria.codigo}`,semestre:`${_convocatoria.semestre}`,link:`${_convocatoria.link}`,publicado:"No publicar",estado:"Desactivado",user:`${_convocatoria.user}`},convocatoria.id);
+                _convocatoria['titulo']     = _convocatoria.titulo;
+                _convocatoria['codigo']     = _convocatoria.codigo;
+                _convocatoria['semestre']   = _convocatoria.semestre;
+                _convocatoria['link']       = _convocatoria.link;
+                _convocatoria['publicado']  = "No publicar";
+                _convocatoria['estado']     = "Desactivado";
+                _convocatoria['user']       = _convocatoria.user;
+                setConvocatoria({ ...convocatoria });
+                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Convocatoria desactivada', life: 3000 });
             }
         }
+        setConvocatorias(_convocatorias);
         setConvocatoria(emptyConvocatoria);
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Convocatoria Eliminada', life: 3000 });
+        setDeleteConvocatoriaDialog(false);
+        
     }
 
     const findIndexById = (id) => {
@@ -344,6 +439,15 @@ export const Convocatoria = (props) => {
             <>
                 <span className="p-column-title">Link</span>
                 <Button label="Ver documento" className="p-button-link" onClick={() => window.open(`${rowData.link}`)} style={props.layoutColorMode === 'light' ? {'color':'#495057', 'font-weight': 'bold' , 'text-align': 'justify'} : {'color':'#ffffff', 'font-weight': 'bold' , 'text-align': 'justify'}}/>      
+            </>
+        );
+    }
+
+    const publicadoBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Publicado</span>
+                {rowData.publicado}
             </>
         );
     }
@@ -416,14 +520,14 @@ export const Convocatoria = (props) => {
                     <Column header={showHeader} colSpan={8}></Column>
                 </Row>
                 <Row>
-                    <Column header="ID"                 field="id"       sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                    <Column header="TITULO"             field="titulo"   sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                    <Column header="CODIGO"             field="codigo"   sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                    <Column header="SEMESTRE"           field="semestre" sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                    <Column header="LINK"               field="link"     sortable style={{ 'background-color': '#13af4e', width:'40%'}}/>
-                    <Column header="ESTADO"             field="estado"   sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                    <Column header="USUARIO"            field="user"     sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                    <Column header="Editar/Eliminar"                              style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="ID"                 field="id"        sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="TITULO"             field="titulo"    sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="CODIGO"             field="codigo"    sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="SEMESTRE"           field="semestre"  sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="LINK"               field="link"      sortable style={{ 'background-color': '#13af4e', width:'40%'}}/>
+                    <Column header="PUBLICADO"          field="publicado" sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="ESTADO"             field="estado"    sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="Editar/Eliminar"                               style={{ 'background-color': '#13af4e', width:'20%'}}/>
                 </Row>
             </ColumnGroup>
         )
@@ -447,20 +551,20 @@ export const Convocatoria = (props) => {
                     <Toast ref={toast} />
                     <Toolbar className="" left={leftToolbarTemplate}></Toolbar>
 
-                    <DataTable headerColumnGroup={headerGroup} ref={dt} value={convocatorias} selection={selectedConvocatorias}  onSelectionChange={(e) => setSelectedConvocatorias(e.value)}
+                    <DataTable ref={dt} value={convocatorias} selection={selectedConvocatorias}  onSelectionChange={(e) => setSelectedConvocatorias(e.value)}
                         dataKey="id" rowHover paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive p-datatable-sm p-datatable-gridlines p-datatable-striped"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} users" resizableColumns columnResizeMode="fit" showGridlines
                         globalFilter={globalFilter} emptyMessage="No se encontro el rol" loading={loading} headerColumnGroup={headerGroup}
                         >
                     
-                        <Column style={{width:'20%'}} field="id"       header="ID"       sortable body={idBodyTemplate}></Column>
-                        <Column style={{width:'20%'}} field="titulo"   header="TITULO"   sortable body={tituloBodyTemplate}></Column>
-                        <Column style={{width:'20%'}} field="codigo"   header="CODIGO"   sortable body={codigoBodyTemplate}></Column>
-                        <Column style={{width:'20%'}} field="semestre" header="SEMESTRE" sortable body={semestreBodyTemplate}></Column>
-                        <Column style={{width:'40%'}} field="link"     header="LINK"     sortable body={linkBodyTemplate}></Column>
-                        <Column style={{width:'20%'}} field="estado"   header="ESTADO"   sortable body={estadoBodyTemplate}></Column>
-                        <Column style={{width:'20%'}} field="user"     header="USER"     sortable body={userBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} field="id"        header="ID"        sortable body={idBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} field="titulo"    header="TITULO"    sortable body={tituloBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} field="codigo"    header="CODIGO"    sortable body={codigoBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} field="semestre"  header="SEMESTRE"  sortable body={semestreBodyTemplate}></Column>
+                        <Column style={{width:'40%'}} field="link"      header="LINK"      sortable body={linkBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} field="publicado" header="PUBLICADO" sortable body={publicadoBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} field="estado"    header="ESTADO"    sortable body={estadoBodyTemplate}></Column>
                         <Column style={{width:'20%'}} body={actionBodyTemplate}></Column>
 
                     </DataTable>
@@ -509,15 +613,31 @@ export const Convocatoria = (props) => {
                             </div>
                             {getFormErrorMessage('link')}
 
-                            <div className="p-field mt-2">
-                                <div className="p-inputgroup">
-                                        <span className="p-inputgroup-addon">
-                                            <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/post.png' : 'assets/layout/images/post-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>  
-                                        </span>
-                                        <Dropdown id="estado" name="estado" placeholder="Seleccione un estado" value={formik.values.estado} onChange={formik.handleChange} options={publicacion} optionLabel="name"  optionValue="name"/>
-                                </div>       
-                            </div>
-                            {getFormErrorMessage('estado')}
+                            {(stateConvocatoria)?(
+                                <div className="form-group">
+                                    <div className="p-field mt-2">
+                                            <div className="p-inputgroup">
+                                                    <span className="p-inputgroup-addon">
+                                                        <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/post.png' : 'assets/layout/images/post-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>  
+                                                    </span>
+                                                    <Dropdown id="publicado" name="publicado" placeholder="Seleccione si se publica" value={formik.values.publicado} onChange={formik.handleChange} options={publicacion} optionLabel="name"  optionValue="name"/>
+                                            </div>       
+                                    </div>
+                                    {getFormErrorMessage('publicado')}
+
+                                    <div className="p-field mt-2">
+                                        <div className="p-inputgroup">
+                                            <span className="p-inputgroup-addon">
+                                                <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/estado.png' : 'assets/layout/images/estado-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>   
+                                            </span>
+                                            <Dropdown id="estado" name="estado" placeholder="Seleccione un estado" value={formik.values.estado} onChange={formik.handleChange} options={estados} optionLabel="name"  optionValue="name"/> 
+                                        </div>       
+                                    </div>
+                                    {getFormErrorMessage('estado')}
+                                </div>
+                            ):
+                                null
+                            }
 
                             <div className="p-field mt-2">
                                 <div className="p-inputgroup">

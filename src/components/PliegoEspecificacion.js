@@ -18,7 +18,7 @@ import { Link }             from 'react-router-dom';
 import uniqid               from 'uniqid';
 
 import { getPliegos,createPliego,updatePliegoID,deletePliegoID} from '../service/apiPliego';
-import { getUsers } from '../service/apiUser';
+import { getUsers,getUsersActivas } from '../service/apiUser';
 
 export const PliegoEspecificacion = (props) => {
 
@@ -28,6 +28,7 @@ export const PliegoEspecificacion = (props) => {
         codigo:    '',
         semestre:  '',
         link:      '',
+        publicado: '',
         estado:    '',
         user:      ''
     };
@@ -43,7 +44,12 @@ export const PliegoEspecificacion = (props) => {
 
     const publicacion = [
         { name: "Publicar"     },
-        { name: "No publicado" }
+        { name: "No publicar" }
+    ];
+
+    const estados = [
+        { name: "Activo"      },
+        { name: "Desactivado" }
     ];
 
     const [pliegos, setPliegos]                          = useState(null);
@@ -67,67 +73,142 @@ export const PliegoEspecificacion = (props) => {
             codigo:    '',
             semestre:  '',
             link:      '',
+            publicado: '',
             estado:    '',
             user:      ''
         },
          validate: (data) => {
             let errors = {};
+            if(statePliego){
 
-            if (!data.titulo) {
-                errors.titulo = "Se requiere el titulo";
-            } else if (data.titulo.length < 2) {
-                errors.titulo = "Como minimo 2 caracteres";
-            } else if (data.titulo.length > 50) {
-                errors.titulo = "Como maximo 50 caracteres";
-            } else if (!/^^[a-zA-Z0-9\s]+$/i.test(data.titulo)) {
-                errors.titulo = "No se permiten numero o caracteres especiales";
-            }
+                if (!data.titulo) {
+                    errors.titulo = "Se requiere el titulo";
+                } else if (data.titulo.length < 2) {
+                    errors.titulo = "Como minimo 2 caracteres";
+                } else if (data.titulo.length > 50) {
+                    errors.titulo = "Como maximo 50 caracteres";
+                } else if (!/^^[a-zA-Z0-9\s]+$/i.test(data.titulo)) {
+                    errors.titulo = "No se permiten numero o caracteres especiales";
+                }
 
-            if (!data.codigo) {
-                errors.codigo = "Se requiere el codigo";
-            } else if (data.codigo.length < 2) {
-                errors.codigo = "Como minimo 2 caracteres";
-            } else if (data.codigo.length > 30) {
-                errors.codigo = "Como maximo 30 caracteres";
-            }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.codigo)) {
-                errors.codigo = "No se permiten numero o caracteres especiales";
-            }else if(!esRepetido(data.codigo) && statePliego === false){
-                errors.codigo = "Ya existe el codigo";
-            } else if(!esRepetidoUpdate(data.codigo,pliegoUpdate) && statePliego === true){
-                errors.codigo = "Ya existe el codigo";  
-            }
+                if (!data.codigo) {
+                    errors.codigo = "Se requiere el codigo";
+                } else if (data.codigo.length < 2) {
+                    errors.codigo = "Como minimo 2 caracteres";
+                } else if (data.codigo.length > 30) {
+                    errors.codigo = "Como maximo 30 caracteres";
+                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.codigo)) {
+                    errors.codigo = "No se permiten numero o caracteres especiales";
+                }else if(!esRepetido(data.codigo) && statePliego === false){
+                    errors.codigo = "Ya existe el codigo";
+                } else if(!esRepetidoUpdate(data.codigo,pliegoUpdate) && statePliego === true){
+                    errors.codigo = "Ya existe el codigo";  
+                }
 
-            
-            if (!data.semestre) {
-                errors.semestre = "Se requiere el semestre";
-            } else if (data.semestre.length < 2) {
-                errors.semestre = "Como minimo 2 caracteres";
-            } else if (data.semestre.length > 30) {
-                errors.semestre = "Como maximo 30 caracteres";
-            }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.semestre)) {
-                errors.semestre = "No se permiten numero o caracteres especiales";
-            }
+                
+                if (!data.semestre) {
+                    errors.semestre = "Se requiere el semestre";
+                } else if (data.semestre.length < 2) {
+                    errors.semestre = "Como minimo 2 caracteres";
+                } else if (data.semestre.length > 30) {
+                    errors.semestre = "Como maximo 30 caracteres";
+                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.semestre)) {
+                    errors.semestre = "No se permiten numero o caracteres especiales";
+                }
 
-            if (!data.link) {
-                errors.link = "Se requiere el link";
-            }else if (data.link.length > 500) {
-                errors.link = "Como maximo 500 caracteres";
-            }else if (!/^(ftp|http|https):\/\/[^ "]+$/.test(data.link)) {
-                errors.link = "El link no es valido";
-            }
+                if (!data.link) {
+                    errors.link = "Se requiere el link";
+                }else if (data.link.length > 500) {
+                    errors.link = "Como maximo 500 caracteres";
+                }else if (!/^(ftp|http|https):\/\/[^ "]+$/.test(data.link)) {
+                    errors.link = "El link no es valido";
+                }
 
-            if (!data.estado) {
-                errors.estado = "Se requiere el estado";
-            } 
+                if (!data.publicado) {
+                    errors.publicado = "Se requiere publicarlo";
+                } else if (data.publicado.length < 2) {
+                    errors.publicado = "Como minimo 2 caracteres";
+                } else if (data.publicado.length > 30) {
+                    errors.publicado = "Como maximo 30 caracteres";
+                } else if (!/^^[a-zA-Z\s]+$/i.test(data.publicado)) {
+                    errors.publicado = "No se permiten numero o caracteres especiales";
+                }
 
-            if (!data.user) {
-                errors.user = "Se requiere el usuario";
-            } else if (data.user.length < 2) {
-                errors.user = "Como minimo 2 caracteres";
-            } else if (data.user.length > 30) {
-                errors.user = "Como maximo 30 caracteres";
-            }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.user)) {
-                errors.user = "No se permiten numero o caracteres especiales";
+                if (!data.estado) {
+                    errors.estado = "Se requiere el estado";
+                } else if (data.estado.length < 2) {
+                    errors.estado = "Como minimo 2 caracteres";
+                } else if (data.estado.length > 30) {
+                    errors.estado = "Como maximo 30 caracteres";
+                } else if (!/^^[a-zA-Z\s]+$/i.test(data.estado)) {
+                    errors.estado = "No se permiten numero o caracteres especiales";
+                } 
+
+                if (!data.user) {
+                    errors.user = "Se requiere el usuario";
+                } else if (data.user.length < 2) {
+                    errors.user = "Como minimo 2 caracteres";
+                } else if (data.user.length > 30) {
+                    errors.user = "Como maximo 30 caracteres";
+                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.user)) {
+                    errors.user = "No se permiten numero o caracteres especiales";
+                }
+
+            }else{
+
+                if (!data.titulo) {
+                    errors.titulo = "Se requiere el titulo";
+                } else if (data.titulo.length < 2) {
+                    errors.titulo = "Como minimo 2 caracteres";
+                } else if (data.titulo.length > 50) {
+                    errors.titulo = "Como maximo 50 caracteres";
+                } else if (!/^^[a-zA-Z0-9\s]+$/i.test(data.titulo)) {
+                    errors.titulo = "No se permiten numero o caracteres especiales";
+                }
+
+                if (!data.codigo) {
+                    errors.codigo = "Se requiere el codigo";
+                } else if (data.codigo.length < 2) {
+                    errors.codigo = "Como minimo 2 caracteres";
+                } else if (data.codigo.length > 30) {
+                    errors.codigo = "Como maximo 30 caracteres";
+                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.codigo)) {
+                    errors.codigo = "No se permiten numero o caracteres especiales";
+                }else if(!esRepetido(data.codigo) && statePliego === false){
+                    errors.codigo = "Ya existe el codigo";
+                } else if(!esRepetidoUpdate(data.codigo,pliegoUpdate) && statePliego === true){
+                    errors.codigo = "Ya existe el codigo";  
+                }
+
+                
+                if (!data.semestre) {
+                    errors.semestre = "Se requiere el semestre";
+                } else if (data.semestre.length < 2) {
+                    errors.semestre = "Como minimo 2 caracteres";
+                } else if (data.semestre.length > 30) {
+                    errors.semestre = "Como maximo 30 caracteres";
+                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.semestre)) {
+                    errors.semestre = "No se permiten numero o caracteres especiales";
+                }
+
+                if (!data.link) {
+                    errors.link = "Se requiere el link";
+                }else if (data.link.length > 500) {
+                    errors.link = "Como maximo 500 caracteres";
+                }else if (!/^(ftp|http|https):\/\/[^ "]+$/.test(data.link)) {
+                    errors.link = "El link no es valido";
+                }
+
+                if (!data.user) {
+                    errors.user = "Se requiere el usuario";
+                } else if (data.user.length < 2) {
+                    errors.user = "Como minimo 2 caracteres";
+                } else if (data.user.length > 30) {
+                    errors.user = "Como maximo 30 caracteres";
+                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.user)) {
+                    errors.user = "No se permiten numero o caracteres especiales";
+                }
+
             }
 
             return errors;
@@ -141,6 +222,7 @@ export const PliegoEspecificacion = (props) => {
                 _pliego['codigo']     = data.codigo;
                 _pliego['semestre']   = data.semestre;
                 _pliego['link']       = data.link;
+                _pliego['publicado']  = data.publicado;
                 _pliego['estado']     = data.estado;
                 _pliego['user']       = data.user;
 
@@ -150,14 +232,18 @@ export const PliegoEspecificacion = (props) => {
                         setPliego({ ...pliego });
                         const index = findIndexById(pliego.id);
                         _pliegos[index] = _pliego;
-                        updatePliegoID({titulo:`${_pliego.titulo}`,codigo:`${_pliego.codigo}`,semestre:`${_pliego.semestre}`,link:`${_pliego.link}`,estado:`${_pliego.estado}`,user:`${_pliego.user}`},pliego.id);
+
+                        updatePliegoID({titulo:`${_pliego.titulo}`,codigo:`${_pliego.codigo}`,semestre:`${_pliego.semestre}`,link:`${_pliego.link}`,publicado:`${_pliego.publicado}`,estado:`${_pliego.estado}`,user:`${_pliego.user}`},pliego.id);
                         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Pliego de especificaciones Actualizada', life: 3000 });
                     }
                     else {
 
-                        _pliego.id = uniqid("plieg-");
+                        _pliego.id        = uniqid("plieg-");
+                        _pliego.publicado = "No publicar";
+                        _pliego.estado    = "Activo";
                         _pliegos.push(_pliego);
-                        createPliego({id:`${_pliego.id}`,titulo:`${_pliego.titulo}`,codigo:`${_pliego.codigo}`,semestre:`${_pliego.semestre}`,link:`${_pliego.link}`,estado:`${_pliego.estado}`,user:`${_pliego.user}`});
+
+                        createPliego({id:`${_pliego.id}`,titulo:`${_pliego.titulo}`,codigo:`${_pliego.codigo}`,semestre:`${_pliego.semestre}`,link:`${_pliego.link}`,publicado:`${_pliego.publicado}`,estado:`${_pliego.estado}`,user:`${_pliego.user}`});
                         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Pliego de especificaciones Creada', life: 3000 });
                     }
                 }
@@ -216,7 +302,7 @@ export const PliegoEspecificacion = (props) => {
     },[])
 
     const fetchUsers = () =>{
-        getUsers().then(json =>{
+        getUsersActivas().then(json =>{
             if(json.error){
                 console.log("Error");
             }else{
@@ -225,10 +311,6 @@ export const PliegoEspecificacion = (props) => {
             }
         })
     }
-
-    useEffect(() => {
-        console.log(statePliego); //esta línea se ejecuta la primera vez que se renderiza y en todos los cambios que location tenga, aqui siempre tendrás el ultimo valor de location
-     }, [statePliego])
 
     const openNew = () => {
         setPliego(emptyPliego);
@@ -262,6 +344,7 @@ export const PliegoEspecificacion = (props) => {
             codigo:    `${pliego.codigo}`,
             semestre:  `${pliego.semestre}`,
             link:      `${pliego.link}`,
+            publicado: `${pliego.publicado}`,
             estado:    `${pliego.estado}`,
             user:      `${pliego.user}`
         });
@@ -276,17 +359,33 @@ export const PliegoEspecificacion = (props) => {
     }
 
     const deletePliego = () => {
-        let _pliegos = pliegos.filter(val => val.id !== pliego.id);
-        setPliegos(_pliegos);
-        setDeletePliegoDialog(false);
+        let _pliegos = [...pliegos];
+        let _pliego  = {...pliego };
+        
 
         if (pliego.titulo.trim()) {
             if (pliego.id) {
-                deletePliegoID(pliego.id);
+
+                
+                const index = findIndexById(pliego.id);
+                _pliegos[index] = _pliego;
+
+                updatePliegoID({titulo:`${_pliego.titulo}`,codigo:`${_pliego.codigo}`,semestre:`${_pliego.semestre}`,link:`${_pliego.link}`,publicado:"No publicar",estado:"Desactivado",user:`${_pliego.user}`},pliego.id);
+                _pliego['titulo']     = _pliego.titulo;
+                _pliego['codigo']     = _pliego.codigo;
+                _pliego['semestre']   = _pliego.semestre;
+                _pliego['link']       = _pliego.link;
+                _pliego['publicado']  = "No publicar";
+                _pliego['estado']     = "Desactivado";
+                _pliego['user']       = _pliego.user;
+                setPliego({ ...pliego });
+                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Pliego de espeficiacion Eliminada', life: 3000 });
             }
         }
+        setPliegos(_pliegos);
         setPliego(emptyPliego);
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Pliego de espeficiacion Eliminada', life: 3000 });
+        setDeletePliegoDialog(false);
+        
     }
 
     const findIndexById = (id) => {
@@ -343,6 +442,15 @@ export const PliegoEspecificacion = (props) => {
             <>
                 <span className="p-column-title">Link</span>
                 <Button label="Ver documento" className="p-button-link" onClick={() => window.open(`${rowData.link}`)} style={props.layoutColorMode === 'light' ? {'color':'#495057', 'font-weight': 'bold' , 'text-align': 'justify'} : {'color':'#ffffff', 'font-weight': 'bold' , 'text-align': 'justify'}}/>      
+            </>
+        );
+    }
+
+    const publicadoBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Publicado</span>
+                {rowData.publicado}
             </>
         );
     }
@@ -416,8 +524,8 @@ export const PliegoEspecificacion = (props) => {
                     <Column header="CODIGO"             field="codigo"   sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
                     <Column header="SEMESTRE"           field="semestre" sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
                     <Column header="LINK"               field="link"     sortable style={{ 'background-color': '#13af4e', width:'40%'}}/>
-                    <Column header="ESTADO"             field="estado"   sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                    <Column header="USUARIO"            field="user"     sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="PUBLICADO"          field="publicado" sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="ESTADO"             field="estado"    sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
                     <Column header="Editar/Eliminar"                              style={{ 'background-color': '#13af4e', width:'20%'}}/>
                 </Row>
             </ColumnGroup>
@@ -448,13 +556,13 @@ export const PliegoEspecificacion = (props) => {
                         globalFilter={globalFilter} emptyMessage="No se encontro el rol" loading={loading} headerColumnGroup={headerGroup}
                         >
                     
-                        <Column style={{width:'20%'}} field="id"       header="ID"       sortable body={idBodyTemplate}></Column>
-                        <Column style={{width:'20%'}} field="titulo"   header="TITULO"   sortable body={tituloBodyTemplate}></Column>
-                        <Column style={{width:'20%'}} field="codigo"   header="CODIGO"   sortable body={codigoBodyTemplate}></Column>
-                        <Column style={{width:'20%'}} field="semestre" header="SEMESTRE" sortable body={semestreBodyTemplate}></Column>
-                        <Column style={{width:'40%'}} field="link"     header="LINK"     sortable body={linkBodyTemplate}></Column>
-                        <Column style={{width:'20%'}} field="estado"   header="ESTADO"   sortable body={estadoBodyTemplate}></Column>
-                        <Column style={{width:'20%'}} field="user"     header="USER"     sortable body={userBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} field="id"        header="ID"        sortable body={idBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} field="titulo"    header="TITULO"    sortable body={tituloBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} field="codigo"    header="CODIGO"    sortable body={codigoBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} field="semestre"  header="SEMESTRE"  sortable body={semestreBodyTemplate}></Column>
+                        <Column style={{width:'40%'}} field="link"      header="LINK"      sortable body={linkBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} field="publicado" header="PUBLICADO" sortable body={publicadoBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} field="estado"    header="ESTADO"    sortable body={estadoBodyTemplate}></Column>
                         <Column style={{width:'20%'}} body={actionBodyTemplate}></Column>
 
                     </DataTable>
@@ -503,15 +611,31 @@ export const PliegoEspecificacion = (props) => {
                             </div>
                             {getFormErrorMessage('link')}
 
-                            <div className="p-field mt-2">
-                                <div className="p-inputgroup">
-                                        <span className="p-inputgroup-addon">
-                                            <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/post.png' : 'assets/layout/images/post-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>  
-                                        </span>
-                                        <Dropdown id="estado" name="estado" placeholder="Seleccione un estado" value={formik.values.estado} onChange={formik.handleChange} options={publicacion} optionLabel="name"  optionValue="name"/>
-                                </div>       
-                            </div>
-                            {getFormErrorMessage('estado')}
+                            {(statePliego)?(
+                                <div className="form-group">
+                                    <div className="p-field mt-2">
+                                            <div className="p-inputgroup">
+                                                    <span className="p-inputgroup-addon">
+                                                        <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/post.png' : 'assets/layout/images/post-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>  
+                                                    </span>
+                                                    <Dropdown id="publicado" name="publicado" placeholder="Seleccione si se publica" value={formik.values.publicado} onChange={formik.handleChange} options={publicacion} optionLabel="name"  optionValue="name"/>
+                                            </div>       
+                                    </div>
+                                    {getFormErrorMessage('publicado')}
+
+                                    <div className="p-field mt-2">
+                                        <div className="p-inputgroup">
+                                            <span className="p-inputgroup-addon">
+                                                <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/estado.png' : 'assets/layout/images/estado-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>   
+                                            </span>
+                                            <Dropdown id="estado" name="estado" placeholder="Seleccione un estado" value={formik.values.estado} onChange={formik.handleChange} options={estados} optionLabel="name"  optionValue="name"/> 
+                                        </div>       
+                                    </div>
+                                    {getFormErrorMessage('estado')}
+                                </div>
+                            ):
+                                null
+                            }
                             
                             <div className="p-field mt-2">
                                 <div className="p-inputgroup">
