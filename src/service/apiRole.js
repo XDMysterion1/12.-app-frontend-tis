@@ -11,8 +11,9 @@ import axios from 'axios';
  export const createRol=(data)=>{
     return axios.post('https://magic-tech-backend.herokuapp.com/api/createRol', 
       {
-         id:  `${data.id}`,
-         rol: `${data.rol}`,
+         id:     `${data.id}`,
+         rol:    `${data.rol}`,
+         estado: `${data.estado}`
       }
       )
       .then(function (response) {
@@ -26,7 +27,8 @@ import axios from 'axios';
 export const updateRolID =(data,id) =>{
     return axios.put(`https://magic-tech-backend.herokuapp.com/api/updateRol/${id}`, 
     {
-       rol: `${data.rol}`
+       rol: `${data.rol}`,
+       estado: `${data.estado}`
     }
     )
     .then(function (response) {
@@ -39,4 +41,8 @@ export const updateRolID =(data,id) =>{
 
 export const deleteRolID =(id) =>{
     return axios.delete(`https://magic-tech-backend.herokuapp.com/api/deleteRolId/${id}`);
+}
+
+export const getRolesActivas = () =>{
+  return axios.get('https://magic-tech-backend.herokuapp.com/api/getRolesActivas');
 }

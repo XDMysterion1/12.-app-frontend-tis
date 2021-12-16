@@ -18,7 +18,8 @@ import axios from 'axios';
          apellido:  `${data.apellido}`,
          email:     `${data.email}`,
          password:  `${data.password}`,
-         rol:       `${data.rol}`      //rol es un numero entero
+         estado:    `${data.estado}`,
+         rol:       `${data.rol}`      
       }
       )
       .then(function (response) {
@@ -36,7 +37,8 @@ export const updateUserID =(data,id) =>{
       apellido:  `${data.apellido}`,
       email:     `${data.email}`,
       password:  `${data.password}`,
-      rol:       `${data.rol}`      //rol es un numero entero
+      estado:    `${data.estado}`,
+      rol:       `${data.rol}`      
     }
     )
     .then(function (response) {
@@ -63,4 +65,8 @@ export async function login(data){
   .catch(function (error) {
     console.log(error);
   });
+}
+
+export const getUsersActivas = () =>{
+  return axios.get('https://magic-tech-backend.herokuapp.com/api/getUsersActivas');
 }

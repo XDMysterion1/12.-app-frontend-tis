@@ -18,6 +18,7 @@ import axios from 'axios';
          codigo:    `${data.codigo}`,
          semestre:  `${data.semestre}`,
          link:      `${data.link}`,
+         publicado: `${data.publicado}`,
          estado:    `${data.estado}`,
          user:      `${data.user}`     
       }
@@ -37,6 +38,7 @@ export const updateConvocatoriaID =(data,id) =>{
         codigo:    `${data.codigo}`,
         semestre:  `${data.semestre}`,
         link:      `${data.link}`,
+        publicado: `${data.publicado}`,
         estado:    `${data.estado}`,
         user:      `${data.user}`
     }

@@ -22,6 +22,7 @@ import axios from 'axios';
          email:       `${data.email}`,
          password:    `${data.password}`,
          informacion: `${data.informacion}`,
+         estado:      `${data.estado}`,
          user:        `${data.user}`
        
       }
@@ -45,6 +46,7 @@ export const updateEmpresaID =(data,id) =>{
       email:       `${data.email}`,
       password:    `${data.password}`,
       informacion: `${data.informacion}`,
+      estado:      `${data.estado}`,
       user:        `${data.user}`
     }
     )
@@ -58,4 +60,8 @@ export const updateEmpresaID =(data,id) =>{
 
 export const deleteEmpresaID =(id) =>{
     return axios.delete(`https://magic-tech-backend.herokuapp.com/api/deleteEmpresaId/${id}`);
+}
+
+export const getEmpresasActivas = () =>{
+  return axios.get('https://magic-tech-backend.herokuapp.com/api/getEmpresasActivas');
 }
