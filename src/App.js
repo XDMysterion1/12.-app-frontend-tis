@@ -19,6 +19,11 @@ import { ListEmpresa }           from './components/ListEmpresa';
 import { ListConvocatoria }      from './components/ListConvocatoria';
 import { ListPliego }            from './components/ListPliego';
 import { Forum }            from './components/Forum';
+import { Contrato }             from './components/Contrato';
+import { Orden }                from './components/Orden';
+import { Plan }                 from './components/Plan';
+import { ParteA }               from './components/ParteA';
+import { ParteB }               from './components/ParteB';   
 
 
 
@@ -209,6 +214,31 @@ const App = () => {
                 ]
             },
             {
+                label: "Gestion de Firma de Contrato", icon: "pi pi-fw pi-sitemap",
+                "items": [
+                    {"label": "Firma de contrato"              , icon: "pi pi-fw pi-id-card"     , to: "/Contrato"}
+                ]
+            },
+            {
+                label: "Gestion de Orden de Cambio", icon: "pi pi-fw pi-sitemap",
+                "items": [
+                    {"label": "Orden de cambio"              , icon: "pi pi-fw pi-id-card"     , to: "/Orden"}
+                ]
+            },
+            {
+                label: "Gestion de Plan de Pagos", icon: "pi pi-fw pi-sitemap",
+                "items": [
+                    {"label": "Plan de pagos"              , icon: "pi pi-fw pi-id-card"     , to: "/Plan"}
+                ]
+            },
+            {
+                label: "Gestion de Entrega", icon: "pi pi-fw pi-sitemap",
+                "items": [
+                    {"label": "Parte A"              , icon: "pi pi-fw pi-id-card"     , to: "/ParteA"},
+                    {"label": "Parte B"              , icon: "pi pi-fw pi-id-card"     , to: "/ParteB"}
+                ]
+            },
+            {
                 label: "Gestion Avisos", icon: "pi pi-fw pi-sitemap",
                 "items": [
                     {"label": "Avisos", icon: "pi pi-fw pi-id-card", to: "/Aviso"}
@@ -258,6 +288,11 @@ const App = () => {
                     <Route path="/ListConvocatoria"      exact={true} render={props => <ListConvocatoria     layoutColorMode={layoutColorMode} {...props} />}/>
                     <Route path="/ListPliego"            exact={true} render={props => <ListPliego           layoutColorMode={layoutColorMode} {...props} />}/>
                     <Route path="/Forum"            exact={true} render={props => <Forum           layoutColorMode={layoutColorMode} {...props} />}/>
+                    <Route path="/Contrato"             exact={true} render={props => <Contrato              layoutColorMode={layoutColorMode} {...props} />}/>
+                    <Route path="/Orden"                exact={true} render={props => <Orden                 layoutColorMode={layoutColorMode} {...props} />}/>
+                    <Route path="/Plan"                 exact={true} render={props => <Plan                  layoutColorMode={layoutColorMode} {...props} />}/>
+                    <Route path="/ParteA"               exact={true} render={props => <ParteA                layoutColorMode={layoutColorMode} {...props} />}/>
+                    <Route path="/ParteB"               exact={true} render={props => <ParteB                layoutColorMode={layoutColorMode} {...props} />}/>
 
                 </div>
 
