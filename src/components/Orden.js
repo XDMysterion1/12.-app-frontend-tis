@@ -10,128 +10,399 @@ import { InputText }        from 'primereact/inputtext';
 import { InputTextarea }    from 'primereact/inputtextarea';
 import { Password }         from 'primereact/password';
 import { ColumnGroup }      from 'primereact/columngroup';
+import { Calendar }         from 'primereact/calendar';
 import { Row }              from 'primereact/row';
 import { Dropdown }         from 'primereact/dropdown';
+import { addLocale }        from 'primereact/api';
 import { useFormik }        from "formik";
 import { Link }             from 'react-router-dom';
+import jsPDF                from 'jspdf';
 
 import uniqid               from 'uniqid';
 
-import { getConvocatorias,getConvocatoriaID,createConvocatoria,updateConvocatoriaID,deleteConvocatoriaID} from '../service/apiConvocatoria';
-import { getUsers,getUsersActivas } from '../service/apiUser';
+import { getOrdens,createOrden,updateOrdenID} from '../service/apiOrden';
+import { getUsersActivas  }                   from '../service/apiUser';
+import { getEmpresasActivas }                 from '../service/apiEmpresa';
+
 
 export const Orden = (props) => {
 
-    let emptyConvocatoria = {
-        id:        null,
-        titulo:    '',
-        codigo:    '',
-        semestre:  '',
-        link:      '',
-        publicado: '',
-        estado:    '',
-        user:      ''
+    let emptyParte = {
+        id:                     null,
+        fecha:                  '',
+        caratulaA:              '',
+        indiceA:                '',
+        cartaA:                 '',
+        boletaA:                '',
+        conformacionA:          '',
+        solvenciaA:             '',
+        caratulaB:              '',
+        indiceB:                '',
+        propuestaServicioB:     '',
+        planificacionB:         '',
+        propuestaEconomicaB:    '',
+        planPagosB:             '',
+        cumplimientoProponente: '',
+        claridadOrganizacion:   '',
+        cumplimientoTecnico:    '',
+        claridadProceso:        '',
+        plazosEjecucion:        '',
+        precioTotal:            '',
+        usoHerramienta:         '',
+        estado:                 '',
+        empresa:                '',
+        user:                   ''
     };
-
-    const semestres = [
-        { name: "I-2020" },
-        { name: "II-2020"},
-        { name: "I-2021"},
-        { name: "II-2021"},
-        { name: "I-2022"},
-        { name: "II-2022"}
-    ];
-
-    const publicacion = [
-        { name: "Publicar"     },
-        { name: "No publicar" }
-    ];
 
     const estados = [
         { name: "Activo"      },
         { name: "Desactivado" }
     ];
 
-    const [convocatorias, setConvocatorias]                          = useState(null);
-    const [users, setUsers]                                          = useState(null);
-    const [globalFilter, setGlobalFilter]                            = useState('');
-    const [loading, setLoading]                                      = useState(true);
-    const [convocatoriaDialog, setConvocatoriaDialog]                = useState(false);
-    const [deleteConvocatoriaDialog, setDeleteConvocatoriaDialog]    = useState(false);
+    const puntuacion1 = [
+        { name: '0'},
+        { name: '1'},
+        { name: '2' },
+        { name: '3'},
+        { name: '4'},
+        { name: '5'},
+        { name: '6'},
+        { name: '7' },
+        { name: '8'},
+        { name: '9'},
+        { name: '10'},
+        { name: '11'},
+        { name: '12' },
+        { name: '13'},
+        { name: '14'},
+        { name: '15'}
+    ];
 
-    const [convocatoria, setConvocatoria]                            = useState(emptyConvocatoria);
-    const [selectedConvocatorias, setSelectedConvocatorias]          = useState(null);
-    const [submitted, setSubmitted]                                  = useState(false);
-    const toast                                                      = useRef(null);
-    const dt                                                         = useRef(null);
-    const [stateConvocatoria,setStateConvocatoria]                   = useState(false);
-    const [convocatoriaUpdate, setConvocatoriaUpdate]                = useState("");
+    const puntuacion2 = [
+        { name: '0'},
+        { name: '1'},
+        { name: '2' },
+        { name: '3'},
+        { name: '4'},
+        { name: '5'},
+        { name: '6'},
+        { name: '7' },
+        { name: '8'},
+        { name: '9'},
+        { name: '10'}
+    ];
+    const puntuacion3 = [
+        { name: '0'},
+        { name: '1'},
+        { name: '2' },
+        { name: '3'},
+        { name: '4'},
+        { name: '5'},
+        { name: '6'},
+        { name: '7' },
+        { name: '8'},
+        { name: '9'},
+        { name: '10'},
+        { name: '11'},
+        { name: '12' },
+        { name: '13'},
+        { name: '14'},
+        { name: '15'},
+        { name: '16'},
+        { name: '17' },
+        { name: '18'},
+        { name: '19'},
+        { name: '20'},
+        { name: '21'},
+        { name: '22' },
+        { name: '23'},
+        { name: '24'},
+        { name: '25'},
+        { name: '26'},
+        { name: '27' },
+        { name: '28'},
+        { name: '29'},
+        { name: '30'}
+    ];
+    const puntuacion4 = [
+        { name: '0'},
+        { name: '1'},
+        { name: '2' },
+        { name: '3'},
+        { name: '4'},
+        { name: '5'},
+        { name: '6'},
+        { name: '7' },
+        { name: '8'},
+        { name: '9'},
+        { name: '10'}
+    ];
+    const puntuacion5 = [
+        { name: '0'},
+        { name: '1'},
+        { name: '2' },
+        { name: '3'},
+        { name: '4'},
+        { name: '5'},
+        { name: '6'},
+        { name: '7' },
+        { name: '8'},
+        { name: '9'},
+        { name: '10'}
+    ];
+    const puntuacion6 = [
+        { name: '0'},
+        { name: '1'},
+        { name: '2' },
+        { name: '3'},
+        { name: '4'},
+        { name: '5'},
+        { name: '6'},
+        { name: '7' },
+        { name: '8'},
+        { name: '9'},
+        { name: '10'},
+        { name: '11'},
+        { name: '12' },
+        { name: '13'},
+        { name: '14'},
+        { name: '15'}
+    ];
+    const puntuacion7 = [
+        { name: '0'},
+        { name: '1'},
+        { name: '2' },
+        { name: '3'},
+        { name: '4'},
+        { name: '5'},
+        { name: '6'},
+        { name: '7' },
+        { name: '8'},
+        { name: '9'},
+        { name: '10'}
+    ];
+
+    addLocale('es', {
+        firstDayOfWeek: 1,
+        dayNames: ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'],
+        dayNamesShort: ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'],
+        dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],
+        monthNames: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
+        monthNamesShort: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'],
+        today: 'Hoy',
+        clear: 'Claro'
+    });
+
+    const [partes, setPartes]                          = useState(null);
+    const [users, setUsers]                            = useState(null);
+    const [empresas, setEmpresas]                      = useState(null);
+
+    const [globalFilter, setGlobalFilter]              = useState('');
+    const [loading, setLoading]                        = useState(true);
+    const [parteDialog, setParteDialog]                = useState(false);
+    const [deleteParteDialog, setDeleteParteDialog]    = useState(false);
+
+    const [parte, setParte]                            = useState(emptyParte);
+    const [selectedPartes, setSelectedPartes]          = useState(null);
+    const [submitted, setSubmitted]                    = useState(false);
+    const toast                                        = useRef(null);
+    const dt                                           = useRef(null);
+    const [stateParte,setStateParte]                   = useState(false);
+    const [parteUpdate, setParteUpdate]                = useState("");
+
+    const options1 = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
     const formik = useFormik({
         initialValues: {
-            titulo:    '',
-            codigo:    '',
-            semestre:  '',
-            link:      '',
-            publicado: '',
-            estado:    '',
-            user:      ''
+            fecha:                  '',
+            caratulaA:              '',
+            indiceA:                '',
+            cartaA:                 '',
+            boletaA:                '',
+            conformacionA:          '',
+            solvenciaA:             '',
+            caratulaB:              '',
+            indiceB:                '',
+            propuestaServicioB:     '',
+            planificacionB:         '',
+            propuestaEconomicaB:    '',
+            planPagosB:             '',
+            cumplimientoProponente: '',
+            claridadOrganizacion:   '',
+            cumplimientoTecnico:    '',
+            claridadProceso:        '',
+            plazosEjecucion:        '',
+            precioTotal:            '',
+            usoHerramienta:         '',
+            estado:                 '',
+            empresa:                '',
+            user:                   ''
         },
          validate: (data) => {
             let errors = {};
-            if(stateConvocatoria){
-                if (!data.titulo) {
-                    errors.titulo = "Se requiere el titulo";
-                } else if (data.titulo.length < 2) {
-                    errors.titulo = "Como minimo 2 caracteres";
-                } else if (data.titulo.length > 50) {
-                    errors.titulo = "Como maximo 50 caracteres";
-                } else if (!/^^[a-zA-Z0-9\s]+$/i.test(data.titulo)) {
-                    errors.titulo = "No se permiten numero o caracteres especiales";
-                }
 
-                if (!data.codigo) {
-                    errors.codigo = "Se requiere el codigo";
-                } else if (data.codigo.length < 2) {
-                    errors.codigo = "Como minimo 2 caracteres";
-                } else if (data.codigo.length > 30) {
-                    errors.codigo = "Como maximo 30 caracteres";
-                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.codigo)) {
-                    errors.codigo = "No se permiten numero o caracteres especiales";
-                }else if(!esRepetido(data.codigo) && stateConvocatoria === false){
-                    errors.codigo = "Ya existe el codigo";
-                } else if(!esRepetidoUpdate(data.codigo,convocatoriaUpdate) && stateConvocatoria === true){
-                    errors.codigo = "Ya existe el codigo";  
+            if(stateParte){
+
+                if (!data.fecha) {
+                    errors.fecha = "Se requiere la fecha";
+                } 
+
+                if (!data.caratulaA) {
+                    errors.caratulaA = "Se requiere la caratula";
+                } else if (data.caratulaA.length < 2) {
+                    errors.caratulaA = "Como minimo 2 caracteres";
+                } else if (data.caratulaA.length > 512) {
+                    errors.caratulaA = "Como maximo 512 caracteres";
                 }
 
                 
-                if (!data.semestre) {
-                    errors.semestre = "Se requiere el semestre";
-                } else if (data.semestre.length < 2) {
-                    errors.semestre = "Como minimo 2 caracteres";
-                } else if (data.semestre.length > 30) {
-                    errors.semestre = "Como maximo 30 caracteres";
-                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.semestre)) {
-                    errors.semestre = "No se permiten numero o caracteres especiales";
+                if (!data.indiceA) {
+                    errors.indiceA = "Se requiere el indice";
+                } else if (data.indiceA.length < 2) {
+                    errors.indiceA = "Como minimo 2 caracteres";
+                } else if (data.indiceA.length > 512) {
+                    errors.indiceA = "Como maximo 512 caracteres";
                 }
 
-                if (!data.link) {
-                    errors.link = "Se requiere el link";
-                }else if (data.link.length > 500) {
-                    errors.link = "Como maximo 500 caracteres";
-                }else if (!/^(ftp|http|https):\/\/[^ "]+$/.test(data.link)) {
-                errors.link = "El link no es valido";
+                if (!data.cartaA) {
+                    errors.cartaA = "Se requiere la carta";
+                } else if (data.cartaA.length < 2) {
+                    errors.cartaA = "Como minimo 2 caracteres";
+                } else if (data.cartaA.length > 512) {
+                    errors.cartaA = "Como maximo 512 caracteres";
                 }
-    
-                if (!data.publicado) {
-                    errors.publicado = "Se requiere publicar";
-                } else if (data.publicado.length < 2) {
-                    errors.publicado = "Como minimo 2 caracteres";
-                } else if (data.publicado.length > 30) {
-                    errors.publicado = "Como maximo 30 caracteres";
-                } else if (!/^^[a-zA-Z\s]+$/i.test(data.publicado)) {
-                    errors.publicado = "No se permiten numero o caracteres especiales";
+
+                if (!data.boletaA) {
+                    errors.boletaA = "Se requiere la boleta de garantia";
+                } else if (data.boletaA.length < 2) {
+                    errors.boletaA = "Como minimo 2 caracteres";
+                } else if (data.boletaA.length > 512) {
+                    errors.boletaA = "Como maximo 512 caracteres";
                 }
+
+                if (!data.conformacionA) {
+                    errors.conformacionA = "Se requiere la conformacion del grupo empresa";
+                } else if (data.conformacionA.length < 2) {
+                    errors.conformacionA = "Como minimo 2 caracteres";
+                } else if (data.conformacionA.length > 512) {
+                    errors.conformacionA = "Como maximo 512 caracteres";
+                }
+
+                if (!data.solvenciaA) {
+                    errors.solvenciaA = "Se requiere la solvencia tecnica";
+                } else if (data.solvenciaA.length < 2) {
+                    errors.solvenciaA = "Como minimo 2 caracteres";
+                } else if (data.solvenciaA.length > 512) {
+                    errors.solvenciaA = "Como maximo 512 caracteres";
+                } 
+
+                if (!data.caratulaB) {
+                    errors.caratulaB = "Se requiere la caratula";
+                } else if (data.caratulaB.length < 2) {
+                    errors.caratulaB = "Como minimo 2 caracteres";
+                } else if (data.caratulaB.length > 512) {
+                    errors.caratulaB = "Como maximo 512 caracteres";
+                }
+
+                if (!data.indiceB) {
+                    errors.indiceB = "Se requiere el indice";
+                } else if (data.indiceB.length < 2) {
+                    errors.indiceB = "Como minimo 2 caracteres";
+                } else if (data.indiceB.length > 512) {
+                    errors.indiceB = "Como maximo 512 caracteres";
+                } 
+
+                if (!data.propuestaServicioB) {
+                    errors.propuestaServicioB = "Se requiere la propuesta de servicio";
+                } else if (data.propuestaServicioB.length < 2) {
+                    errors.propuestaServicioB = "Como minimo 2 caracteres";
+                } else if (data.propuestaServicioB.length > 512) {
+                    errors.propuestaServicioB = "Como maximo 512 caracteres";
+                } 
+
+                if (!data.planificacionB) {
+                    errors.planificacionB = "Se requiere la planificacion";
+                } else if (data.planificacionB.length < 2) {
+                    errors.planificacionB = "Como minimo 2 caracteres";
+                } else if (data.planificacionB.length > 512) {
+                    errors.planificacionB = "Como maximo 512 caracteres";
+                } 
+
+                if (!data.propuestaEconomicaB) {
+                    errors.propuestaEconomicaB = "Se requiere la propuesta economica";
+                } else if (data.propuestaEconomicaB.length < 2) {
+                    errors.propuestaEconomicaB = "Como minimo 2 caracteres";
+                } else if (data.propuestaEconomicaB.length > 512) {
+                    errors.propuestaEconomicaB = "Como maximo 512 caracteres";
+                } 
+
+                if (!data.planPagosB) {
+                    errors.planPagosB = "Se requiere el plan de pagos";
+                } else if (data.planPagosB.length < 2) {
+                    errors.planPagosB = "Como minimo 2 caracteres";
+                } else if (data.planPagosB.length > 512) {
+                    errors.planPagosB = "Como maximo 512 caracteres";
+                } 
+
+                //---------------------------------------------------------
+                if (!data.cumplimientoProponente) {
+                    errors.cumplimientoProponente = "Se requiere el cumplimiento de espeficicaciones";
+                } else if (data.cumplimientoProponente.length < 1) {
+                    errors.cumplimientoProponente = "Como minimo 2 caracteres";
+                } else if (data.cumplimientoProponente.length > 512) {
+                    errors.cumplimientoProponente = "Como maximo 512 caracteres";
+                } 
+
+                if (!data.claridadOrganizacion) {
+                    errors.claridadOrganizacion = "Se requiere el clarida de organizacion";
+                } else if (data.claridadOrganizacion.length < 1) {
+                    errors.claridadOrganizacion = "Como minimo 2 caracteres";
+                } else if (data.claridadOrganizacion.length > 512) {
+                    errors.claridadOrganizacion = "Como maximo 512 caracteres";
+                } 
+
+
+                if (!data.cumplimientoTecnico) {
+                    errors.cumplimientoTecnico = "Se requiere el cumplimiento de especificaciones tecnicas";
+                } else if (data.cumplimientoTecnico.length < 1) {
+                    errors.cumplimientoTecnico = "Como minimo 2 caracteres";
+                } else if (data.cumplimientoTecnico.length > 512) {
+                    errors.cumplimientoTecnico = "Como maximo 512 caracteres";
+                } 
+
+                if (!data.claridadProceso) {
+                    errors.claridadProceso = "Se requiere el claridad de proceso de desarrollo";
+                } else if (data.claridadProceso.length < 1) {
+                    errors.claridadProceso = "Como minimo 2 caracteres";
+                } else if (data.claridadProceso.length > 512) {
+                    errors.claridadProceso = "Como maximo 512 caracteres";
+                } 
+
+                
+                if (!data.plazosEjecucion) {
+                    errors.plazosEjecucion = "Se requiere los plazos de ejecucion";
+                } else if (data.plazosEjecucion.length < 1) {
+                    errors.plazosEjecucion = "Como minimo 2 caracteres";
+                } else if (data.plazosEjecucion.length > 512) {
+                    errors.plazosEjecucion = "Como maximo 512 caracteres";
+                } 
+
+                if (!data.precioTotal) {
+                    errors.precioTotal = "Se requiere los precios totales";
+                } else if (data.precioTotal.length < 1) {
+                    errors.precioTotal = "Como minimo 2 caracteres";
+                } else if (data.precioTotal.length > 512) {
+                    errors.precioTotal = "Como maximo 512 caracteres";
+                }
+
+                if (!data.usoHerramienta) {
+                    errors.usoHerramienta = "Se requiere el uso de herramienta";
+                } else if (data.usoHerramienta.length < 1) {
+                    errors.usoHerramienta = "Como minimo 2 caracteres";
+                } else if (data.usoHerramienta.length > 512) {
+                    errors.usoHerramienta = "Como maximo 512 caracteres";
+                } 
+
 
                 if (!data.estado) {
                     errors.estado = "Se requiere el estado";
@@ -141,8 +412,18 @@ export const Orden = (props) => {
                     errors.estado = "Como maximo 30 caracteres";
                 } else if (!/^^[a-zA-Z\s]+$/i.test(data.estado)) {
                     errors.estado = "No se permiten numero o caracteres especiales";
-                } 
+                }
 
+                if (!data.empresa) {
+                    errors.empresa = "Se requiere la empresa";
+                } else if (data.empresa.length < 2) {
+                    errors.empresa = "Como minimo 2 caracteres";
+                } else if (data.empresa.length > 30) {
+                    errors.empresa = "Como maximo 30 caracteres";
+                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.empresa)) {
+                    errors.empresa = "No se permiten numero o caracteres especiales";
+                }
+                
                 if (!data.user) {
                     errors.user = "Se requiere el usuario";
                 } else if (data.user.length < 2) {
@@ -154,49 +435,177 @@ export const Orden = (props) => {
                 }
 
             }else{
-                if (!data.titulo) {
-                    errors.titulo = "Se requiere el titulo";
-                } else if (data.titulo.length < 2) {
-                    errors.titulo = "Como minimo 2 caracteres";
-                } else if (data.titulo.length > 50) {
-                    errors.titulo = "Como maximo 50 caracteres";
-                } else if (!/^^[a-zA-Z0-9\s]+$/i.test(data.titulo)) {
-                    errors.titulo = "No se permiten numero o caracteres especiales";
-                }
 
-                if (!data.codigo) {
-                    errors.codigo = "Se requiere el codigo";
-                } else if (data.codigo.length < 2) {
-                    errors.codigo = "Como minimo 2 caracteres";
-                } else if (data.codigo.length > 30) {
-                    errors.codigo = "Como maximo 30 caracteres";
-                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.codigo)) {
-                    errors.codigo = "No se permiten numero o caracteres especiales";
-                }else if(!esRepetido(data.codigo) && stateConvocatoria === false){
-                    errors.codigo = "Ya existe el codigo";
-                } else if(!esRepetidoUpdate(data.codigo,convocatoriaUpdate) && stateConvocatoria === true){
-                    errors.codigo = "Ya existe el codigo";  
-                }
+                if (!data.fecha) {
+                    errors.fecha = "Se requiere la fecha";
+                } 
+
+                if (!data.caratulaA) {
+                    errors.caratulaA = "Se requiere la caratula";
+                } else if (data.caratulaA.length < 2) {
+                    errors.caratulaA = "Como minimo 2 caracteres";
+                } else if (data.caratulaA.length > 512) {
+                    errors.caratulaA = "Como maximo 512 caracteres";
+                } 
 
                 
-                if (!data.semestre) {
-                    errors.semestre = "Se requiere el semestre";
-                } else if (data.semestre.length < 2) {
-                    errors.semestre = "Como minimo 2 caracteres";
-                } else if (data.semestre.length > 30) {
-                    errors.semestre = "Como maximo 30 caracteres";
-                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.semestre)) {
-                    errors.semestre = "No se permiten numero o caracteres especiales";
-                }
+                if (!data.indiceA) {
+                    errors.indiceA = "Se requiere el indice";
+                } else if (data.indiceA.length < 2) {
+                    errors.indiceA = "Como minimo 2 caracteres";
+                } else if (data.indiceA.length > 512) {
+                    errors.indiceA = "Como maximo 512 caracteres";
+                } 
 
-                if (!data.link) {
-                    errors.link = "Se requiere el link";
-                }else if (data.link.length > 500) {
-                    errors.link = "Como maximo 500 caracteres";
-                }else if (!/^(ftp|http|https):\/\/[^ "]+$/.test(data.link)) {
-                errors.link = "El link no es valido";
-                }
+                if (!data.cartaA) {
+                    errors.cartaA = "Se requiere la carta";
+                } else if (data.cartaA.length < 2) {
+                    errors.cartaA = "Como minimo 2 caracteres";
+                } else if (data.cartaA.length > 512) {
+                    errors.cartaA = "Como maximo 512 caracteres";
+                } 
 
+                if (!data.boletaA) {
+                    errors.boletaA = "Se requiere la boleta de garantia";
+                } else if (data.boletaA.length < 2) {
+                    errors.boletaA = "Como minimo 2 caracteres";
+                } else if (data.boletaA.length > 512) {
+                    errors.boletaA = "Como maximo 512 caracteres";
+                } 
+
+                if (!data.conformacionA) {
+                    errors.conformacionA = "Se requiere la conformacion del grupo empresa";
+                } else if (data.conformacionA.length < 2) {
+                    errors.conformacionA = "Como minimo 2 caracteres";
+                } else if (data.conformacionA.length > 512) {
+                    errors.conformacionA = "Como maximo 512 caracteres";
+                } 
+
+                if (!data.solvenciaA) {
+                    errors.solvenciaA = "Se requiere la solvencia tecnica";
+                } else if (data.solvenciaA.length < 2) {
+                    errors.solvenciaA = "Como minimo 2 caracteres";
+                } else if (data.solvenciaA.length > 512) {
+                    errors.solvenciaA = "Como maximo 512 caracteres";
+                } 
+
+                if (!data.caratulaB) {
+                    errors.caratulaB = "Se requiere la caratula";
+                } else if (data.caratulaB.length < 2) {
+                    errors.caratulaB = "Como minimo 2 caracteres";
+                } else if (data.caratulaB.length > 512) {
+                    errors.caratulaB = "Como maximo 512 caracteres";
+                } 
+
+                if (!data.indiceB) {
+                    errors.indiceB = "Se requiere el indice";
+                } else if (data.indiceB.length < 2) {
+                    errors.indiceB = "Como minimo 2 caracteres";
+                } else if (data.indiceB.length > 512) {
+                    errors.indiceB = "Como maximo 512 caracteres";
+                } 
+
+                if (!data.propuestaServicioB) {
+                    errors.propuestaServicioB = "Se requiere la propuesta de servicio";
+                } else if (data.propuestaServicioB.length < 2) {
+                    errors.propuestaServicioB = "Como minimo 2 caracteres";
+                } else if (data.propuestaServicioB.length > 512) {
+                    errors.propuestaServicioB = "Como maximo 512 caracteres";
+                } 
+
+                if (!data.planificacionB) {
+                    errors.planificacionB = "Se requiere la planificacion";
+                } else if (data.planificacionB.length < 2) {
+                    errors.planificacionB = "Como minimo 2 caracteres";
+                } else if (data.planificacionB.length > 512) {
+                    errors.planificacionB = "Como maximo 512 caracteres";
+                } 
+
+                if (!data.propuestaEconomicaB) {
+                    errors.propuestaEconomicaB = "Se requiere la propuesta economica";
+                } else if (data.propuestaEconomicaB.length < 2) {
+                    errors.propuestaEconomicaB = "Como minimo 2 caracteres";
+                } else if (data.propuestaEconomicaB.length > 512) {
+                    errors.propuestaEconomicaB = "Como maximo 512 caracteres";
+                } 
+
+                if (!data.planPagosB) {
+                    errors.planPagosB = "Se requiere el plan de pagos";
+                } else if (data.planPagosB.length < 2) {
+                    errors.planPagosB = "Como minimo 2 caracteres";
+                } else if (data.planPagosB.length > 512) {
+                    errors.planPagosB = "Como maximo 512 caracteres";
+                } 
+
+                //---------------------------------------------------------
+                if (!data.cumplimientoProponente) {
+                    errors.cumplimientoProponente = "Se requiere el cumplimiento de espeficicaciones";
+                } else if (data.cumplimientoProponente.length < 1) {
+                    errors.cumplimientoProponente = "Como minimo 2 caracteres";
+                } else if (data.cumplimientoProponente.length > 512) {
+                    errors.cumplimientoProponente = "Como maximo 512 caracteres";
+                } 
+
+                if (!data.claridadOrganizacion) {
+                    errors.claridadOrganizacion = "Se requiere el clarida de organizacion";
+                } else if (data.claridadOrganizacion.length < 1) {
+                    errors.claridadOrganizacion = "Como minimo 2 caracteres";
+                } else if (data.claridadOrganizacion.length > 512) {
+                    errors.claridadOrganizacion = "Como maximo 512 caracteres";
+                } 
+
+                if (!data.cumplimientoTecnico) {
+                    errors.cumplimientoTecnico = "Se requiere el cumplimiento de especificaciones tecnicas";
+                } else if (data.cumplimientoTecnico.length < 1) {
+                    errors.cumplimientoTecnico = "Como minimo 2 caracteres";
+                } else if (data.cumplimientoTecnico.length > 512) {
+                    errors.cumplimientoTecnico = "Como maximo 512 caracteres";
+                } 
+
+                if (!data.claridadProceso) {
+                    errors.claridadProceso = "Se requiere el claridad de proceso de desarrollo";
+                } else if (data.claridadProceso.length < 1) {
+                    errors.claridadProceso = "Como minimo 2 caracteres";
+                } else if (data.claridadProceso.length > 512) {
+                    errors.claridadProceso = "Como maximo 512 caracteres";
+                } 
+
+                
+                if (!data.plazosEjecucion) {
+                    errors.plazosEjecucion = "Se requiere los plazos de ejecucion";
+                } else if (data.plazosEjecucion.length < 1) {
+                    errors.plazosEjecucion = "Como minimo 2 caracteres";
+                } else if (data.plazosEjecucion.length > 512) {
+                    errors.plazosEjecucion = "Como maximo 512 caracteres";
+                } 
+
+                if (!data.precioTotal) {
+                    errors.precioTotal = "Se requiere los precios totales";
+                } else if (data.precioTotal.length < 1) {
+                    errors.precioTotal = "Como minimo 2 caracteres";
+                } else if (data.precioTotal.length > 512) {
+                    errors.precioTotal = "Como maximo 512 caracteres";
+                } 
+
+                if (!data.usoHerramienta) {
+                    errors.usoHerramienta = "Se requiere el uso de herramienta";
+                } else if (data.usoHerramienta.length < 1) {
+                    errors.usoHerramienta = "Como minimo 2 caracteres";
+                } else if (data.usoHerramienta.length > 512) {
+                    errors.usoHerramienta = "Como maximo 512 caracteres";
+                } 
+
+
+                if (!data.empresa) {
+                    errors.empresa = "Se requiere la empresa";
+                } else if (data.empresa.length < 2) {
+                    errors.empresa = "Como minimo 2 caracteres";
+                } else if (data.empresa.length > 30) {
+                    errors.empresa = "Como maximo 30 caracteres";
+                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.empresa)) {
+                    errors.empresa = "No se permiten numero o caracteres especiales";
+                }
+                
                 if (!data.user) {
                     errors.user = "Se requiere el usuario";
                 } else if (data.user.length < 2) {
@@ -213,66 +622,120 @@ export const Orden = (props) => {
         },
 
         onSubmit: (data) => {
+            console.log(data);
             if(submitted === true){
-                let _convocatorias = [...convocatorias];
-                let _convocatoria  = {...convocatoria };
-                _convocatoria['titulo']     = data.titulo;
-                _convocatoria['codigo']     = data.codigo;
-                _convocatoria['semestre']   = data.semestre;
-                _convocatoria['link']       = data.link;
-                _convocatoria['publicado']  = data.publicado;
-                _convocatoria['estado']     = data.estado;
-                _convocatoria['user']       = data.user;
+                
+                let _partes = [...partes];
+                let _parte  = {...parte };
 
-                if (_convocatoria.titulo.trim()) {
-                    if (convocatoria.id) {
+                let dat1        = new Date(data.fecha);
+                let convertido1 = dat1.toLocaleDateString(undefined, options1);
 
-                        setConvocatoria({ ...convocatoria });
-                        const index = findIndexById(convocatoria.id);
-                        _convocatorias[index] = _convocatoria;
+                _parte['fecha']                     = convertido1;
+                _parte['caratulaA']                 = data.caratulaA;
+                _parte['indiceA']                   = data.indiceA;
+                _parte['cartaA']                    = data.cartaA;
+                _parte['boletaA']                   = data.boletaA;
+                _parte['conformacionA']             = data.conformacionA;
+                _parte['solvenciaA']                = data.solvenciaA;
+                _parte['caratulaB']                 = data.caratulaB;
+                _parte['indiceB']                   = data.indiceB;
+                _parte['propuestaServicioB']        = data.propuestaServicioB;
+                _parte['planificacionB']            = data.planificacionB;
+                _parte['propuestaEconomicaB']       = data.propuestaEconomicaB;
+                _parte['planPagosB']                = data.planPagosB;
+                _parte['cumplimientoProponente']    = data.cumplimientoProponente;
+                _parte['claridadOrganizacion']      = data.claridadOrganizacion;
+                _parte['cumplimientoTecnico']       = data.cumplimientoTecnico;
+                _parte['claridadProceso']           = data.claridadProceso;
+                _parte['plazosEjecucion']           = data.plazosEjecucion;
+                _parte['precioTotal']               = data.precioTotal;
+                _parte['usoHerramienta']            = data.usoHerramienta;
+                _parte['estado']                    = data.estado;
+                _parte['empresa']                   = data.empresa;
+                _parte['user']                      = data.user;
 
-                        updateConvocatoriaID({titulo:`${_convocatoria.titulo}`,codigo:`${_convocatoria.codigo}`,semestre:`${_convocatoria.semestre}`,link:`${_convocatoria.link}`,publicado:`${_convocatoria.publicado}`,estado:`${_convocatoria.estado}`,user:`${_convocatoria.user}`},convocatoria.id);
-                        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Convocatoria Actualizada', life: 3000 });
+
+                if (_parte.caratulaA.trim()) {
+                    if (parte.id) {
+
+                        setParte({ ...parte });
+                        const index = findIndexById(parte.id);
+                        _partes[index] = _parte;
+
+                        updateOrdenID(
+                            {
+                                fecha:                      `${_parte.fecha}`,
+                                caratulaA:                  `${_parte.caratulaA}`,
+                                indiceA:                    `${_parte.indiceA}`,
+                                cartaA:                     `${_parte.cartaA}`,
+                                boletaA:                    `${_parte.boletaA}`,
+                                conformacionA:              `${_parte.conformacionA}`,
+                                solvenciaA:                 `${_parte.solvenciaA}`,
+                                caratulaB:                  `${_parte.caratulaB}`,
+                                indiceB:                    `${_parte.indiceB}`,
+                                propuestaServicioB:         `${_parte.propuestaServicioB}`,
+                                planificacionB:             `${_parte.planificacionB}`,
+                                propuestaEconomicaB:        `${_parte.propuestaEconomicaB}`,
+                                planPagosB:                 `${_parte.planPagosB}`,
+                                cumplimientoProponente:     `${_parte.cumplimientoProponente}`,
+                                claridadOrganizacion:       `${_parte.claridadOrganizacion}`,
+                                cumplimientoTecnico:        `${_parte.cumplimientoTecnico}`,
+                                claridadProceso:            `${_parte.claridadProceso}`,
+                                plazosEjecucion:            `${_parte.plazosEjecucion}`,
+                                precioTotal:                `${_parte.precioTotal}`,
+                                usoHerramienta:             `${_parte.usoHerramienta}`,
+                                estado:                     `${_parte.estado}`,
+                                empresa:                    `${_parte.empresa}`,
+                                user:                       `${_parte.user}`
+                            }
+                            ,parte.id);
+                        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Orden de cambio Actualizado', life: 3000 });
                     }
                     else {
 
-                        _convocatoria.id        = uniqid("conv-");
-                        _convocatoria.publicado = "No publicar";
-                        _convocatoria.estado    = "Activo"; 
-                        _convocatorias.push(_convocatoria);
-                
-                        createConvocatoria({id:`${_convocatoria.id}`,titulo:`${_convocatoria.titulo}`,codigo:`${_convocatoria.codigo}`,semestre:`${_convocatoria.semestre}`,link:`${_convocatoria.link}`,publicado:`${_convocatoria.publicado}`,estado:`${_convocatoria.estado}`,user:`${_convocatoria.user}`});
-                        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Convocatoria Creada', life: 3000 });
+                        _parte.id        = uniqid("Orden-");
+                        _parte.estado    = "Activo"; 
+                        _partes.push(_parte);
+                        createOrden(
+                            {
+                                id:                         `${_parte.id}`,
+                                fecha:                      `${_parte.fecha}`,
+                                caratulaA:                  `${_parte.caratulaA}`,
+                                indiceA:                    `${_parte.indiceA}`,
+                                cartaA:                     `${_parte.cartaA}`,
+                                boletaA:                    `${_parte.boletaA}`,
+                                conformacionA:              `${_parte.conformacionA}`,
+                                solvenciaA:                 `${_parte.solvenciaA}`,
+                                caratulaB:                  `${_parte.caratulaB}`,
+                                indiceB:                    `${_parte.indiceB}`,
+                                propuestaServicioB:         `${_parte.propuestaServicioB}`,
+                                planificacionB:             `${_parte.planificacionB}`,
+                                propuestaEconomicaB:        `${_parte.propuestaEconomicaB}`,
+                                planPagosB:                 `${_parte.planPagosB}`,
+                                cumplimientoProponente:     `${_parte.cumplimientoProponente}`,
+                                claridadOrganizacion:       `${_parte.claridadOrganizacion}`,
+                                cumplimientoTecnico:        `${_parte.cumplimientoTecnico}`,
+                                claridadProceso:            `${_parte.claridadProceso}`,
+                                plazosEjecucion:            `${_parte.plazosEjecucion}`,
+                                precioTotal:                `${_parte.precioTotal}`,
+                                usoHerramienta:             `${_parte.usoHerramienta}`,
+                                estado:                     `${_parte.estado}`,
+                                empresa:                    `${_parte.empresa}`,
+                                user:                       `${_parte.user}`
+                            }
+                        );
+                        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Orden de cambio Creado', life: 3000 });
                     }
                 }
-                setConvocatorias(_convocatorias);
-                setConvocatoriaDialog(false);
-                setConvocatoria(emptyConvocatoria);
+                setPartes(_partes);
+                setParteDialog(false);
+                setParte(emptyParte);
                 formik.resetForm();
         }
             
         },
       });
-
-      const esRepetido =(value)=>{
-        var _convocatorias = [...convocatorias];
-        let res = _convocatorias.find(i => (i.codigo).toLowerCase().trim() === (value).toLowerCase().trim() );
-         if(res === undefined){
-             return true;
-         }else{
-             return false;
-         }
-    }
-    const esRepetidoUpdate =(value,original)=>{
-        var _convocatorias = [...convocatorias];
-        let aux = _convocatorias.filter(i =>(i.codigo).toLowerCase()!= (original).toLowerCase())
-        let res = aux.find(i => (i.codigo).toLowerCase().trim() === (value).toLowerCase().trim() );
-         if(res === undefined || res === original){
-             return true;
-         }else{
-             return false;
-         }
-    }
 
     const isFormFieldValid = (name) => !!(formik.touched[name] && formik.errors[name]);
     const getFormErrorMessage = (name) => {
@@ -280,16 +743,16 @@ export const Orden = (props) => {
     };
 
     useEffect(()=>{
-        fetchConvocatorias();
+        fetchOrdens();
     },[])
 
-    const fetchConvocatorias = () =>{
-        getConvocatorias().then(json =>{
+    const fetchOrdens = () =>{
+        getOrdens().then(json =>{
             if(json.error){
                 console.log("Error");
             }else{
-                console.log("---------Convocatorias insertados-----------");
-                setConvocatorias(json.data);
+                console.log("---------Orden de cambio insertados-----------");
+                setPartes(json.data);
                 setLoading(false);
             }
         })
@@ -310,17 +773,33 @@ export const Orden = (props) => {
         })
     }
 
+    useEffect(()=>{
+        fetchEmpresas();
+    },[])
+
+    const fetchEmpresas = () =>{
+        getEmpresasActivas().then(json =>{
+            if(json.error){
+                console.log("Error");
+            }else{
+                console.log("---------Empresas insertadas-----------");
+                setEmpresas(json.data);
+            }
+        })
+    }
+
+
     const openNew = () => {
-        setConvocatoria(emptyConvocatoria);
+        setParte(emptyParte);
         formik.resetForm();
         setSubmitted(false);
-        setStateConvocatoria(false); 
-        setConvocatoriaDialog(true);    
+        setStateParte(false); 
+        setParteDialog(true);    
     }
 
     const hideDialog = () => {
         setSubmitted(false);
-        setConvocatoriaDialog(false);
+        setParteDialog(false);
     }
 
     const showDialog = () => {
@@ -328,67 +807,126 @@ export const Orden = (props) => {
         formik.handleSubmit();
     }
 
-    const hideDeleteConvocatoriaDialog = () => {
-        setDeleteConvocatoriaDialog(false);
+    const hideDeleteParteDialog = () => {
+        setDeleteParteDialog(false);
     }
 
-    const editConvocatoria = (convocatoria) => {
-        setConvocatoria({ ...convocatoria });
+    const editParte = (parte) => {
+        setParte({ ...parte });
         setSubmitted(true);
+
         formik.resetForm();
         formik.setValues(
         {
-            titulo:    `${convocatoria.titulo}`,
-            codigo:    `${convocatoria.codigo}`,
-            semestre:  `${convocatoria.semestre}`,
-            link:      `${convocatoria.link}`,
-            publicado: `${convocatoria.publicado}`,
-            estado:    `${convocatoria.estado}`,
-            user:      `${convocatoria.user}`
+            fecha:                      `${parte.fecha}`,
+            caratulaA:                  `${parte.caratulaA}`,
+            indiceA:                    `${parte.indiceA}`,
+            cartaA:                     `${parte.cartaA}`,
+            boletaA:                    `${parte.boletaA}`,
+            conformacionA:              `${parte.conformacionA}`,
+            solvenciaA:                 `${parte.solvenciaA}`,
+            caratulaB:                  `${parte.caratulaB}`,
+            indiceB:                    `${parte.indiceB}`,
+            propuestaServicioB:         `${parte.propuestaServicioB}`,
+            planificacionB:             `${parte.planificacionB}`,
+            propuestaEconomicaB:        `${parte.propuestaEconomicaB}`,
+            planPagosB:                 `${parte.planPagosB}`,
+            cumplimientoProponente:     `${parte.cumplimientoProponente}`,
+            claridadOrganizacion:       `${parte.claridadOrganizacion}`,
+            cumplimientoTecnico:        `${parte.cumplimientoTecnico}`,
+            claridadProceso:            `${parte.claridadProceso}`,
+            plazosEjecucion:            `${parte.plazosEjecucion}`,
+            precioTotal:                `${parte.precioTotal}`,
+            usoHerramienta:             `${parte.usoHerramienta}`,
+            estado:                     `${parte.estado}`,
+            empresa:                    `${parte.empresa}`,
+            user:                       `${parte.user}`
         });
-        setConvocatoriaUpdate(`${convocatoria.codigo}`);
-        setStateConvocatoria(true);
-        setConvocatoriaDialog(true);
+        setParteUpdate(`${parte.estado}`);
+        setStateParte(true);
+        setParteDialog(true);
     }
 
-    const confirmDeleteConvocatoria = (convocatoria) => {
-        setConvocatoria(convocatoria);
-        setDeleteConvocatoriaDialog(true);
+    const confirmDeleteParte = (parte) => {
+        setParte(parte);
+        setDeleteParteDialog(true);
     }
 
-    const deleteConvocatoria = () => {
-        let _convocatorias = [...convocatorias];
-        let _convocatoria  = {...convocatoria };
+    const deleteParte = () => {
+        let _partes = [...partes];
+        let _parte  = {...parte };
         
+        if (parte.caratulaA.trim()) {
+            if (parte.id) {
 
-        if (convocatoria.titulo.trim()) {
-            if (convocatoria.id) {
+                const index = findIndexById(parte.id);
+                _partes[index] = _parte;
 
+                updateOrdenID(
+                    {
+                        fecha:                      `${_parte.fecha}`,
+                        caratulaA:                  `${_parte.caratulaA}`,
+                        indiceA:                    `${_parte.indiceA}`,
+                        cartaA:                     `${_parte.cartaA}`,
+                        boletaA:                    `${_parte.boletaA}`,
+                        conformacionA:              `${_parte.conformacionA}`,
+                        solvenciaA:                 `${_parte.solvenciaA}`,
+                        caratulaB:                  `${_parte.caratulaB}`,
+                        indiceB:                    `${_parte.indiceB}`,
+                        propuestaServicioB:         `${_parte.propuestaServicioB}`,
+                        planificacionB:             `${_parte.planificacionB}`,
+                        propuestaEconomicaB:        `${_parte.propuestaEconomicaB}`,
+                        planPagosB:                 `${_parte.planPagosB}`,
+                        cumplimientoProponente:     `${_parte.cumplimientoProponente}`,
+                        claridadOrganizacion:       `${_parte.claridadOrganizacion}`,
+                        cumplimientoTecnico:        `${_parte.cumplimientoTecnico}`,
+                        claridadProceso:            `${_parte.claridadProceso}`,
+                        plazosEjecucion:            `${_parte.plazosEjecucion}`,
+                        precioTotal:                `${_parte.precioTotal}`,
+                        usoHerramienta:             `${_parte.usoHerramienta}`,
+                        estado:                     "Desactivado",
+                        empresa:                    `${_parte.empresa}`,
+                        user:                       `${_parte.user}`
+                    }
+                    ,parte.id);
                 
-                const index = findIndexById(convocatoria.id);
-                _convocatorias[index] = _convocatoria;
-                updateConvocatoriaID({titulo:`${_convocatoria.titulo}`,codigo:`${_convocatoria.codigo}`,semestre:`${_convocatoria.semestre}`,link:`${_convocatoria.link}`,publicado:"No publicar",estado:"Desactivado",user:`${_convocatoria.user}`},convocatoria.id);
-                _convocatoria['titulo']     = _convocatoria.titulo;
-                _convocatoria['codigo']     = _convocatoria.codigo;
-                _convocatoria['semestre']   = _convocatoria.semestre;
-                _convocatoria['link']       = _convocatoria.link;
-                _convocatoria['publicado']  = "No publicar";
-                _convocatoria['estado']     = "Desactivado";
-                _convocatoria['user']       = _convocatoria.user;
-                setConvocatoria({ ...convocatoria });
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Convocatoria desactivada', life: 3000 });
+                _parte['fecha']                     = _parte.fecha;
+                _parte['caratulaA']                 = _parte.caratulaA;
+                _parte['indiceA']                   = _parte.indiceA;
+                _parte['cartaA']                    = _parte.cartaA;
+                _parte['boletaA']                   = _parte.boletaA;
+                _parte['conformacionA']             = _parte.conformacionA;
+                _parte['solvenciaA']                = _parte.solvenciaA;
+                _parte['caratulaB']                 = _parte.caratulaB;
+                _parte['indiceB']                   = _parte.indiceB;
+                _parte['propuestaServicioB']        = _parte.propuestaServicioB;
+                _parte['planificacionB']            = _parte.planificacionB;
+                _parte['propuestaEconomicaB']       = _parte.propuestaEconomicaB;
+                _parte['planPagosB']                = _parte.planPagosB;
+                _parte['cumplimientoProponente']    = _parte.cumplimientoProponente;
+                _parte['claridadOrganizacion']      = _parte.claridadOrganizacion;
+                _parte['cumplimientoTecnico']       = _parte.cumplimientoTecnico;
+                _parte['claridadProceso']           = _parte.claridadProceso;
+                _parte['plazosEjecucion']           = _parte.plazosEjecucion;
+                _parte['precioTotal']               = _parte.precioTotal;
+                _parte['usoHerramienta']            = _parte.usoHerramienta;
+                _parte['estado']                    = "Desactivado";
+                _parte['empresa']                   = _parte.empresa;
+                _parte['user']                      = _parte.user;
+                setParte({ ...parte });
+                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Orden de cambio desactivado', life: 3000 });
             }
         }
-        setConvocatorias(_convocatorias);
-        setConvocatoria(emptyConvocatoria);
-        setDeleteConvocatoriaDialog(false);
+        setPartes(_partes);
+        setParte(emptyParte);
+        setDeleteParteDialog(false);
         
     }
 
     const findIndexById = (id) => {
         let index = -1;
-        for (let i = 0; i < convocatorias.length; i++) {
-            if (convocatorias[i].id === id) {
+        for (let i = 0; i < partes.length; i++) {
+            if (partes[i].id === id) {
 
                 index = i;
                 break;
@@ -407,50 +945,15 @@ export const Orden = (props) => {
         );
     }
 
-    const tituloBodyTemplate = (rowData) => {
+    const fechaBodyTemplate = (rowData) => {
         return (
             <>
-                <span className="p-column-title">Titulo</span>
-                {rowData.titulo}
+                <span className="p-column-title">Fecha</span>
+                {rowData.fecha}
             </>
         );
     }
 
-    const codigoBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Codigo</span>
-                {rowData.codigo}
-            </>
-        );
-    }
-
-    const semestreBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Semestre</span>
-                {rowData.semestre}
-            </>
-        );
-    }
-
-    const linkBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Link</span>
-                <Button label="Ver documento" className="p-button-link" onClick={() => window.open(`${rowData.link}`)} style={props.layoutColorMode === 'light' ? {'color':'#495057', 'font-weight': 'bold' , 'text-align': 'justify'} : {'color':'#ffffff', 'font-weight': 'bold' , 'text-align': 'justify'}}/>      
-            </>
-        );
-    }
-
-    const publicadoBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Publicado</span>
-                {rowData.publicado}
-            </>
-        );
-    }
 
     const estadoBodyTemplate = (rowData) => {
         return (
@@ -461,13 +964,21 @@ export const Orden = (props) => {
         );
     }
 
-    
+    const empresaBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Empresa</span>
+                {rowData.empresa}
+               
 
+            </>
+        );
+    }
 
     const userBodyTemplate = (rowData) => {
         return (
             <>
-                <span className="p-column-title">User</span>
+                <span className="p-column-title">Usuario</span>
                 {rowData.user}
                
 
@@ -486,16 +997,24 @@ export const Orden = (props) => {
     const actionBodyTemplate = (rowData) => {
         return (
             <div className="actions">
-                <Button icon="pi pi-pencil" style={{'background': '#13af4e'}} className="p-button-rounded p-button-success mr-2"   onClick={() => editConvocatoria(rowData)} />
-                <Button icon="pi pi-trash"  style={{'background': '#eee500'}} className="p-button-rounded p-button-warning"        onClick={() => confirmDeleteConvocatoria(rowData)} />
+                <Button icon="pi pi-pencil"    style={{'background': '#13af4e'}} className="p-button-rounded p-button-success mr-2"   onClick={() => editParte(rowData)} />
+                <Button icon="pi pi-trash"     style={{'background': '#eee500'}} className="p-button-rounded p-button-warning"        onClick={() => confirmDeleteParte(rowData)} />
             </div>
         );
     }
 
-    const deleteConvocatoriaDialogFooter = (
+    const pdfBodyTemplate = (rowData) => {
+        return (
+            <div className="actions">
+                <Button icon="pi pi-file-pdf"  style={{'background': '#ed4651'}} className="p-button-rounded p-button-success mr-2"         />
+            </div>
+        );
+    }
+
+    const deleteParteDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" style={{'background': '#d13639','color':'#ffffff'}} className="p-button-text" onClick={hideDeleteConvocatoriaDialog} />
-            <Button label="Si" icon="pi pi-check" style={props.layoutColorMode === 'light' ? {'color':'#13af4e','border-color':'#13af4e'} : {'color':'#13af4e','border-color':'#13af4e'}} className="p-button-text" onClick={deleteConvocatoria} />
+            <Button label="No" icon="pi pi-times" style={{'background': '#d13639','color':'#ffffff'}} className="p-button-text" onClick={hideDeleteParteDialog} />
+            <Button label="Si" icon="pi pi-check" style={props.layoutColorMode === 'light' ? {'color':'#13af4e','border-color':'#13af4e'} : {'color':'#13af4e','border-color':'#13af4e'}} className="p-button-text" onClick={deleteParte} />
         </>
     );
 
@@ -504,7 +1023,7 @@ export const Orden = (props) => {
     const renderHeader = () => {
         return (
             <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-            <h5 className="m-0">Gestion de convocatorias</h5>
+            <h5 className="m-0">Gestion de Orden de Cambio</h5>
             <span className="block mt-2 md:mt-0 p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." />
@@ -513,21 +1032,30 @@ export const Orden = (props) => {
         )
     }
 
+    const renderHeaderEditor = () => {
+        return (
+            <span className="ql-formats">
+                <button className="ql-bold" aria-label="Bold"></button>
+                <button className="ql-italic" aria-label="Italic"></button>
+                <button className="ql-underline" aria-label="Underline"></button>
+            </span>
+        );
+    }
+
     const renderGroup = () => {
         return (
             <ColumnGroup>
                 <Row>
-                    <Column header={showHeader} colSpan={8}></Column>
+                    <Column header={showHeader} colSpan={7}></Column>
                 </Row>
                 <Row>
-                    <Column header="ID"                 field="id"        sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                    <Column header="TITULO"             field="titulo"    sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                    <Column header="CODIGO"             field="codigo"    sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                    <Column header="SEMESTRE"           field="semestre"  sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                    <Column header="LINK"               field="link"      sortable style={{ 'background-color': '#13af4e', width:'40%'}}/>
-                    <Column header="PUBLICADO"          field="publicado" sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                    <Column header="ESTADO"             field="estado"    sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                    <Column header="Editar/Eliminar"                               style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="ID"               field="id"       sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="FECHA"            field="fecha"    sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="ESTADO"           field="estado"   sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="EMPRESA"          field="empresa"  sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="USUARIO"          field="user"     sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="Editar/Eliminar"                            style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="Generar PDF"                                style={{ 'background-color': '#13af4e', width:'20%'}}/>
                 </Row>
             </ColumnGroup>
         )
@@ -540,7 +1068,7 @@ export const Orden = (props) => {
 
 
     const headerDialog =()=>{
-        return (stateConvocatoria)?"Actualizando convocatoria":"Añadir convocatoria"
+        return (stateParte)?"Actualizando Orden de cambio":"Añadir Orden de cambio"
     }
 
     return (
@@ -551,80 +1079,200 @@ export const Orden = (props) => {
                     <Toast ref={toast} />
                     <Toolbar className="" left={leftToolbarTemplate}></Toolbar>
 
-                    <DataTable ref={dt} value={convocatorias} selection={selectedConvocatorias}  onSelectionChange={(e) => setSelectedConvocatorias(e.value)}
+                    <DataTable ref={dt} value={partes} selection={selectedPartes}  onSelectionChange={(e) => setSelectedPartes(e.value)}
                         dataKey="id" rowHover paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive p-datatable-sm p-datatable-gridlines p-datatable-striped"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} users" resizableColumns columnResizeMode="fit" showGridlines
-                        globalFilter={globalFilter} emptyMessage="No se encontro el rol" loading={loading} headerColumnGroup={headerGroup}
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} parte A" resizableColumns columnResizeMode="fit" showGridlines
+                        globalFilter={globalFilter} emptyMessage="No se encontro los documentos de la Parte A" loading={loading} headerColumnGroup={headerGroup}
                         >
                     
-                        <Column style={{width:'20%'}} field="id"        header="ID"        sortable body={idBodyTemplate}></Column>
-                        <Column style={{width:'20%'}} field="titulo"    header="TITULO"    sortable body={tituloBodyTemplate}></Column>
-                        <Column style={{width:'20%'}} field="codigo"    header="CODIGO"    sortable body={codigoBodyTemplate}></Column>
-                        <Column style={{width:'20%'}} field="semestre"  header="SEMESTRE"  sortable body={semestreBodyTemplate}></Column>
-                        <Column style={{width:'40%'}} field="link"      header="LINK"      sortable body={linkBodyTemplate}></Column>
-                        <Column style={{width:'20%'}} field="publicado" header="PUBLICADO" sortable body={publicadoBodyTemplate}></Column>
-                        <Column style={{width:'20%'}} field="estado"    header="ESTADO"    sortable body={estadoBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} field="id"                 header="ID"        sortable body={idBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} field="fecha"              header="FECHA"     sortable body={fechaBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} field="estado"             header="ESTADO"    sortable body={estadoBodyTemplate}></Column>
+                        <Column style={{width:'20%'}} field="empresa"            header="EMPRESA"   sortable body={empresaBodyTemplate}></Column>                   
+                        <Column style={{width:'20%'}} field="user"               header="USUARIO"   sortable body={userBodyTemplate}></Column>
                         <Column style={{width:'20%'}} body={actionBodyTemplate}></Column>
+                        <Column header="Generar PDF"  body={pdfBodyTemplate}></Column>
 
                     </DataTable>
 
 
-                    <Dialog visible={convocatoriaDialog} style={{ width: '450px' }} header={headerDialog} modal className="p-fluid" onHide={hideDialog}>
+                    <Dialog visible={parteDialog} style={{ width: '750px' }} header={headerDialog} modal className="p-fluid" onHide={hideDialog}>
                         <form onSubmit={formik.handleSubmit}>
-                            <div className="p-field mt-2" >
-                                <div className="p-inputgroup">
-                                        <span className="p-inputgroup-addon">
-                                            <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/title.png' : 'assets/layout/images/title-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>  
-                                        </span>
-                                        <InputText id="titulo" name='titulo' placeholder="Titulo" value={formik.values.titulo} onChange={formik.handleChange} autoFocus/>
-                                </div>       
-                            </div>
-                            {getFormErrorMessage('titulo')}
 
-                            <div className="p-field mt-2">
-                                <div className="p-inputgroup">
-                                        <span className="p-inputgroup-addon">
-                                            <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/code.png' : 'assets/layout/images/code-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>  
-                                        </span>
-                                        <InputText id="codigo" name='codigo' placeholder="Codigo" value={formik.values.codigo} onChange={formik.handleChange}/>
-                                </div>       
-                            </div>
-                            {getFormErrorMessage('codigo')}
-
-                            
                             <div className="p-field mt-2">
                                 <div className="p-inputgroup">
                                         <span className="p-inputgroup-addon">
                                             <i className="pi pi-calendar"></i>
                                         </span>
-                                        <Dropdown id="semestre" name="semestre" placeholder="Seleccione el semestre" value={formik.values.semestre} onChange={formik.handleChange} options={semestres} optionLabel="name"  optionValue="name"/>
+                                        <Calendar id="fecha" name="fecha" placeholder="Seleccione una fecha" value={formik.values.fecha} onChange={formik.handleChange} locale="es" dateFormat ="mm/dd/yy"/>
                                 </div>       
                             </div>
-                            {getFormErrorMessage('semestre')}
+                            {getFormErrorMessage('fecha')}
+                            
+                            <div className="p-field mt-2">
+                                <div className="flex justify-content-center flex-wrap">
+                                    <h5>PARTE A</h5>
+                                </div>
+                            </div>
+                            <div className="p-field mt-2">
+                                <h6>Caratula</h6>
+                                <InputTextarea style={{ height: '100px' }} id="caratulaA" name='caratulaA' placeholder="Ingrese la correccion de la caratula" value={formik.values.caratulaA} onChange={formik.handleChange} autoResize/> 
+                            </div>
+                            {getFormErrorMessage('caratulaA')}
+
+                            <div className="p-field mt-2">
+                                <h6>Indice</h6>
+                                <InputTextarea style={{ height: '100px' }} id="indiceA" name='indiceA' placeholder="Ingrese la correccion de la indice" value={formik.values.indiceA} onChange={formik.handleChange} autoResize/> 
+                            </div>
+                            {getFormErrorMessage('indiceA')}
+
+                            <div className="p-field mt-2">
+                                <h6>Carta</h6>
+                                <InputTextarea style={{ height: '100px' }} id="cartaA" name='cartaA' placeholder="Ingrese la correccion del carta" value={formik.values.cartaA} onChange={formik.handleChange} autoResize/> 
+                            </div>
+                            {getFormErrorMessage('cartaA')}
+
+                            <div className="p-field mt-2">
+                                <h6>Boleta de garantia</h6>
+                                <InputTextarea style={{ height: '100px' }} id="boletaA" name='boletaA' placeholder="Ingrese la correccion de la boleta de garantia" value={formik.values.boletaA} onChange={formik.handleChange} autoResize/> 
+                            </div>
+                            {getFormErrorMessage('boletaA')}
+
+                            
+                            <div className="p-field mt-2">
+                                <h6>Conformacion del grupo empresa</h6>
+                                <InputTextarea style={{ height: '100px' }} id="conformacionA" name='conformacionA' placeholder="Ingrese la correccion de la conformacion del grupo empresa" value={formik.values.conformacionA} onChange={formik.handleChange} autoResize/> 
+                            </div>
+                            {getFormErrorMessage('conformacionA')}
+
+                            <div className="p-field mt-2">
+                                <h6>Solvencia tecnica</h6>
+                                <InputTextarea style={{ height: '100px' }} id="solvenciaA" name='solvenciaA' placeholder="Ingrese la correccion de la solvencia tecnica" value={formik.values.solvenciaA} onChange={formik.handleChange} autoResize/> 
+                            </div>
+                            {getFormErrorMessage('solvenciaA')}
+
+                            <div className="p-field mt-2">
+                                <div className="flex justify-content-center flex-wrap">
+                                    <h5>PARTE B</h5>
+                                </div>
+                            </div>
+
+                            <div className="p-field mt-2">
+                                <h6>Caratula</h6>
+                                <InputTextarea style={{ height: '100px' }} id="caratulaB" name='caratulaB' placeholder="Ingrese la correccion de la caratula" value={formik.values.caratulaB} onChange={formik.handleChange} autoResize/> 
+                            </div>
+                            {getFormErrorMessage('caratulaB')}
+
+                            <div className="p-field mt-2">
+                                <h6>Indice</h6>
+                                <InputTextarea style={{ height: '100px' }} id="indiceB" name='indiceB' placeholder="Ingrese la correccion del indice" value={formik.values.indiceB} onChange={formik.handleChange} autoResize/> 
+                            </div>
+                            {getFormErrorMessage('indiceB')}
+
+                            <div className="p-field mt-2">
+                                <h6>Propuesta de servicio</h6>
+                                <InputTextarea style={{ height: '100px' }} id="propuestaServicioB" name='propuestaServicioB' placeholder="Ingrese la correccion de la propuesta de servicio" value={formik.values.propuestaServicioB} onChange={formik.handleChange} autoResize/> 
+                            </div>
+                            {getFormErrorMessage('propuestaServicioB')}
+
+                            <div className="p-field mt-2">
+                                <h6>Planificacion</h6>
+                                <InputTextarea style={{ height: '100px' }} id="planificacionB" name='planificacionB' placeholder="Ingrese la correccion de la planificacion" value={formik.values.planificacionB} onChange={formik.handleChange} autoResize/> 
+                            </div>
+                            {getFormErrorMessage('planificacionB')}
+
+                            <div className="p-field mt-2">
+                                <h6>Propuesta economica</h6>
+                                <InputTextarea style={{ height: '100px' }} id="propuestaEconomicaB" name='propuestaEconomicaB' placeholder="Ingrese la correccion de la propuesta economica" value={formik.values.propuestaEconomicaB} onChange={formik.handleChange} autoResize/> 
+                            </div>
+                            {getFormErrorMessage('propuestaEconomicaB')}
+
+                            <div className="p-field mt-2">
+                                <h6>Plan de pagos</h6>
+                                <InputTextarea style={{ height: '100px' }} id="planPagosB" name='planPagosB' placeholder="Ingrese la correccion del plan de pagos" value={formik.values.planPagosB} onChange={formik.handleChange} autoResize/> 
+                            </div>
+                            {getFormErrorMessage('planPagosB')}
+
+                            <div className="p-field mt-2">
+                                <div className="flex justify-content-center flex-wrap">
+                                    <h5>PUNTAJE</h5>
+                                </div>
+                            </div>
 
                             <div className="p-field mt-2">
                                 <div className="p-inputgroup">
                                         <span className="p-inputgroup-addon">
-                                            <i className="pi pi-link"></i>
+                                            <i className="pi pi-pencil"></i>
                                         </span>
-                                        <InputTextarea id="link" name='link' placeholder="Link"  value={formik.values.link} onChange={formik.handleChange}/>
+                                        <Dropdown id="cumplimientoProponente" name="cumplimientoProponente" placeholder="Puntuacion para el cumplimiento de espeficicaciones" value={formik.values.cumplimientoProponente} onChange={formik.handleChange} options={puntuacion1} optionLabel="name"  optionValue="name"/>
                                 </div>       
                             </div>
-                            {getFormErrorMessage('link')}
+                            {getFormErrorMessage('cumplimientoProponente')}
 
-                            {(stateConvocatoria)?(
+                            <div className="p-field mt-2">
+                                <div className="p-inputgroup">
+                                        <span className="p-inputgroup-addon">
+                                            <i className="pi pi-pencil"></i>
+                                        </span>
+                                        <Dropdown id="claridadOrganizacion" name="claridadOrganizacion" placeholder="Puntuacion para la clarida de organizacion" value={formik.values.claridadOrganizacion} onChange={formik.handleChange} options={puntuacion2} optionLabel="name"  optionValue="name"/>
+                                </div>       
+                            </div>
+                            {getFormErrorMessage('claridadOrganizacion')}
+
+                            <div className="p-field mt-2">
+                                <div className="p-inputgroup">
+                                        <span className="p-inputgroup-addon">
+                                            <i className="pi pi-pencil"></i>
+                                        </span>
+                                        <Dropdown id="cumplimientoTecnico" name="cumplimientoTecnico" placeholder="Puntuacion para el cumplimiento de especificaciones tecnicas" value={formik.values.cumplimientoTecnico} onChange={formik.handleChange} options={puntuacion3} optionLabel="name"  optionValue="name"/>
+                                </div>       
+                            </div>
+                            {getFormErrorMessage('cumplimientoTecnico')}
+
+                            <div className="p-field mt-2">
+                                <div className="p-inputgroup">
+                                        <span className="p-inputgroup-addon">
+                                            <i className="pi pi-pencil"></i>
+                                        </span>
+                                        <Dropdown id="claridadProceso" name="claridadProceso" placeholder="Puntuacion para la claridad de proceso de desarrollo" value={formik.values.claridadProceso} onChange={formik.handleChange} options={puntuacion4} optionLabel="name"  optionValue="name"/>
+                                </div>       
+                            </div>
+                            {getFormErrorMessage('claridadProceso')}
+
+                            <div className="p-field mt-2">
+                                <div className="p-inputgroup">
+                                        <span className="p-inputgroup-addon">
+                                            <i className="pi pi-pencil"></i>
+                                        </span>
+                                        <Dropdown id="plazosEjecucion" name="plazosEjecucion" placeholder="Puntuacion para los plazos de ejecucion" value={formik.values.plazosEjecucion} onChange={formik.handleChange} options={puntuacion5} optionLabel="name"  optionValue="name"/>
+                                </div>       
+                            </div>
+                            {getFormErrorMessage('plazosEjecucion')}
+
+                            <div className="p-field mt-2">
+                                <div className="p-inputgroup">
+                                        <span className="p-inputgroup-addon">
+                                            <i className="pi pi-pencil"></i>
+                                        </span>
+                                        <Dropdown id="precioTotal" name="precioTotal" placeholder="Puntuacion para los precios totales" value={formik.values.precioTotal} onChange={formik.handleChange} options={puntuacion6} optionLabel="name"  optionValue="name"/>
+                                </div>       
+                            </div>
+                            {getFormErrorMessage('precioTotal')}
+
+                            <div className="p-field mt-2">
+                                <div className="p-inputgroup">
+                                        <span className="p-inputgroup-addon">
+                                            <i className="pi pi-pencil"></i>
+                                        </span>
+                                        <Dropdown id="usoHerramienta" name="usoHerramienta" placeholder="Puntuacion para el uso de herramientas" value={formik.values.usoHerramienta} onChange={formik.handleChange} options={puntuacion7} optionLabel="name"  optionValue="name"/>
+                                </div>       
+                            </div>
+                            {getFormErrorMessage('usoHerramienta')}
+
+
+                            {(stateParte)?(
                                 <div className="form-group">
-                                    <div className="p-field mt-2">
-                                            <div className="p-inputgroup">
-                                                    <span className="p-inputgroup-addon">
-                                                        <img   src={props.layoutColorMode === 'light' ? 'assets/layout/images/post.png' : 'assets/layout/images/post-dark.png'} style={{'height': '1.2em','width':'1.2em',}}/>  
-                                                    </span>
-                                                    <Dropdown id="publicado" name="publicado" placeholder="Seleccione si se publica" value={formik.values.publicado} onChange={formik.handleChange} options={publicacion} optionLabel="name"  optionValue="name"/>
-                                            </div>       
-                                    </div>
-                                    {getFormErrorMessage('publicado')}
-
                                     <div className="p-field mt-2">
                                         <div className="p-inputgroup">
                                             <span className="p-inputgroup-addon">
@@ -638,6 +1286,16 @@ export const Orden = (props) => {
                             ):
                                 null
                             }
+
+                            <div className="p-field mt-2">
+                                <div className="p-inputgroup">
+                                        <span className="p-inputgroup-addon">
+                                            <i className="pi pi-briefcase"></i>
+                                        </span>
+                                        <Dropdown id="empresa" name="empresa" placeholder="Seleccione una empresa" value={formik.values.empresa} onChange={formik.handleChange} options={empresas} optionLabel="nombre"  optionValue="id"/>
+                                </div>       
+                            </div>
+                            {getFormErrorMessage('empresa')}
 
                             <div className="p-field mt-2">
                                 <div className="p-inputgroup">
@@ -664,10 +1322,10 @@ export const Orden = (props) => {
                     </Dialog>
 
 
-                    <Dialog className="mt-2" visible={deleteConvocatoriaDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteConvocatoriaDialogFooter} onHide={hideDeleteConvocatoriaDialog}>
+                    <Dialog className="mt-2" visible={deleteParteDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteParteDialogFooter} onHide={hideDeleteParteDialog}>
                         <div className="confirmation-content">
                             <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
-                            {convocatoria && <span>¿Estás segura de que quieres eliminar? <b>{convocatoria.titulo}</b> <b>{convocatoria.semestre}</b>?</span>}
+                            {parte && <span>¿Estás segura de que quieres eliminar? <b>{parte.id}</b>?</span>}
                         </div>
                     </Dialog>
     

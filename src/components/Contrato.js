@@ -16,12 +16,14 @@ import { Dropdown }         from 'primereact/dropdown';
 import { addLocale }        from 'primereact/api';
 import { useFormik }        from "formik";
 import { Link }             from 'react-router-dom';
+import { renderToString }   from 'react-dom/server';
+import jsPDF                from 'jspdf';
 
 import uniqid               from 'uniqid';
 
 import { getContratos,createContrato,updateContratoID} from '../service/apiContrato';
 import { getUsersActivas    } from '../service/apiUser';
-import { getEmpresasActivas } from '../service/apiEmpresa';
+import { getEmpresasActivas,getEmpresaID } from '../service/apiEmpresa';
 import { getConvocatoriasPublicados    } from '../service/apiConvocatoria';
 import { getPliegosPublicados }          from '../service/apiPliego';
 
@@ -36,6 +38,7 @@ export const Contrato = (props) => {
         empresa:            '',
         user:               ''
     };
+
 
     const estados = [
         { name: "Activo"      },
@@ -56,6 +59,7 @@ export const Contrato = (props) => {
     const [contratos, setContratos]                          = useState(null);
     const [users, setUsers]                                  = useState(null);
     const [empresas, setEmpresas]                            = useState(null);
+
     const [convocatorias, setConvocatorias]                  = useState(null);
     const [pliegos, setPliegos]                              = useState(null);
     const [globalFilter, setGlobalFilter]                    = useState('');
@@ -394,6 +398,50 @@ export const Contrato = (props) => {
         return index;
     }
 
+    const findIndexByIdEmpresa = (id) => {
+        let data;
+        for (let i = 0; i < empresas.length; i++) {
+            if (empresas[i].id === id) {
+                data = {
+                    id:              empresas[i].id,
+                    nombre:          empresas[i].nombre,
+                    nombreCorto:     empresas[i].nombreCorto,
+                    nombreLargo:     empresas[i].nombreLargo,
+                    tipoSociedad:    empresas[i].tipoSociedad,
+                    direccion:       empresas[i].direccion,
+                    email:           empresas[i].direccion,
+                    password:        empresas[i].password,
+                    informacion:     empresas[i].informacion,
+                    estado:          empresas[i].estado,
+                    user:            empresas[i].user
+                }
+
+                break;
+            }
+        }
+        return data;
+    }
+
+    const findIndexByIdUser = (id) => {
+        let data;
+        for (let i = 0; i < users.length; i++) {
+            if (users[i].id === id) {
+                data = {
+                    id:       users[i].id,
+                    nombre:   users[i].nombre,
+                    apellido: users[i].apellido,
+                    email:    users[i].email,
+                    password: users[i].password,
+                    estado:   users[i].estado,
+                    rol:      users[i].rol
+                }
+
+                break;
+            }
+        }
+        return data;
+    }
+
     const idBodyTemplate = (rowData) => {
         return (
             <>
@@ -470,11 +518,87 @@ export const Contrato = (props) => {
     const actionBodyTemplate = (rowData) => {
         return (
             <div className="actions">
-                <Button icon="pi pi-pencil" style={{'background': '#13af4e'}} className="p-button-rounded p-button-success mr-2"   onClick={() => editContratto(rowData)} />
-                <Button icon="pi pi-trash"  style={{'background': '#eee500'}} className="p-button-rounded p-button-warning"        onClick={() => confirmDeleteContrato(rowData)} />
+                <Button icon="pi pi-pencil"    style={{'background': '#13af4e'}} className="p-button-rounded p-button-success mr-2"   onClick={() => editContratto(rowData)} />
+                <Button icon="pi pi-trash"     style={{'background': '#eee500'}} className="p-button-rounded p-button-warning "       onClick={() => confirmDeleteContrato(rowData)} />
             </div>
         );
     }
+
+
+    const generatePDF = (contrato) => {
+        console.log(contrato.empresa)
+        let index = findIndexByIdEmpresa(contrato.empresa);
+        let _user = findIndexByIdUser(index.user);
+        var doc = new jsPDF();
+        doc.setFont("Arial Bold");
+        doc.text(60, 20,'CONTRATO DE PRESTACIÓN DE');
+        doc.text(65, 25,'SERVICIOS - CONSULTORÍA');
+        doc.setFontSize(15);
+        doc.setFont("normal");
+        doc.setFontSize(12); 
+        doc.text(70, 30,`${contrato.fecha}`);
+
+        doc.text(20, 40, 'Que suscriben la empresa Taller de Ingeniería de Software - TIS, que en lo sucesivo se');
+        doc.text(20, 45, 'denominará TIS, por una parte, y la consultora '+ `${index.nombre.toLocaleUpperCase()}`+ ' '+ `${index.tipoSociedad.toLocaleUpperCase()}`+' registrada debidamente en el ');
+        doc.text(20, 50, 'Departamento de Procesamiento de Datos y Registro e Inscripciones, domiciliada en la ciudad de');
+        doc.text(20, 55, 'Cochabamba, que en lo sucesivo se denominará '+ `${index.nombre.toLocaleUpperCase()}`+ ' '+ `${index.tipoSociedad.toLocaleUpperCase()}`+', por otra parte, de');
+        doc.text(20, 60, 'conformidad a las cláusulas que se detallan a continuación:');
+
+        doc.text(20, 70, 'PRIMERA.- TIS contratará los servicios del Contratista para la provisión de un Sistema de Apoyo a');
+        doc.text(20, 75, 'la Empresa TIS que se realizará, conforme a la modalidad y presupuesto entregado por la');
+        doc.text(20, 80, 'Consultora, en su documento de propuesta técnica, y normas estipuladas por TIS.');
+
+        doc.text(20, 90, 'SEGUNDO.- El objeto de este contrato es la provisión de un producto software.');
+
+        doc.text(20, 100,'TERCERO.- La consultora ' + `${index.nombre.toLocaleUpperCase()}`+ ' '+ `${index.tipoSociedad.toLocaleUpperCase()}`+', se hace responsable por la buena ejecución de las');
+        doc.text(20, 105,'distintas fases, que involucren su ingeniería del proyecto, especificadas en la propuesta técnica');
+        doc.text(20, 110,'corregida de acuerdo al pliego de especificaciones.');
+
+        doc.text(20, 120,'CUARTO.- Para cualquier otro punto no estipulado en el presente contrato, debe hacerse referencia');
+        doc.text(20, 125,'a la Convocatoria Pública '+ `${contrato.codigoConvocatoria.toLocaleUpperCase()}`+', al Pliego de Especificaciones '+ `${contrato.codigoPliego.toLocaleUpperCase()}`+' y/o a');
+        doc.text(20, 130,'PG-TIS (Plan Global - TIS)');
+
+        doc.text(20, 140,'QUINTO.- Se pone en evidencia que cualquier incumplimiento de las cláusulas estipuladas en el ');
+        doc.text(20, 145,'presente contrato, es pasible a la disolución del mismo.');
+        
+        doc.text(20, 155,'SEXTO.- La consultora '+ `${index.nombre.toLocaleUpperCase()}`+ ' '+ `${index.tipoSociedad.toLocaleUpperCase()}`+', declara su absoluta conformidad con los términos del ');
+        doc.text(20, 160,'presente contrato. Se deja constancia de que los datos y antecedentes personales jurídicos ');
+        doc.text(20, 165,'proporcionados por el adjudicatario son verídicos.');
+
+        doc.text(20, 175,'SEPTIMO.- El presente contrato se disuelve también, por cualquier motivo de incumplimiento a');
+        doc.text(20, 180,'normas establecidas en PG-TIS (Plan Global - TIS).');
+
+        doc.text(20, 190,'OCTAVO.- Por la disolución del contrato, TIS tiene todo el derecho de ejecutar la boleta de garantía, ');
+        doc.text(20, 195,'que es entregada por el contratado como documento de seriedad de la empresa.');
+
+        doc.text(20, 205,'NOVENO.- La información que TIS brinde al contratado debe ser de rigurosa confidencialidad, y no');
+        doc.text(20, 210,'utilizarse para otros fines que no sea el desarrollo del proyecto.');
+
+        doc.text(20, 220,'DECIMO.- TIS representada por su directorio Lic. Corina Flores V., Lic. M. Leticia Blanco C., Lic.');
+        doc.text(20, 225,'David Escalera F., y Lic. Patricia Rodriguez, y por otra; la consultora '+ `${index.nombre.toLocaleUpperCase()}`+ ' '+ `${index.tipoSociedad.toLocaleUpperCase()}`+', ');
+        doc.text(20, 230,'representada por su representante legal '+`${_user.nombre}`+' '+`${_user.apellido}` +', dan su plena');
+        doc.text(20, 235,'conformidad a los términos y condiciones establecidos en el presente Contrato de Prestación de');
+        doc.text(20, 240,'Servicios y Consultoría, firmando en constancia al pie de presente documento.');
+
+        doc.text(70, 250,'Cochabamba, '+`${contrato.fecha}`);
+
+        doc.text(20, 270,'REPRESENTANTE');
+        doc.text(20, 275,'GRUPOEMPRESA');
+
+        doc.text(150, 270,'REPRESENTANTE');
+        doc.text(150, 275,'CONSULTORA TIS');
+
+        doc.save('contrato.pdf')
+    } 
+
+    const pdfBodyTemplate = (rowData) => {
+        return (
+            <div className="actions">
+                <Button icon="pi pi-file-pdf"  style={{'background': '#ed4651'}} className="p-button-rounded p-button-success mr-2"  onClick={() =>(generatePDF(rowData))}     />
+            </div>
+        );
+    }
+    
 
     const deleteContratoDialogFooter = (
         <>
@@ -501,7 +625,7 @@ export const Contrato = (props) => {
         return (
             <ColumnGroup>
                 <Row>
-                    <Column header={showHeader} colSpan={6}></Column>
+                    <Column header={showHeader} colSpan={7}></Column>
                 </Row>
                 <Row>
                     <Column header="ID"                     field="id"                  sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
@@ -510,6 +634,7 @@ export const Contrato = (props) => {
                     <Column header="COD. PLIEGO"            field="codigoPliego"        sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
                     <Column header="ESTADO"                 field="estado"              sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
                     <Column header="Editar/Eliminar"                                             style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="Generar PDF"                                                 style={{ 'background-color': '#13af4e', width:'20%'}}/>
                 </Row>
             </ColumnGroup>
         )
@@ -546,6 +671,7 @@ export const Contrato = (props) => {
                         <Column style={{width:'20%'}} field="codigoPliego"          header="COD. PLIEGO"            sortable body={codigoPliegoBodyTemplate}></Column>                   
                         <Column style={{width:'20%'}} field="estado"                header="ESTADO"                 sortable body={estadoBodyTemplate}></Column>
                         <Column style={{width:'20%'}} body={actionBodyTemplate}></Column>
+                        <Column header="Generar PDF"  body={pdfBodyTemplate}></Column>
 
                     </DataTable>
 
