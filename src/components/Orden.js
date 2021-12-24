@@ -212,6 +212,22 @@ export const Orden = (props) => {
 
     const options1 = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
+    let today = new Date();
+    let month = today.getMonth();
+    let year = today.getFullYear();
+    let prevMonth = (month === 0) ? 11 : month - 0;
+    let prevYear = (prevMonth === 11) ? year - 0 : year;
+    let nextMonth = (month === 11) ? 0 : month + 1;
+    let nextYear = (nextMonth === 0) ? year + 1 : year;
+
+    let minDate = new Date();
+    minDate.setMonth(prevMonth);
+    minDate.setFullYear(prevYear);
+
+    let maxDate = new Date();
+    maxDate.setMonth(nextMonth);
+    maxDate.setFullYear(nextYear);
+
     const formik = useFormik({
         initialValues: {
             fecha:                  '',
@@ -1105,7 +1121,7 @@ export const Orden = (props) => {
                                         <span className="p-inputgroup-addon">
                                             <i className="pi pi-calendar"></i>
                                         </span>
-                                        <Calendar id="fecha" name="fecha" placeholder="Seleccione una fecha" value={formik.values.fecha} onChange={formik.handleChange} locale="es" dateFormat ="mm/dd/yy"/>
+                                        <Calendar id="fecha" name="fecha" placeholder="Seleccione una fecha" value={formik.values.fecha} onChange={formik.handleChange} locale="es" dateFormat ="mm/dd/yy"  minDate={minDate} maxDate={maxDate} readOnlyInput/>
                                 </div>       
                             </div>
                             {getFormErrorMessage('fecha')}

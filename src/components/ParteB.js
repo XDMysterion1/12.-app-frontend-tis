@@ -67,6 +67,23 @@ export const ParteB = (props) => {
     const [parteUpdate, setParteUpdate]                = useState("");
     const options1 = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const options2 = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+    let today = new Date();
+    let month = today.getMonth();
+    let year = today.getFullYear();
+    let prevMonth = (month === 0) ? 11 : month - 0;
+    let prevYear = (prevMonth === 11) ? year - 0 : year;
+    let nextMonth = (month === 11) ? 0 : month + 1;
+    let nextYear = (nextMonth === 0) ? year + 1 : year;
+
+    let minDate = new Date();
+    minDate.setMonth(prevMonth);
+    minDate.setFullYear(prevYear);
+
+    let maxDate = new Date();
+    maxDate.setMonth(nextMonth);
+    maxDate.setFullYear(nextYear);
+
     const formik = useFormik({
         initialValues: {
             link:         '',
@@ -485,7 +502,7 @@ export const ParteB = (props) => {
                                         <span className="p-inputgroup-addon">
                                             <i className="pi pi-calendar"></i>
                                         </span>
-                                        <Calendar id="fechaInicio" name="fechaInicio" placeholder="Seleccione la fecha de inicio" value={formik.values.fechaInicio} onChange={formik.handleChange} locale="es" dateFormat ="mm/dd/yy"/>
+                                        <Calendar id="fechaInicio" name="fechaInicio" placeholder="Seleccione la fecha de inicio" value={formik.values.fechaInicio} onChange={formik.handleChange} locale="es" dateFormat ="mm/dd/yy"  minDate={minDate} maxDate={maxDate} readOnlyInput/>
                                 </div>       
                             </div>
                             {getFormErrorMessage('fechaInicio')}
@@ -495,7 +512,7 @@ export const ParteB = (props) => {
                                         <span className="p-inputgroup-addon">
                                             <i className="pi pi-calendar"></i>
                                         </span>
-                                        <Calendar id="fechaCierre" name="fechaCierre" placeholder="Seleccione una fecha de cierre" value={formik.values.fechaCierre} onChange={formik.handleChange} locale="es" dateFormat ="mm/dd/yy"/>
+                                        <Calendar id="fechaCierre" name="fechaCierre" placeholder="Seleccione una fecha de cierre" value={formik.values.fechaCierre} onChange={formik.handleChange} locale="es" dateFormat ="mm/dd/yy"  minDate={minDate} maxDate={maxDate} readOnlyInput/>
                                 </div>       
                             </div>
                             {getFormErrorMessage('fechaCierre')}
