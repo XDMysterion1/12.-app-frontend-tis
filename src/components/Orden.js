@@ -1019,10 +1019,125 @@ export const Orden = (props) => {
         );
     }
 
+    const findIndexByIdEmpresa = (id) => {
+        let data;
+        for (let i = 0; i < empresas.length; i++) {
+            if (empresas[i].id === id) {
+                data = {
+                    id:              empresas[i].id,
+                    nombre:          empresas[i].nombre,
+                    nombreCorto:     empresas[i].nombreCorto,
+                    nombreLargo:     empresas[i].nombreLargo,
+                    tipoSociedad:    empresas[i].tipoSociedad,
+                    direccion:       empresas[i].direccion,
+                    email:           empresas[i].direccion,
+                    password:        empresas[i].password,
+                    informacion:     empresas[i].informacion,
+                    estado:          empresas[i].estado,
+                    user:            empresas[i].user
+                }
+
+                break;
+            }
+        }
+        return data;
+    }
+
+    const findIndexByIdUser = (id) => {
+        let data;
+        for (let i = 0; i < users.length; i++) {
+            if (users[i].id === id) {
+                data = {
+                    id:       users[i].id,
+                    nombre:   users[i].nombre,
+                    apellido: users[i].apellido,
+                    email:    users[i].email,
+                    password: users[i].password,
+                    estado:   users[i].estado,
+                    rol:      users[i].rol
+                }
+
+                break;
+            }
+        }
+        return data;
+    }
+
+    const generatePDF = (orden) => {
+
+        let index = findIndexByIdEmpresa(orden.empresa);
+        let _user = findIndexByIdUser(index.user);
+
+        var doc = new jsPDF();
+        doc.setFont("Arial Bold");
+        doc.text(75, 20,'ORDEN DE CAMBIO');
+        doc.setFontSize(17);
+        doc.text(70, 30,'');
+ 
+        doc.autoTable({ html: '#my-table' })
+
+        doc.autoTable({
+            head: [['', '']],
+            body: [
+                ['De: Corina Flores, consultora de TIS', `${orden.fecha}`],
+                ['Para el representante de la GrupoEmpresa '+ `${index.nombre.toLocaleUpperCase()}`+ ' '+ `${index.tipoSociedad.toLocaleUpperCase()}`+','+'representada por su representante legal '+`${_user.nombre}`+' '+`${_user.apellido}`, ''],
+            ],
+            })
+
+        doc.autoTable({
+        head: [['PARTE A', '']],
+        body: [
+            ['Carátula'                         , `${orden.caratulaA}`],
+            ['Indice'                           , `${orden.indiceA}`],
+            ['Carta de presentación'            , `${orden.cartaA}`],
+            ['Boleta de garantía'               , `${orden.boletaA}`],
+            ['Conformación de la grupo-empresa' , `${orden.conformacionA}`],
+            ['Solvencia técnica'                , `${orden.solvenciaA}`],
+        ],
+        })
+
+        doc.autoTable({
+            head: [['PARTE B', '']],
+            body: [
+                ['Carátula'             , `${orden.caratulaB}`],
+                ['Indice'               , `${orden.indiceB}`],
+                ['Propuesta de servicio', `${orden.propuestaServicioB}`],
+                ['Planificacion'        , `${orden.planificacionB}`],
+                ['Propuesta economica'  , `${orden.propuestaEconomicaB}`],
+                ['Plan de pagos'        , `${orden.planPagosB}`],
+            ],
+            })
+
+        doc.autoTable({
+            head: [['', '']],
+            body: [
+                ['En consecuencia una vez revisadas las propuestas por su grupo-empresa,TIS resuelve:', ''],
+            ],
+            })
+        
+        doc.autoTable({
+            head: [['CRITERIOS', 'PUNTAJE']],
+            body: [
+                ['Cumplimiento de especificaciones del proponente (15 puntos)'      , `${orden.cumplimientoProponente}`],
+                ['Claridad en la organización de la empresa proponente (10 puntos)' , `${orden.claridadOrganizacion}`],
+                ['Cumplimiento de especificaciones técnicas (30 puntos)'            , `${orden.cumplimientoTecnico}`],
+                ['Claridad en el proceso de desarrollo (10 puntos)'                 , `${orden.claridadProceso}`],
+                ['Plazo de ejecución (10 puntos)'                                   , `${orden.plazosEjecucion}`],
+                ['Precio total (15 puntos)'                                         , `${orden.precioTotal}`],
+                ['Uso de herramientas en el proceso de desarrollo (10 puntos)'      , `${orden.usoHerramienta}`],
+                ['TOTAL PUNTAJE',  (parseInt(`${orden.cumplimientoProponente}`)+parseInt(`${orden.claridadOrganizacion}`)+parseInt(`${orden.cumplimientoTecnico}`)+parseInt(`${orden.claridadProceso}`)+parseInt(`${orden.plazosEjecucion}`)+parseInt(`${orden.precioTotal}`)+parseInt(`${orden.usoHerramienta}`))],
+            ],
+            })
+
+
+
+        doc.save('ordenDeCambio.pdf')
+    } 
+
     const pdfBodyTemplate = (rowData) => {
         return (
             <div className="actions">
-                <Button icon="pi pi-file-pdf"  style={{'background': '#ed4651'}} className="p-button-rounded p-button-success mr-2"         />
+                <Button icon="pi pi-file-pdf"  style={{'background': '#ed4651'}} className="p-button-rounded p-button-success mr-2"    onClick={() =>(generatePDF(rowData))}      />
             </div>
         );
     }
@@ -1217,6 +1332,7 @@ export const Orden = (props) => {
                             </div>
 
                             <div className="p-field mt-2">
+                                <h6>Cumplimiento de especificaciones del proponente (15 puntos) </h6>
                                 <div className="p-inputgroup">
                                         <span className="p-inputgroup-addon">
                                             <i className="pi pi-pencil"></i>
@@ -1227,6 +1343,7 @@ export const Orden = (props) => {
                             {getFormErrorMessage('cumplimientoProponente')}
 
                             <div className="p-field mt-2">
+                                <h6>Claridad en la organización de la empresa proponente (10 puntos)</h6>
                                 <div className="p-inputgroup">
                                         <span className="p-inputgroup-addon">
                                             <i className="pi pi-pencil"></i>
@@ -1237,6 +1354,7 @@ export const Orden = (props) => {
                             {getFormErrorMessage('claridadOrganizacion')}
 
                             <div className="p-field mt-2">
+                                <h6>Cumplimiento de especificaciones técnicas (30 puntos)  </h6>
                                 <div className="p-inputgroup">
                                         <span className="p-inputgroup-addon">
                                             <i className="pi pi-pencil"></i>
@@ -1247,6 +1365,7 @@ export const Orden = (props) => {
                             {getFormErrorMessage('cumplimientoTecnico')}
 
                             <div className="p-field mt-2">
+                                <h6>Claridad en el proceso de desarrollo (10 puntos) </h6>
                                 <div className="p-inputgroup">
                                         <span className="p-inputgroup-addon">
                                             <i className="pi pi-pencil"></i>
@@ -1257,6 +1376,7 @@ export const Orden = (props) => {
                             {getFormErrorMessage('claridadProceso')}
 
                             <div className="p-field mt-2">
+                                <h6>Plazo de ejecución (10 puntos) </h6>
                                 <div className="p-inputgroup">
                                         <span className="p-inputgroup-addon">
                                             <i className="pi pi-pencil"></i>
@@ -1267,6 +1387,7 @@ export const Orden = (props) => {
                             {getFormErrorMessage('plazosEjecucion')}
 
                             <div className="p-field mt-2">
+                                <h6>Precio total (15 puntos)</h6>
                                 <div className="p-inputgroup">
                                         <span className="p-inputgroup-addon">
                                             <i className="pi pi-pencil"></i>
@@ -1277,6 +1398,7 @@ export const Orden = (props) => {
                             {getFormErrorMessage('precioTotal')}
 
                             <div className="p-field mt-2">
+                                <h6>Uso de herramientas en el proceso de desarrollo (10 puntos) </h6>
                                 <div className="p-inputgroup">
                                         <span className="p-inputgroup-addon">
                                             <i className="pi pi-pencil"></i>

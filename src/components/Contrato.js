@@ -18,6 +18,7 @@ import { useFormik }        from "formik";
 import { Link }             from 'react-router-dom';
 import { renderToString }   from 'react-dom/server';
 import jsPDF                from 'jspdf';
+import 'jspdf-autotable';
 
 import uniqid               from 'uniqid';
 
