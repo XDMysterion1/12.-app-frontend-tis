@@ -1131,7 +1131,7 @@ export const Orden = (props) => {
 
 
 
-        doc.save('ordenDeCambio.pdf')
+        doc.save('OC_'+`${index.nombre.toLocaleUpperCase()}`+'.pdf')
     } 
 
     const pdfBodyTemplate = (rowData) => {

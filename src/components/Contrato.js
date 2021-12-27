@@ -605,7 +605,7 @@ export const Contrato = (props) => {
         doc.text(150, 270,'REPRESENTANTE');
         doc.text(150, 275,'CONSULTORA TIS');
 
-        doc.save('contrato.pdf')
+        doc.save('Contrato_'+`${index.nombre.toLocaleUpperCase()}`+'.pdf')
     } 
 
     const pdfBodyTemplate = (rowData) => {
