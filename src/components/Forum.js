@@ -101,7 +101,7 @@ export class Forum extends Component {
                              
                               <Navegacion/>
                               <Switch>
-                                   <Route exact path="/" render={ () => {
+                                   <Route exact path="/foro" render={ () => {
                                         return(
                                              <Posts 
                                                   posts={this.state.posts}
