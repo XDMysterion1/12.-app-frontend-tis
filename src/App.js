@@ -239,12 +239,6 @@ const App = () => {
                 ]
             },
             {
-                label: "Gestion Avisos", icon: "pi pi-fw pi-sitemap",
-                "items": [
-                    {"label": "Avisos", icon: "pi pi-fw pi-id-card", to: "/Aviso"}
-                ]
-            },
-            {
                 label: "Lista de empresas", icon: "pi pi-fw pi-briefcase",
                 "items": [
                     {"label": "Empresas", icon: "pi pi-fw pi-briefcase", to: "/ListEmpresa"}
