@@ -1,15 +1,15 @@
 import axios from 'axios';
 
  export const getRoles = () =>{
-     return axios.get('https://magic-tech-backend.herokuapp.com/api/getRoles');
+     return axios.get('http://magictsec.tis.cs.umss.edu.bo/api/getRoles');
  }
 
  export const getRolID =(id) =>{
-     return axios.get(`https://magic-tech-backend.herokuapp.com/api/getRolId/${id}`);
+     return axios.get(`http://magictsec.tis.cs.umss.edu.bo/api/getRolId/${id}`);
  }
 
  export const createRol=(data)=>{
-    return axios.post('https://magic-tech-backend.herokuapp.com/api/createRol', 
+    return axios.post('http://magictsec.tis.cs.umss.edu.bo/api/createRol', 
       {
          id:     `${data.id}`,
          rol:    `${data.rol}`,
@@ -25,7 +25,7 @@ import axios from 'axios';
  }
 
 export const updateRolID =(data,id) =>{
-    return axios.put(`https://magic-tech-backend.herokuapp.com/api/updateRol/${id}`, 
+    return axios.put(`http://magictsec.tis.cs.umss.edu.bo/api/updateRol/${id}`, 
     {
        rol: `${data.rol}`,
        estado: `${data.estado}`
@@ -40,9 +40,9 @@ export const updateRolID =(data,id) =>{
 }
 
 export const deleteRolID =(id) =>{
-    return axios.delete(`https://magic-tech-backend.herokuapp.com/api/deleteRolId/${id}`);
+    return axios.delete(`http://magictsec.tis.cs.umss.edu.bo/api/deleteRolId/${id}`);
 }
 
 export const getRolesActivas = () =>{
-  return axios.get('https://magic-tech-backend.herokuapp.com/api/getRolesActivas');
+  return axios.get('http://magictsec.tis.cs.umss.edu.bo/api/getRolesActivas');
 }

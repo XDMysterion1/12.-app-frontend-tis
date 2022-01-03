@@ -1,17 +1,17 @@
 import axios from 'axios';
 
  export const getEntregaBs = () =>{
-     return axios.get('https://magic-tech-backend.herokuapp.com/api/getEntregaBs');
+     return axios.get('http://magictsec.tis.cs.umss.edu.bo/api/getEntregaBs');
  }
 
  export const getEntregaBID =(id) =>{
-     return axios.get(`https://magic-tech-backend.herokuapp.com/api/getEntregaBId/${id}`);
+     return axios.get(`http://magictsec.tis.cs.umss.edu.bo/api/getEntregaBId/${id}`);
  }
 
 
 
  export const createEntregaB=(data)=>{
-    return axios.post('https://magic-tech-backend.herokuapp.com/api/createEntregaB', 
+    return axios.post('http://magictsec.tis.cs.umss.edu.bo/api/createEntregaB', 
       {
          id:          `${data.id}`,
          link:        `${data.link}`,
@@ -30,7 +30,7 @@ import axios from 'axios';
  }
 
 export const updateEntregaBID =(data,id) =>{
-    return axios.put(`https://magic-tech-backend.herokuapp.com/api/updateEntregaB/${id}`, 
+    return axios.put(`http://magictsec.tis.cs.umss.edu.bo/api/updateEntregaB/${id}`, 
     {
         link:        `${data.link}`,
         fechaInicio: `${data.fechaInicio}`,
@@ -48,9 +48,9 @@ export const updateEntregaBID =(data,id) =>{
 }
 
 export const deleteEntregaBID =(id) =>{
-    return axios.delete(`https://magic-tech-backend.herokuapp.com/api/deleteEntregaBId/${id}`);
+    return axios.delete(`http://magictsec.tis.cs.umss.edu.bo/api/deleteEntregaBId/${id}`);
 }
 
 export const getEntregaBsActivas = () =>{
-  return axios.get('https://magic-tech-backend.herokuapp.com/api/getEntregaBsActivas');
+  return axios.get('http://magictsec.tis.cs.umss.edu.bo/api/getEntregaBsActivas');
 }

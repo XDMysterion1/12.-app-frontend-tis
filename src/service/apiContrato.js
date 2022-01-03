@@ -1,17 +1,17 @@
 import axios from 'axios';
 
  export const getContratos = () =>{
-     return axios.get('https://magic-tech-backend.herokuapp.com/api/getContratos');
+     return axios.get('http://magictsec.tis.cs.umss.edu.bo/api/getContratos');
  }
 
  export const getContratoId =(id) =>{
-     return axios.get(`https://magic-tech-backend.herokuapp.com/api/getContratoId/${id}`);
+     return axios.get(`http://magictsec.tis.cs.umss.edu.bo/api/getContratoId/${id}`);
  }
 
 
 
  export const createContrato=(data)=>{
-    return axios.post('https://magic-tech-backend.herokuapp.com/api/createContrato', 
+    return axios.post('http://magictsec.tis.cs.umss.edu.bo/api/createContrato', 
       {
          id:                 `${data.id}`,
          fecha:              `${data.fecha}`,
@@ -32,7 +32,7 @@ import axios from 'axios';
  }
 
 export const updateContratoID =(data,id) =>{
-    return axios.put(`https://magic-tech-backend.herokuapp.com/api/updateContrato/${id}`, 
+    return axios.put(`http://magictsec.tis.cs.umss.edu.bo/api/updateContrato/${id}`, 
     {
         fecha:              `${data.fecha}`,
         codigoConvocatoria: `${data.codigoConvocatoria}`,
@@ -51,9 +51,9 @@ export const updateContratoID =(data,id) =>{
 }
 
 export const deleteContratoID =(id) =>{
-    return axios.delete(`https://magic-tech-backend.herokuapp.com/api/deleteContratoId/${id}`);
+    return axios.delete(`http://magictsec.tis.cs.umss.edu.bo/api/deleteContratoId/${id}`);
 }
 
 export const getContratosActivas = () =>{
-  return axios.get('https://magic-tech-backend.herokuapp.com/api/getContratosActivas');
+  return axios.get('http://magictsec.tis.cs.umss.edu.bo/api/getContratosActivas');
 }

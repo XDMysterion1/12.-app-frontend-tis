@@ -84,16 +84,18 @@ export const Register = (props) =>{
         onSubmit: (data) => {
             let idUser = uniqid("user-");
             let rolUser= "rol-kvjva7f6";
+            let est = "Activo"; 
             setIsPush(false); 
             const timeout = setTimeout(() => {}, 10000);
 
-            axios.post('https://magic-tech-backend.herokuapp.com/api/createUser', 
+            axios.post('http://magictsec.tis.cs.umss.edu.bo/api/createUser', 
             {
                 id:         `${idUser}`,
                 nombre:     `${data.nombre}`,
                 apellido:   `${data.apellido}`,
                 email:      `${data.email}`,
                 password:   `${data.password}`,
+                estado:     `${est}`,
                 rol:        `${rolUser}` 
             }
             )
