@@ -46,7 +46,7 @@ export const LoginApp = (props) =>{
         onSubmit: (data) => {
             setIsPush(false);
             const timeout = setTimeout(() => {}, 10000);
-            axios.post('http://magictsec.tis.cs.umss.edu.bo/api/login', 
+            axios.post('https://magic-tech-backend.herokuapp.com/api/login', 
             {
                 email:     `${data.email}`,
                 password:  `${data.password}`
