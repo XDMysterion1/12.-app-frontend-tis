@@ -4,13 +4,16 @@
         {
             "label": "Home", "icon": "pi pi-fw pi-home",
             "items": [{
-                "label": "Tablero", "icon": "pi pi-fw pi-home", "to": "/"
-            }]
+                "label": "Tablero", "icon": "pi pi-fw pi-home", "to": "/"     
+            }
+            
+        ]
         },
         {
             "label": "Gestion de Roles", "icon": "pi pi-fw pi-sitemap",
             "items": [
                 {"label": "Roles", "icon": "pi pi-fw pi-users", "to": "/Role"}
+               
                
             ]
         },
@@ -56,6 +59,7 @@
             "label": "FORO DE DISCUSION", "icon": "pi pi-fw pi-sitemap",
             "items": [
                 {"label": "Foro", "icon": "pi pi-fw pi-users", "to": "/Forum"}
+                
             ]
         }
 

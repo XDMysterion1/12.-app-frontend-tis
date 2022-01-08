@@ -19,8 +19,23 @@ import uniqid               from 'uniqid';
 
 import { getConvocatorias,getConvocatoriaID,createConvocatoria,updateConvocatoriaID,deleteConvocatoriaID} from '../service/apiConvocatoria';
 import { getUsers,getUsersActivas } from '../service/apiUser';
-
+import { subirConvocatoria,downloadConvocatoria } from '../service/apiArchivo';
+const initialValues = {
+    archivo : null,
+    archivoNombre : '',
+    archivoURL: ''
+}
 export const Convocatoria = (props) => {
+
+    const [archivo, setArchivo]= useState(initialValues);
+
+
+    const fileSelectHandler = (e)=>{
+        setArchivo({
+            archivo: e.target.files[0],
+            archivoNombre: e.target.files[0].name
+        })
+    }
 
     let emptyConvocatoria = {
         id:        null,
@@ -115,13 +130,7 @@ export const Convocatoria = (props) => {
                     errors.semestre = "No se permiten numero o caracteres especiales";
                 }
 
-                if (!data.link) {
-                    errors.link = "Se requiere el link";
-                }else if (data.link.length > 500) {
-                    errors.link = "Como maximo 500 caracteres";
-                }else if (!/^(ftp|http|https):\/\/[^ "]+$/.test(data.link)) {
-                errors.link = "El link no es valido";
-                }
+              
     
                 if (!data.publicado) {
                     errors.publicado = "Se requiere publicar";
@@ -164,6 +173,11 @@ export const Convocatoria = (props) => {
                     errors.titulo = "No se permiten numero o caracteres especiales";
                 }
 
+                if (archivo!=null) {
+                    errors.link = "Se requiere el archivo";
+                }
+                
+
                 if (!data.codigo) {
                     errors.codigo = "Se requiere el codigo";
                 } else if (data.codigo.length < 2) {
@@ -189,13 +203,7 @@ export const Convocatoria = (props) => {
                     errors.semestre = "No se permiten numero o caracteres especiales";
                 }
 
-                if (!data.link) {
-                    errors.link = "Se requiere el link";
-                }else if (data.link.length > 500) {
-                    errors.link = "Como maximo 500 caracteres";
-                }else if (!/^(ftp|http|https):\/\/[^ "]+$/.test(data.link)) {
-                errors.link = "El link no es valido";
-                }
+             
 
                 if (!data.user) {
                     errors.user = "Se requiere el usuario";
@@ -230,7 +238,7 @@ export const Convocatoria = (props) => {
                         setConvocatoria({ ...convocatoria });
                         const index = findIndexById(convocatoria.id);
                         _convocatorias[index] = _convocatoria;
-
+                        subirConvocatoria(archivo);
                         updateConvocatoriaID({titulo:`${_convocatoria.titulo}`,codigo:`${_convocatoria.codigo}`,semestre:`${_convocatoria.semestre}`,link:`${_convocatoria.link}`,publicado:`${_convocatoria.publicado}`,estado:`${_convocatoria.estado}`,user:`${_convocatoria.user}`},convocatoria.id);
                         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Convocatoria Actualizada', life: 3000 });
                     }
@@ -240,7 +248,7 @@ export const Convocatoria = (props) => {
                         _convocatoria.publicado = "No publicar";
                         _convocatoria.estado    = "Activo"; 
                         _convocatorias.push(_convocatoria);
-                
+                        subirConvocatoria(archivo);
                         createConvocatoria({id:`${_convocatoria.id}`,titulo:`${_convocatoria.titulo}`,codigo:`${_convocatoria.codigo}`,semestre:`${_convocatoria.semestre}`,link:`${_convocatoria.link}`,publicado:`${_convocatoria.publicado}`,estado:`${_convocatoria.estado}`,user:`${_convocatoria.user}`});
                         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Convocatoria Creada', life: 3000 });
                     }
@@ -438,7 +446,7 @@ export const Convocatoria = (props) => {
         return (
             <>
                 <span className="p-column-title">Link</span>
-                <Button label="Ver documento" className="p-button-link" onClick={() => window.open(`${rowData.link}`)} style={props.layoutColorMode === 'light' ? {'color':'#495057', 'font-weight': 'bold' , 'text-align': 'justify'} : {'color':'#ffffff', 'font-weight': 'bold' , 'text-align': 'justify'}}/>      
+                <Button label="Descargar" className="p-button-link" onClick={downloadConvocatoria} style={props.layoutColorMode === 'light' ? {'color':'#495057', 'font-weight': 'bold' , 'text-align': 'justify'} : {'color':'#ffffff', 'font-weight': 'bold' , 'text-align': 'justify'}}/>      
             </>
         );
     }
@@ -524,7 +532,7 @@ export const Convocatoria = (props) => {
                     <Column header="TITULO"             field="titulo"    sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
                     <Column header="CODIGO"             field="codigo"    sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
                     <Column header="SEMESTRE"           field="semestre"  sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                    <Column header="LINK"               field="link"      sortable style={{ 'background-color': '#13af4e', width:'40%'}}/>
+                    <Column header="ARCHIVO"               field="link"      sortable style={{ 'background-color': '#13af4e', width:'40%'}}/>
                     <Column header="PUBLICADO"          field="publicado" sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
                     <Column header="ESTADO"             field="estado"    sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
                     <Column header="Editar/Eliminar"                               style={{ 'background-color': '#13af4e', width:'20%'}}/>
@@ -603,13 +611,32 @@ export const Convocatoria = (props) => {
                             </div>
                             {getFormErrorMessage('semestre')}
 
-                            <div className="p-field mt-2">
+                            <div style={{ 'marginBottom': '10px' }} className="p-field mt-2" >
                                 <div className="p-inputgroup">
-                                        <span className="p-inputgroup-addon">
-                                            <i className="pi pi-link"></i>
-                                        </span>
-                                        <InputTextarea id="link" name='link' placeholder="Link"  value={formik.values.link} onChange={formik.handleChange}/>
-                                </div>       
+
+                                    <input
+                                        id="subir"
+                                        type="file"
+                                        onChange={fileSelectHandler}
+                                        hidden
+                                    />
+
+                                    <label for="subir"
+                                        style={{
+                                            display: 'inline - block',
+                                            background: 'rgb(19, 175, 78)',
+                                            color: 'white',
+                                            padding: '0.6rem',
+                                            fontFamily: 'sans-serif',
+
+                                            cursor: 'pointer',
+                                            marginTop: '0',
+                                            borderRadius: '7px'
+
+
+                                        }}
+                                    >Seleccionar Archivo PDF</label>
+                                </div>
                             </div>
                             {getFormErrorMessage('link')}
 

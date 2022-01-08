@@ -21,9 +21,25 @@ import uniqid               from 'uniqid';
 
 import { getEntregaAs,updateEntregaAID,createEntregaA} from '../service/apiSobreA';
 import { getUsersActivas  } from '../service/apiUser';
+import { subirParteA,descargarParteA } from '../service/apiArchivo';
 
-
+/**archivos */
+const initialValues = {
+    archivo : null,
+    archivoNombre : '',
+    archivoURL: ''
+}
+/** */
 export const ParteA = (props) => {
+    const [archivo, setArchivo]= useState(initialValues);
+
+    const fileSelectHandler = (e)=>{
+        setArchivo({
+            archivo: e.target.files[0],
+            archivoNombre: e.target.files[0].name
+        })
+    }
+
 
     let emptyParte = {
         id:            null,
@@ -88,7 +104,7 @@ export const ParteA = (props) => {
 
     const formik = useFormik({
         initialValues: {
-            link:         '',
+            link:         'https://www.magict',
             fechaInicio:  '',
             fechaCierre:  '',
             estado:       '',
@@ -99,13 +115,7 @@ export const ParteA = (props) => {
 
             if(stateParte){
 
-                if (!data.link) {
-                    errors.link = "Se requiere el link";
-                }else if (data.link.length > 500) {
-                    errors.link = "Como maximo 500 caracteres";
-                }else if (!/^(ftp|http|https):\/\/[^ "]+$/.test(data.link)) {
-                errors.link = "El link no es valido";
-                }
+              
 
                 if (!data.fechaInicio) {
                     errors.fechaInicio = "Se requiere la fecha de inicio";
@@ -138,14 +148,11 @@ export const ParteA = (props) => {
 
             }else{
 
-                if (!data.link) {
-                    errors.link = "Se requiere el link";
-                }else if (data.link.length > 500) {
-                    errors.link = "Como maximo 500 caracteres";
-                }else if (!/^(ftp|http|https):\/\/[^ "]+$/.test(data.link)) {
-                errors.link = "El link no es valido";
+        
+                if (archivo!=null) {
+                    errors.link = "Se requiere el archivo";
                 }
-
+                
 
                 if (!data.fechaInicio) {
                     errors.fechaInicio = "Se requiere la fecha de inicio";
@@ -188,15 +195,16 @@ export const ParteA = (props) => {
                 _parte['fechaCierre'] = convertido2;
                 _parte['estado']      = data.estado;
                 _parte['user']        = data.user;
-                console.log(_parte);
+                console.log("aqui estoy"+_parte);
 
                 if (_parte.link.trim()) {
+                    console.log("aqui ya no estoy")
                     if (parte.id) {
 
                         setParte({ ...parte });
                         const index = findIndexById(parte.id);
                         _partes[index] = _parte;
-
+                        subirParteA(archivo);
                         updateEntregaAID({link:`${_parte.link}`,fechaInicio:`${_parte.fechaInicio}`,fechaCierre:`${_parte.fechaCierre}`,estado:`${_parte.estado}`,user:`${_parte.user}`},parte.id);
                         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Parte A Actualizado', life: 3000 });
                     }
@@ -206,6 +214,7 @@ export const ParteA = (props) => {
                         _parte.estado    = "Activo"; 
                         _partes.push(_parte);
                         console.log({id:`${_parte.id}`,link:`${_parte.link}`,fechaInicio:`${_parte.fechaInicio}`,fechaCierre:`${_parte.fechaCierre}`,estado:`${_parte.estado}`,user:`${_parte.user}`});
+                        subirParteA(archivo);
                         createEntregaA({id:`${_parte.id}`,link:`${_parte.link}`,fechaInicio:`${_parte.fechaInicio}`,fechaCierre:`${_parte.fechaCierre}`,estado:`${_parte.estado}`,user:`${_parte.user}`});
                         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Parte A Creado', life: 3000 });
                     }
@@ -352,7 +361,7 @@ export const ParteA = (props) => {
         return (
             <>
                 <span className="p-column-title">Link</span>
-                <Button label="Ver documento" className="p-button-link" onClick={() => window.open(`${rowData.link}`)} style={props.layoutColorMode === 'light' ? {'color':'#495057', 'font-weight': 'bold' , 'text-align': 'justify'} : {'color':'#ffffff', 'font-weight': 'bold' , 'text-align': 'justify'}}/>      
+                <Button label="Descargar" className="p-button-link" onClick={descargarParteA} style={props.layoutColorMode === 'light' ? {'color':'#495057', 'font-weight': 'bold' , 'text-align': 'justify'} : {'color':'#ffffff', 'font-weight': 'bold' , 'text-align': 'justify'}}/>      
             </>
         );
     }
@@ -441,7 +450,7 @@ export const ParteA = (props) => {
                 </Row>
                 <Row>
                     <Column header="ID"                   field="id"            sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                    <Column header="LINK"                 field="link"          sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="ARCHIVO"                 field="link"          sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
                     <Column header="FECHA DE INICIO"      field="fechaInicio"   sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
                     <Column header="FECHA DE CIERRE"      field="fechaCierre"   sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
                     <Column header="ESTADO"               field="estado"        sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
@@ -489,13 +498,32 @@ export const ParteA = (props) => {
                     <Dialog visible={parteDialog} style={{ width: '450px' }} header={headerDialog} modal className="p-fluid" onHide={hideDialog}>
                         <form onSubmit={formik.handleSubmit}>
 
-                            <div className="p-field mt-2">
+                        <div style={{ 'marginBottom': '10px' }} className="p-field mt-2" >
                                 <div className="p-inputgroup">
-                                        <span className="p-inputgroup-addon">
-                                            <i className="pi pi-link"></i>
-                                        </span>
-                                        <InputTextarea id="link" name='link' placeholder="Link"  value={formik.values.link} onChange={formik.handleChange}/>
-                                </div>       
+
+                                    <input
+                                        id="subir"
+                                        type="file"
+                                        onChange={fileSelectHandler}
+                                        hidden
+                                    />
+                             
+                            <label for="subir" 
+                                      style={{
+                                        display: 'inline - block',
+                                        background: 'rgb(19, 175, 78)',
+                                        color: 'white',
+                                        padding: '0.6rem',
+                                        fontFamily: 'sans-serif',
+                        
+                                        cursor: 'pointer',
+                                        marginTop: '0',
+                                        borderRadius:'7px'
+                                        
+                                      
+                                    }}
+                            >Seleccionar Archivo PDF</label>
+                               </div>
                             </div>
                             {getFormErrorMessage('link')}
                             

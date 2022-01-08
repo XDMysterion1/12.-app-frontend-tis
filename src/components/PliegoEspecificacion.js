@@ -19,8 +19,25 @@ import uniqid               from 'uniqid';
 
 import { getPliegos,createPliego,updatePliegoID,deletePliegoID} from '../service/apiPliego';
 import { getUsers,getUsersActivas } from '../service/apiUser';
+import { subirPliego,downloadPliego } from '../service/apiArchivo';
+
+const initialValues = {
+    archivo : null,
+    archivoNombre : '',
+    archivoURL: ''
+}
 
 export const PliegoEspecificacion = (props) => {
+
+    const [archivo, setArchivo]= useState(initialValues);
+
+
+    const fileSelectHandler = (e)=>{
+        setArchivo({
+            archivo: e.target.files[0],
+            archivoNombre: e.target.files[0].name
+        })
+    }
 
     let emptyPliego = {
         id:        null,
@@ -116,13 +133,7 @@ export const PliegoEspecificacion = (props) => {
                     errors.semestre = "No se permiten numero o caracteres especiales";
                 }
 
-                if (!data.link) {
-                    errors.link = "Se requiere el link";
-                }else if (data.link.length > 500) {
-                    errors.link = "Como maximo 500 caracteres";
-                }else if (!/^(ftp|http|https):\/\/[^ "]+$/.test(data.link)) {
-                    errors.link = "El link no es valido";
-                }
+             
 
                 if (!data.publicado) {
                     errors.publicado = "Se requiere publicarlo";
@@ -191,13 +202,10 @@ export const PliegoEspecificacion = (props) => {
                     errors.semestre = "No se permiten numero o caracteres especiales";
                 }
 
-                if (!data.link) {
-                    errors.link = "Se requiere el link";
-                }else if (data.link.length > 500) {
-                    errors.link = "Como maximo 500 caracteres";
-                }else if (!/^(ftp|http|https):\/\/[^ "]+$/.test(data.link)) {
-                    errors.link = "El link no es valido";
+                if (archivo!=null) {
+                    errors.link = "Se requiere el archivo";
                 }
+                
 
                 if (!data.user) {
                     errors.user = "Se requiere el usuario";
@@ -232,7 +240,7 @@ export const PliegoEspecificacion = (props) => {
                         setPliego({ ...pliego });
                         const index = findIndexById(pliego.id);
                         _pliegos[index] = _pliego;
-
+                        subirPliego(archivo);
                         updatePliegoID({titulo:`${_pliego.titulo}`,codigo:`${_pliego.codigo}`,semestre:`${_pliego.semestre}`,link:`${_pliego.link}`,publicado:`${_pliego.publicado}`,estado:`${_pliego.estado}`,user:`${_pliego.user}`},pliego.id);
                         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Pliego de especificaciones Actualizada', life: 3000 });
                     }
@@ -242,7 +250,7 @@ export const PliegoEspecificacion = (props) => {
                         _pliego.publicado = "No publicar";
                         _pliego.estado    = "Activo";
                         _pliegos.push(_pliego);
-
+                        subirPliego(archivo);
                         createPliego({id:`${_pliego.id}`,titulo:`${_pliego.titulo}`,codigo:`${_pliego.codigo}`,semestre:`${_pliego.semestre}`,link:`${_pliego.link}`,publicado:`${_pliego.publicado}`,estado:`${_pliego.estado}`,user:`${_pliego.user}`});
                         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Pliego de especificaciones Creada', life: 3000 });
                     }
@@ -441,7 +449,7 @@ export const PliegoEspecificacion = (props) => {
         return (
             <>
                 <span className="p-column-title">Link</span>
-                <Button label="Ver documento" className="p-button-link" onClick={() => window.open(`${rowData.link}`)} style={props.layoutColorMode === 'light' ? {'color':'#495057', 'font-weight': 'bold' , 'text-align': 'justify'} : {'color':'#ffffff', 'font-weight': 'bold' , 'text-align': 'justify'}}/>      
+                <Button label="Descargar" className="p-button-link" onClick={downloadPliego} style={props.layoutColorMode === 'light' ? {'color':'#495057', 'font-weight': 'bold' , 'text-align': 'justify'} : {'color':'#ffffff', 'font-weight': 'bold' , 'text-align': 'justify'}}/>      
             </>
         );
     }
@@ -523,7 +531,7 @@ export const PliegoEspecificacion = (props) => {
                     <Column header="TITULO"             field="titulo"   sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
                     <Column header="CODIGO"             field="codigo"   sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
                     <Column header="SEMESTRE"           field="semestre" sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                    <Column header="LINK"               field="link"     sortable style={{ 'background-color': '#13af4e', width:'40%'}}/>
+                    <Column header="ARCHIVO"               field="link"     sortable style={{ 'background-color': '#13af4e', width:'40%'}}/>
                     <Column header="PUBLICADO"          field="publicado" sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
                     <Column header="ESTADO"             field="estado"    sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
                     <Column header="Editar/Eliminar"                              style={{ 'background-color': '#13af4e', width:'20%'}}/>
@@ -601,13 +609,32 @@ export const PliegoEspecificacion = (props) => {
                             </div>
                             {getFormErrorMessage('semestre')}
 
-                            <div className="p-field mt-2">
+                            <div style={{ 'marginBottom': '10px' }} className="p-field mt-2" >
                                 <div className="p-inputgroup">
-                                        <span className="p-inputgroup-addon">
-                                            <i className="pi pi-link"></i>
-                                        </span>
-                                        <InputTextarea id="link" name='link' placeholder="Link"  value={formik.values.link} onChange={formik.handleChange}/>
-                                </div>       
+
+                                    <input
+                                        id="subir"
+                                        type="file"
+                                        onChange={fileSelectHandler}
+                                        hidden
+                                    />
+
+                                    <label for="subir"
+                                        style={{
+                                            display: 'inline - block',
+                                            background: 'rgb(19, 175, 78)',
+                                            color: 'white',
+                                            padding: '0.6rem',
+                                            fontFamily: 'sans-serif',
+
+                                            cursor: 'pointer',
+                                            marginTop: '0',
+                                            borderRadius: '7px'
+
+
+                                        }}
+                                    >Seleccionar Archivo PDF</label>
+                                </div>
                             </div>
                             {getFormErrorMessage('link')}
 
