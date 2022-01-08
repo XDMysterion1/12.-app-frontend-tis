@@ -269,6 +269,10 @@ const App = () => {
 
     useEffect(()=>{
         let _permisos = [...permisos]
+        let etiqueta = ["homelabel", "rolelabel","itemlabel","userlabel","empresalabel","convocatorialabel","pliegolabel","contratolabel","ordenlabel","planlabel","parteAlabel","parteBlabel","listEmpresalabel","listConvlabel","listPliegolabel","forolabel"];
+
+
+
 
         let data =[    
             {
@@ -277,6 +281,7 @@ const App = () => {
                     label: `${_permisos[0].homeItemLabel}`, icon: `${_permisos[0].homeItemIcono}`, to: `${_permisos[0].homeItemTo}`
                 }]
             },
+            
             {
                 label:  `${_permisos[0].rolelabel}`, icon:  `${_permisos[0].roleIcono}`,
                 items: [{
