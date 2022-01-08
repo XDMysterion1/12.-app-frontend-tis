@@ -271,6 +271,10 @@ const App = () => {
         }
     ]);
 
+
+    //////////
+    
+
     const cookies                                             = new Cookies();
 
 
@@ -408,11 +412,7 @@ const App = () => {
       
             console.log("este es el dato sin filtrar"+data);
             var resultArray = data.filter((row) => {
-<<<<<<< HEAD
-                var ignoreValue = Object.values(row).some(elem => elem === '*');
-=======
                 var ignoreValue = Object.values(row).some(elem => elem === '*'||  elem === 'undefined');
->>>>>>> cbbd692eedcd4c01240858f4a824abb024ef1e90
                 return !ignoreValue ? true : false;
             });
             console.log("este es el valos"+resultArray);

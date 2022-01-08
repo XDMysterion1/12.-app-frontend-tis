@@ -5,7 +5,7 @@ export const subirArchivo = (archivo) =>{
    
     const fd = new FormData();
     fd.append('file', archivo.archivo, archivo.archivoNombre);
-    axios.post('http://127.0.0.1:8000/api/upload', fd,{
+    axios.post('https://magic-tech-backend.herokuapp.com/api/upload', fd,{
         onUploadProgress: progressEvent =>{
             console.log("Upload progress: " + Math.round(progressEvent.loaded / progressEvent.total * 100) + "%")
         }
@@ -14,7 +14,7 @@ export const subirArchivo = (archivo) =>{
 }
 export const download=()=>{
     axios({
-        url:"http://127.0.0.1:8000/api/download",
+        url:"https://magic-tech-backend.herokuapp.com/api/download",
         method: 'GET',
         responseType:'blob',
 
@@ -33,7 +33,7 @@ export const subirConvocatoria = (archivo) =>{
    
     const fd = new FormData();
     fd.append('file', archivo.archivo, archivo.archivoNombre);
-    axios.post('http://127.0.0.1:8000/api/uploadConvocatoria', fd,{
+    axios.post('https://magic-tech-backend.herokuapp.com/api/uploadConvocatoria', fd,{
         onUploadProgress: progressEvent =>{
             console.log("Upload progress: " + Math.round(progressEvent.loaded / progressEvent.total * 100) + "%")
         }
@@ -42,7 +42,7 @@ export const subirConvocatoria = (archivo) =>{
 }
 export const downloadConvocatoria=()=>{
     axios({
-        url:"http://127.0.0.1:8000/api/downloadConvocatoria",
+        url:"https://magic-tech-backend.herokuapp.com/api/downloadConvocatoria",
         method: 'GET',
         responseType:'blob',
 
@@ -60,7 +60,7 @@ export const subirPliego = (archivo) =>{
    
     const fd = new FormData();
     fd.append('file', archivo.archivo, archivo.archivoNombre);
-    axios.post('http://127.0.0.1:8000/api/uploadPliego', fd,{
+    axios.post('https://magic-tech-backend.herokuapp.com/api/uploadPliego', fd,{
         onUploadProgress: progressEvent =>{
             console.log("Upload progress: " + Math.round(progressEvent.loaded / progressEvent.total * 100) + "%")
         }
@@ -69,7 +69,7 @@ export const subirPliego = (archivo) =>{
 }
 export const downloadPliego=()=>{
     axios({
-        url:"http://127.0.0.1:8000/api/downloadPliego",
+        url:"https://magic-tech-backend.herokuapp.com/api/downloadPliego",
         method: 'GET',
         responseType:'blob',
 
@@ -88,7 +88,7 @@ export const subirParteA = (archivo) =>{
    
     const fd = new FormData();
     fd.append('file', archivo.archivo, archivo.archivoNombre);
-    axios.post('http://127.0.0.1:8000/api/uploadParteA', fd,{
+    axios.post('https://magic-tech-backend.herokuapp.com/api/uploadParteA', fd,{
         onUploadProgress: progressEvent =>{
             console.log("Upload progress: " + Math.round(progressEvent.loaded / progressEvent.total * 100) + "%")
         }
@@ -97,7 +97,7 @@ export const subirParteA = (archivo) =>{
 }
 export const descargarParteA=()=>{
     axios({
-        url:"http://127.0.0.1:8000/api/downloadParteA",
+        url:"https://magic-tech-backend.herokuapp.com/api/downloadParteA",
         method: 'GET',
         responseType:'blob',
 
@@ -115,7 +115,7 @@ export const subirParteB = (archivo) =>{
    
     const fd = new FormData();
     fd.append('file', archivo.archivo, archivo.archivoNombre);
-    axios.post('http://127.0.0.1:8000/api/uploadParteB', fd,{
+    axios.post('https://magic-tech-backend.herokuapp.com/api/uploadParteB', fd,{
         onUploadProgress: progressEvent =>{
             console.log("Upload progress: " + Math.round(progressEvent.loaded / progressEvent.total * 100) + "%")
         }
@@ -124,7 +124,7 @@ export const subirParteB = (archivo) =>{
 }
 export const descargarParteB=()=>{
     axios({
-        url:"http://127.0.0.1:8000/api/downloadParteB",
+        url:"https://magic-tech-backend.herokuapp.com/api/downloadParteB",
         method: 'GET',
         responseType:'blob',
 
