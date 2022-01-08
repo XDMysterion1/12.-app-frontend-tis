@@ -268,7 +268,8 @@ const App = () => {
                     ]
                 }
             ]
-        }]);
+        }
+    ]);
 
     const cookies                                             = new Cookies();
 
@@ -401,16 +402,16 @@ const App = () => {
                 ]
             
 
-            },]
+            }]
         
              
       
-
+            console.log("este es el dato sin filtrar"+data);
             var resultArray = data.filter((row) => {
-                var ignoreValue = Object.values(row).some(elem => elem === 'undefined');
+                var ignoreValue = Object.values(row).some(elem => elem === '*');
                 return !ignoreValue ? true : false;
             });
-            console.log(resultArray);
+            console.log("este es el valos"+resultArray);
 
         setMenus(resultArray);
     },[permisos])
