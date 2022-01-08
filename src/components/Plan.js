@@ -21,10 +21,24 @@ import uniqid               from 'uniqid';
 
 import { getPlans,createPlan,updatePlanID} from '../service/apiPlan';
 import { getUsersActivas  } from '../service/apiUser';
-
-
+import { subirArchivo, download } from '../service/apiArchivo';
+/**archivos */
+const initialValues = {
+    archivo : null,
+    archivoNombre : '',
+    archivoURL: ''
+}
+/** */
 export const Plan = (props) => {
-
+/**archivo */
+const [archivo, setArchivo]= useState(initialValues);
+    const fileSelectHandler = (e)=>{
+        setArchivo({
+            archivo: e.target.files[0],
+            archivoNombre: e.target.files[0].name
+        })
+    }
+/**archivo */
     let emptyParte = {
         id:            null,
         link:         '',
@@ -76,13 +90,7 @@ export const Plan = (props) => {
 
             if(stateParte){
 
-                if (!data.link) {
-                    errors.link = "Se requiere el link";
-                }else if (data.link.length > 500) {
-                    errors.link = "Como maximo 500 caracteres";
-                }else if (!/^(ftp|http|https):\/\/[^ "]+$/.test(data.link)) {
-                errors.link = "El link no es valido";
-                }
+       
 
                 if (!data.estado) {
                     errors.estado = "Se requiere el estado";
@@ -107,13 +115,7 @@ export const Plan = (props) => {
 
             }else{
 
-                if (!data.link) {
-                    errors.link = "Se requiere el link";
-                }else if (data.link.length > 500) {
-                    errors.link = "Como maximo 500 caracteres";
-                }else if (!/^(ftp|http|https):\/\/[^ "]+$/.test(data.link)) {
-                errors.link = "El link no es valido";
-                }
+               
 
                 if (!data.user) {
                     errors.user = "Se requiere el usuario";
@@ -150,6 +152,7 @@ export const Plan = (props) => {
                         _partes[index] = _parte;
 
                         updatePlanID({link:`${_parte.link}`,estado:`${_parte.estado}`,user:`${_parte.user}`},parte.id);
+                        subirArchivo(archivo);
                         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Plan de pago Actualizado', life: 3000 });
                     }
                     else {
@@ -158,6 +161,7 @@ export const Plan = (props) => {
                         _parte.estado    = "Activo"; 
                         _partes.push(_parte);
                         createPlan({id:`${_parte.id}`,link:`${_parte.link}`,estado:`${_parte.estado}`,user:`${_parte.user}`});
+                        subirArchivo(archivo);
                         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Plan de pago Creado', life: 3000 });
                     }
                 }
@@ -299,7 +303,7 @@ export const Plan = (props) => {
         return (
             <>
                 <span className="p-column-title">Link</span>
-                <Button label="Ver documento" className="p-button-link" onClick={() => window.open(`${rowData.link}`)} style={props.layoutColorMode === 'light' ? {'color':'#495057', 'font-weight': 'bold' , 'text-align': 'justify'} : {'color':'#ffffff', 'font-weight': 'bold' , 'text-align': 'justify'}}/>      
+                <Button label="Descargar" className="p-button-link" onClick={download} style={props.layoutColorMode === 'light' ? {'color':'#495057', 'font-weight': 'bold' , 'text-align': 'justify'} : {'color':'#ffffff', 'font-weight': 'bold' , 'text-align': 'justify'}}/>      
             </>
         );
     }
@@ -370,7 +374,7 @@ export const Plan = (props) => {
                 </Row>
                 <Row>
                     <Column header="ID"                   field="id"            sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
-                    <Column header="LINK"                 field="link"          sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
+                    <Column header="ARCHIVO"                 field="link"          sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
                     <Column header="ESTADO"               field="estado"        sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
                     <Column header="USUARIO"              field="user"          sortable style={{ 'background-color': '#13af4e', width:'20%'}}/>
                     <Column header="Editar/Eliminar"                                     style={{ 'background-color': '#13af4e', width:'20%'}}/>
@@ -388,6 +392,7 @@ export const Plan = (props) => {
     const headerDialog =()=>{
         return (stateParte)?"Actualizando Plan de pagos":"Añadir Plan de pagos"
     }
+
 
     return (
         <div className="p-grid crud-demo">
@@ -416,15 +421,35 @@ export const Plan = (props) => {
                     <Dialog visible={parteDialog} style={{ width: '450px' }} header={headerDialog} modal className="p-fluid" onHide={hideDialog}>
                         <form onSubmit={formik.handleSubmit}>
 
-                            <div className="p-field mt-2">
+           <div style={{ 'marginBottom': '10px' }} className="p-field mt-2" >
                                 <div className="p-inputgroup">
-                                        <span className="p-inputgroup-addon">
-                                            <i className="pi pi-link"></i>
-                                        </span>
-                                        <InputTextarea id="link" name='link' placeholder="Link"  value={formik.values.link} onChange={formik.handleChange}/>
-                                </div>       
+
+                                    <input
+                                        id="subir"
+                                        type="file"
+                                        onChange={fileSelectHandler}
+                                        hidden
+                                    />
+
+                                    <label for="subir"
+                                        style={{
+                                            display: 'inline - block',
+                                            background: 'rgb(19, 175, 78)',
+                                            color: 'white',
+                                            padding: '0.6rem',
+                                            fontFamily: 'sans-serif',
+
+                                            cursor: 'pointer',
+                                            marginTop: '0',
+                                            borderRadius: '7px'
+
+
+                                        }}
+                                    >Seleccionar Archivo PDF</label>
+                                </div>
                             </div>
-                            {getFormErrorMessage('link')}
+                      
+
                             
                             {(stateParte)?(
                                 <div className="form-group">
