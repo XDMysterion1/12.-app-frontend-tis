@@ -26,7 +26,7 @@ export const AppTopbar = (props) => {
         cookies.remove('nombre');
         cookies.remove('apellido');
         cookies.remove('email');
-        cookies.set('rol' , "rol-kvjva7f6" ,{path: "/"});
+        cookies.set('rol' , "rol-gt521sdfg" ,{path: "/"});
         cookies.set('isLogin', false);
         history.push('/Login');
     }
