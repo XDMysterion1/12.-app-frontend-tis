@@ -3,13 +3,16 @@ import classNames           from 'classnames';
 import { Route}             from 'react-router-dom';
 import { CSSTransition }    from 'react-transition-group';
 
+
 import { AppTopbar }        from './AppTopbar';
 import { AppFooter }        from './AppFooter';
 import { AppMenu }          from './AppMenu';
 import { AppConfig }        from './AppConfig';
+import { Derechos}          from './Derechos';
 
 import { Dashboard }             from './components/Dashboard';
 import { Role }                  from './components/Role';
+import { Permiso }               from './components/Permiso';
 import { User }                  from './components/User';
 import {Empresa}                 from './components/Empresa';
 import { Convocatoria }          from './components/Convocatoria';
@@ -28,8 +31,7 @@ import { ParteB }               from './components/ParteB';
 
 
 import Cookies                   from 'universal-cookie';
-import { MenuService }           from './service/Menu';
-
+import { getItems , getItemId,getItemsRol}   from './service/apiItem';
 
 import PrimeReact           from 'primereact/api';
 
@@ -49,24 +51,451 @@ const App = () => {
     const [layoutMode, setLayoutMode]                         = useState('static');
     const [layoutColorMode, setLayoutColorMode]               = useState('light')
     const [inputStyle, setInputStyle]                         = useState('outlined');
+    const [permisos, setPermisos]                             = useState([ 
+        {
+            label: "Home", icon: "pi pi-fw pi-home",
+            items: [{
+                label: "Tablero", icon: "pi pi-fw pi-home", to: "/"
+            }]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "", icon: "", to: ""}
+               
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "", icon: "", to: ""}
+               
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "", icon: "", to: ""}
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "", icon: "", to: ""}
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "" , icon: "", to: ""},
+               
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "" , icon: "", to: ""},
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "" , icon: "" , to: ""}
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "" , icon: "" , to: ""}
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "" , icon: "" , to: ""}
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "" , icon: "", to: ""}
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "", icon: "" , to: ""}
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "", icon: "", to: ""}
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "" , icon: "" , to: ""},
+                
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "", icon: "", to: ""}
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "", icon: "", to: ""}
+            ]
+        }]);
     const [ripple, setRipple]                                 = useState(true);
     const [staticMenuInactive, setStaticMenuInactive]         = useState(false);
     const [overlayMenuActive, setOverlayMenuActive]           = useState(false);
     const [mobileMenuActive, setMobileMenuActive]             = useState(false);
     const [mobileTopbarMenuActive, setMobileTopbarMenuActive] = useState(false);
-    const [menus, setMenus]                                   = useState(null);
+    const [menus, setMenus]                                   = useState([ 
+    {
+        label: "Home", icon: "pi pi-fw pi-home",
+        items: [{
+            label: "Tablero", icon: "pi pi-fw pi-home", to: "/"
+        }]
+    },
+    {
+        label: "", icon: "",
+        items: [
+            {label: "", icon: "", to: ""}
+           
+        ]
+    },
+    {
+        label: "", icon: "",
+        items: [
+            {label: "", icon: "", to: ""}
+           
+        ]
+    },
+    {
+        label: "", icon: "",
+        items: [
+            {label: "", icon: "", to: ""}
+        ]
+    },
+    {
+        label: "", icon: "",
+        items: [
+            {label: "", icon: "", to: ""}
+        ]
+    },
+    {
+        label: "", icon: "",
+        items: [
+            {label: "" , icon: "", to: ""},
+           
+        ]
+    },
+    {
+        label: "", icon: "",
+        items: [
+            {label: "" , icon: "", to: ""},
+        ]
+    },
+    {
+        label: "", icon: "",
+        items: [
+            {label: "" , icon: "" , to: ""}
+        ]
+    },
+    {
+        label: "", icon: "",
+        items: [
+            {label: "" , icon: "" , to: ""}
+        ]
+    },
+    {
+        label: "", icon: "",
+        items: [
+            {label: "" , icon: "" , to: ""}
+        ]
+    },
+    {
+        label: "", icon: "",
+        items: [
+            {label: "" , icon: "", to: ""}
+        ]
+    },
+    {
+        label: "", icon: "",
+        items: [
+            {label: "", icon: "" , to: ""}
+        ]
+    },
+    {
+        label: "", icon: "",
+        items: [
+            {label: "", icon: "", to: ""}
+        ]
+    },
+    {
+        label: "", icon: "",
+        items: [
+            {label: "" , icon: "" , to: ""},
+            
+        ]
+    },
+    {
+        label: "", icon: "",
+        items: [
+            {label: "", icon: "", to: ""}
+        ]
+    },
+    {
+        label: "", icon: "",
+        items: [
+            {label: "", icon: "", to: ""}
+        ]
+    }]);
+
     const cookies                                             = new Cookies();
-    const menuService = new MenuService();
+
 
     PrimeReact.ripple = true;
 
     let menuClick = false;
     let mobileTopbarMenuClick = false;
 
+    useEffect(()=>{
+        let _permisos = [...permisos]
+        let etiqueta = ["homelabel", "rolelabel","itemlabel","userlabel","empresalabel","convocatorialabel","pliegolabel","contratolabel","ordenlabel","planlabel","parteAlabel","parteBlabel","listEmpresalabel","listConvlabel","listPliegolabel","forolabel"];
+
+
+
+
+        let data =[    
+            {
+                label:  `${_permisos[0].homelabel}`, icon:  `${_permisos[0].homeIcono}`,
+                items: [{
+                    label: `${_permisos[0].homeItemLabel}`, icon: `${_permisos[0].homeItemIcono}`, to: `${_permisos[0].homeItemTo}`
+                }]
+            },
+            
+            {
+                label:  `${_permisos[0].rolelabel}`, icon:  `${_permisos[0].roleIcono}`,
+                items: [{
+                    label: `${_permisos[0].roleItemLabel}`, icon: `${_permisos[0].roleItemIcono}`, to: `${_permisos[0].roleItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].itemlabel}`, icon:  `${_permisos[0].itemIcono}`,
+                items: [{
+                    label: `${_permisos[0].itemItemLabel}`, icon: `${_permisos[0].itemItemIcono}`, to: `${_permisos[0].itemItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].userlabel}`, icon:  `${_permisos[0].userIcono}`,
+                items: [{
+                    label: `${_permisos[0].userItemLabel}`, icon: `${_permisos[0].userItemIcono}`, to: `${_permisos[0].userItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].empresalabel}`, icon:  `${_permisos[0].empresaIcono}`,
+                items: [{
+                    label: `${_permisos[0].empresaItemLabel}`, icon: `${_permisos[0].empresaItemIcono}`, to: `${_permisos[0].empresaItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].convocatorialabel}`, icon:  `${_permisos[0].convocatoriaIcono}`,
+                items: [{
+                    label: `${_permisos[0].convocatoriaItemLabel}`, icon: `${_permisos[0].convocatoriaItemIcono}`, to: `${_permisos[0].convocatoriaItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].pliegolabel}`, icon:  `${_permisos[0].pliegoIcono}`,
+                items: [{
+                    label: `${_permisos[0].pliegoItemLabel}`, icon: `${_permisos[0].pliegoItemIcono}`, to: `${_permisos[0].pliegoItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].contratolabel}`, icon:  `${_permisos[0].contratoIcono}`,
+                items: [{
+                    label: `${_permisos[0].contratoItemLabel}`, icon: `${_permisos[0].contratoItemIcono}`, to: `${_permisos[0].contratoItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].ordenlabel}`, icon:  `${_permisos[0].ordenIcono}`,
+                items: [{
+                    label: `${_permisos[0].ordenItemLabel}`, icon: `${_permisos[0].ordenItemIcono}`, to: `${_permisos[0].ordenItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].planlabel}`, icon:  `${_permisos[0].planIcono}`,
+                items: [{
+                    label: `${_permisos[0].planItemLabel}`, icon: `${_permisos[0].planItemIcono}`, to: `${_permisos[0].planItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].parteAlabel}`, icon:  `${_permisos[0].parteAIcono}`,
+                items: [{
+                    label: `${_permisos[0].parteAItemLabel}`, icon: `${_permisos[0].parteAItemIcono}`, to: `${_permisos[0].parteAItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].parteBlabel}`, icon:  `${_permisos[0].parteBIcono}`,
+                items: [{
+                    label: `${_permisos[0].parteBItemLabel}`, icon: `${_permisos[0].parteBItemIcono}`, to: `${_permisos[0].parteBItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].listEmpresalabel}`, icon:  `${_permisos[0].listEmpresaIcono}`,
+                items: [{
+                    label: `${_permisos[0].listEmpresaItemLabel}`, icon: `${_permisos[0].listEmpresaItemIcono}`, to: `${_permisos[0].listEmpresaItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].listConvlabel}`, icon:  `${_permisos[0].listConvIcono}`,
+                items: [{
+                    label: `${_permisos[0].listConvItemLabel}`, icon: `${_permisos[0].listConvItemIcono}`, to: `${_permisos[0].listConvItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].listPliegolabel}`, icon:  `${_permisos[0].listPliegoIcono}`,
+                items: [{
+                    label: `${_permisos[0].listPliegoItemLabel}`, icon: `${_permisos[0].listPliegoItemIcono}`, to: `${_permisos[0].listPliegoItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].forolabel}`, icon:  `${_permisos[0].foroIcono}`,
+                items: [{
+                    label: `${_permisos[0].foroItemLabel}`, icon: `${_permisos[0].foroItemIcono}`, to: `${_permisos[0].foroItemTo}`
+                }]
+            }]
+        setMenus(data);
+    },[permisos])
 
     useEffect(()=>{
-        menuService.getMenusAdmin().then(data => setMenus(data));
+        fetchPermisos();
     },[])
+
+    const fetchPermisos = () =>{
+        
+        let rol = cookies.get('rol');
+        getItemsRol(rol).then(json =>{
+            if(json.error){
+                console.log("Error");
+            }else{
+                console.log("---------Permisos insertados-----------");
+                setPermisos(json.data);
+            }
+        })
+    }
+
+    const modificandoMenu = () => {
+        console.log(permisos);
+        let _permisos = [...permisos]
+        console.log(_permisos);
+        let data =[    
+            {
+                label:  `${_permisos[0].homelabel}`, icon:  `${_permisos[0].homeIcono}`,
+                items: [{
+                    label: `${_permisos[0].homeItemLabel}`, icon: `${_permisos[0].homeItemIcono}`, to: `${_permisos[0].homeItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].rolelabel}`, icon:  `${_permisos[0].roleIcono}`,
+                items: [{
+                    label: `${_permisos[0].roleItemLabel}`, icon: `${_permisos[0].roleItemIcono}`, to: `${_permisos[0].roleItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].itemlabel}`, icon:  `${_permisos[0].itemIcono}`,
+                items: [{
+                    label: `${_permisos[0].itemItemLabel}`, icon: `${_permisos[0].itemItemIcono}`, to: `${_permisos[0].itemItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].userlabel}`, icon:  `${_permisos[0].userIcono}`,
+                items: [{
+                    label: `${_permisos[0].userItemLabel}`, icon: `${_permisos[0].userItemIcono}`, to: `${_permisos[0].userItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].empresalabel}`, icon:  `${_permisos[0].empresaIcono}`,
+                items: [{
+                    label: `${_permisos[0].empresaItemLabel}`, icon: `${_permisos[0].empresaItemIcono}`, to: `${_permisos[0].empresaItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].convocatorialabel}`, icon:  `${_permisos[0].convocatoriaIcono}`,
+                items: [{
+                    label: `${_permisos[0].convocatoriaItemLabel}`, icon: `${_permisos[0].convocatoriaItemIcono}`, to: `${_permisos[0].convocatoriaItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].pliegolabel}`, icon:  `${_permisos[0].pliegoIcono}`,
+                items: [{
+                    label: `${_permisos[0].pliegoItemLabel}`, icon: `${_permisos[0].pliegoItemIcono}`, to: `${_permisos[0].pliegoItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].contratolabel}`, icon:  `${_permisos[0].contratoIcono}`,
+                items: [{
+                    label: `${_permisos[0].contratoItemLabel}`, icon: `${_permisos[0].contratoItemIcono}`, to: `${_permisos[0].contratoItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].ordenlabel}`, icon:  `${_permisos[0].ordenIcono}`,
+                items: [{
+                    label: `${_permisos[0].ordenItemLabel}`, icon: `${_permisos[0].ordenItemIcono}`, to: `${_permisos[0].ordenItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].planlabel}`, icon:  `${_permisos[0].planIcono}`,
+                items: [{
+                    label: `${_permisos[0].planItemLabel}`, icon: `${_permisos[0].planItemIcono}`, to: `${_permisos[0].planItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].parteAlabel}`, icon:  `${_permisos[0].parteAIcono}`,
+                items: [{
+                    label: `${_permisos[0].parteAItemLabel}`, icon: `${_permisos[0].parteAItemIcono}`, to: `${_permisos[0].parteAItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].parteBlabel}`, icon:  `${_permisos[0].parteBIcono}`,
+                items: [{
+                    label: `${_permisos[0].parteBItemLabel}`, icon: `${_permisos[0].parteBItemIcono}`, to: `${_permisos[0].parteBItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].listEmpresalabel}`, icon:  `${_permisos[0].listEmpresaIcono}`,
+                items: [{
+                    label: `${_permisos[0].listEmpresaItemLabel}`, icon: `${_permisos[0].listEmpresaItemIcono}`, to: `${_permisos[0].listEmpresaItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].listConvlabel}`, icon:  `${_permisos[0].listConvIcono}`,
+                items: [{
+                    label: `${_permisos[0].listConvItemLabel}`, icon: `${_permisos[0].listConvItemIcono}`, to: `${_permisos[0].listConvItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].listPliegolabel}`, icon:  `${_permisos[0].listPliegoIcono}`,
+                items: [{
+                    label: `${_permisos[0].listPliegoItemLabel}`, icon: `${_permisos[0].listPliegoItemIcono}`, to: `${_permisos[0].listPliegoItemTo}`
+                }]
+            },
+            {
+                label:  `${_permisos[0].forolabel}`, icon:  `${_permisos[0].foroIcono}`,
+                items: [{
+                    label: `${_permisos[0].foroItemLabel}`, icon: `${_permisos[0].foroItemIcono}`, to: `${_permisos[0].foroItemTo}`
+                }]
+            }]
+
+    }
+
 
     useEffect(() => {
         if (mobileMenuActive) {
@@ -182,99 +611,21 @@ const App = () => {
         'layout-theme-light': layoutColorMode === 'light'
     });
 
-    const menu = [
-            {
-                label: "Home", icon: "pi pi-fw pi-home",
-                "items": [{
-                    label: "Tablero", icon: "pi pi-fw pi-home", to: "/"
-                }]
-            },
-            {
-                label: "Gestion de Roles", icon: "pi pi-fw pi-sitemap",
-                "items": [
-                    {"label": "Roles", icon: "pi pi-fw pi-users", to: "/Role"}
-                   
-                ]
-            },
-            {
-                label: "Gestion de Usuario", icon: "pi pi-fw pi-sitemap",
-                "items": [
-                    {"label": "Usuarios", icon: "pi pi-fw pi-user", to: "/User"}
-                ]
-            },
-            {
-                label: "Gestion de Empresa", icon: "pi pi-fw pi-briefcase",
-                "items": [
-                    {"label": "Empresas", icon: "pi pi-fw pi-briefcase", to: "/Empresa"}
-                ]
-            },
-            {
-                label: "Gestion Publicacion", icon: "pi pi-fw pi-sitemap",
-                "items": [
-                    {"label": "Convocatoria"              , icon: "pi pi-fw pi-id-card"     , to: "/Convocatoria"},
-                    {"label": "Pliego de Especificaciones", icon: "pi pi-fw pi-check-square", to: "/PliegoEspecificacion"}
-                ]
-            },
-            {
-                label: "Gestion de Firma de Contrato", icon: "pi pi-fw pi-sitemap",
-                "items": [
-                    {"label": "Firma de contrato"              , icon: "pi pi-fw pi-id-card"     , to: "/Contrato"}
-                ]
-            },
-            {
-                label: "Gestion de Orden de Cambio", icon: "pi pi-fw pi-sitemap",
-                "items": [
-                    {"label": "Orden de cambio"              , icon: "pi pi-fw pi-id-card"     , to: "/Orden"}
-                ]
-            },
-            {
-                label: "Gestion de Plan de Pagos", icon: "pi pi-fw pi-sitemap",
-                "items": [
-                    {"label": "Plan de pagos"              , icon: "pi pi-fw pi-id-card"     , to: "/Plan"}
-                ]
-            },
-            {
-                label: "Gestion de Entrega", icon: "pi pi-fw pi-sitemap",
-                "items": [
-                    {"label": "Parte A"              , icon: "pi pi-fw pi-id-card"     , to: "/ParteA"},
-                    {"label": "Parte B"              , icon: "pi pi-fw pi-id-card"     , to: "/ParteB"}
-                ]
-            },
-            {
-                label: "Lista de empresas", icon: "pi pi-fw pi-briefcase",
-                "items": [
-                    {"label": "Empresas", icon: "pi pi-fw pi-briefcase", to: "/ListEmpresa"}
-                ]
-            },
-            {
-                label: "Lista de Publicaciones", icon: "pi pi-fw pi-sitemap",
-                "items": [
-                    {"label": "Convocatoria"              , icon: "pi pi-fw pi-id-card"     , to: "/ListConvocatoria"},
-                    {"label": "Pliego de Especificaciones", icon: "pi pi-fw pi-check-square", to: "/ListPliego"}
-                ]
-            },
-            {
-                label: "FORO DE DISCUSION", icon: "pi pi-fw pi-sitemap",
-                "items": [
-                    {label: "Foro", icon: "pi pi-fw pi-users", to: "/Forum"}
-                ]
-            }
-    
-    ];
 
     return (
         <div className={wrapperClass} onClick={onWrapperClick}>
             <AppTopbar onToggleMenuClick={onToggleMenuClick} layoutColorMode={layoutColorMode}
                        mobileTopbarMenuActive={mobileTopbarMenuActive} onMobileTopbarMenuClick={onMobileTopbarMenuClick} onMobileSubTopbarMenuClick={onMobileSubTopbarMenuClick}/>
-
+        
             <div className="layout-sidebar" onClick={onSidebarClick}>
-                <AppMenu model={menu} onMenuItemClick={onMenuItemClick} layoutColorMode={layoutColorMode} />
+                <AppMenu model={menus} onMenuItemClick={onMenuItemClick} layoutColorMode={layoutColorMode} />
             </div>
 
             <div className="layout-main-container">
                 <div className="layout-main">
                     <Route path="/"                      exact component={Dashboard}/>
                     <Route path="/Role"                  exact={true} render={props => <Role                 layoutColorMode={layoutColorMode} {...props} />}/>
+                    <Route path="/Permiso"               exact={true} render={props => <Permiso              layoutColorMode={layoutColorMode} {...props} />}/>
                     <Route path="/User"                  exact={true} render={props => <User                 layoutColorMode={layoutColorMode} {...props} />}/>
                     <Route path="/Empresa"               exact={true} render={props => <Empresa              layoutColorMode={layoutColorMode} {...props} />}/>
                     <Route path="/Convocatoria"          exact={true} render={props => <Convocatoria         layoutColorMode={layoutColorMode} {...props} />}/>
@@ -293,6 +644,7 @@ const App = () => {
                 </div>
 
                 <AppFooter layoutColorMode={layoutColorMode}/>
+                <Derechos layoutColorMode={layoutColorMode}/>
             </div>
 
             <AppConfig rippleEffect={ripple} onRippleEffect={onRipple} inputStyle={inputStyle} onInputStyleChange={onInputStyleChange}

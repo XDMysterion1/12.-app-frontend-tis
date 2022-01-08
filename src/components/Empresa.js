@@ -134,8 +134,6 @@ export const Empresa = (props) => {
                     errors.direccion = "Como minimo 2 caracteres";
                 } else if (data.direccion.length > 50) {
                     errors.direccion = "Como maximo 50 caracteres";
-                }else if (!/^^[a-zA-Z0-9.\s]+$/i.test(data.direccion)) {
-                    errors.direccion = "No se permiten numero o caracteres especiales";
                 }
 
                 if (!data.email) {
@@ -170,8 +168,6 @@ export const Empresa = (props) => {
                     errors.informacion = "Como minimo 2 caracteres";
                 } else if (data.informacion.length > 255) {
                     errors.informacion = "Como maximo 255 caracteres";
-                } else if (!/^^[a-zA-Z0-9.\s]+$/i.test(data.informacion)) {
-                    errors.informacion = "No se permiten numero o caracteres especiales";
                 }
 
                 if (!data.user) {
@@ -246,8 +242,6 @@ export const Empresa = (props) => {
                     errors.direccion = "Como minimo 2 caracteres";
                 } else if (data.direccion.length > 50) {
                     errors.direccion = "Como maximo 50 caracteres";
-                }else if (!/^^[a-zA-Z0-9.\s]+$/i.test(data.direccion)) {
-                    errors.direccion = "No se permiten numero o caracteres especiales";
                 }
 
                 if (!data.email) {
@@ -282,9 +276,7 @@ export const Empresa = (props) => {
                     errors.informacion = "Como minimo 2 caracteres";
                 } else if (data.informacion.length > 255) {
                     errors.informacion = "Como maximo 255 caracteres";
-                } else if (!/^^[a-zA-Z0-9.\s]+$/i.test(data.informacion)) {
-                    errors.informacion = "No se permiten numero o caracteres especiales";
-                }
+                } 
 
                 if (!data.user) {
                     errors.user = "Se requiere el usuario";

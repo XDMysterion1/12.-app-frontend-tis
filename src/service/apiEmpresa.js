@@ -1,17 +1,17 @@
 import axios from 'axios';
 
  export const getEmpresas = () =>{
-     return axios.get('http://magictsec.tis.cs.umss.edu.bo/api/getEmpresas');
+     return axios.get('https://magic-tech-backend.herokuapp.com/api/getEmpresas');
  }
 
  export const getEmpresaID =(id) =>{
-     return axios.get(`http://magictsec.tis.cs.umss.edu.bo/api/getEmpresaId/${id}`);
+     return axios.get(`https://magic-tech-backend.herokuapp.com/api/getEmpresaId/${id}`);
  }
 
 
 
  export const createEmpresa=(data)=>{
-    return axios.post('http://magictsec.tis.cs.umss.edu.bo/api/createEmpresa', 
+    return axios.post('https://magic-tech-backend.herokuapp.com/api/createEmpresa', 
       {
          id:          `${data.id}`,
          nombre:      `${data.nombre}`,
@@ -36,7 +36,7 @@ import axios from 'axios';
  }
 
 export const updateEmpresaID =(data,id) =>{
-    return axios.put(`http://magictsec.tis.cs.umss.edu.bo/api/updateEmpresa/${id}`, 
+    return axios.put(`https://magic-tech-backend.herokuapp.com/api/updateEmpresa/${id}`, 
     {
       nombre:      `${data.nombre}`,
       nombreCorto: `${data.nombreCorto}`,
@@ -59,9 +59,9 @@ export const updateEmpresaID =(data,id) =>{
 }
 
 export const deleteEmpresaID =(id) =>{
-    return axios.delete(`http://magictsec.tis.cs.umss.edu.bo/api/deleteEmpresaId/${id}`);
+    return axios.delete(`https://magic-tech-backend.herokuapp.com/api/deleteEmpresaId/${id}`);
 }
 
 export const getEmpresasActivas = () =>{
-  return axios.get('http://magictsec.tis.cs.umss.edu.bo/api/getEmpresasActivas');
+  return axios.get('https://magic-tech-backend.herokuapp.com/api/getEmpresasActivas');
 }

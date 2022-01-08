@@ -1,17 +1,17 @@
 import axios from 'axios';
 
  export const getUsers = () =>{
-     return axios.get('http://magictsec.tis.cs.umss.edu.bo/api/getUsers');
+     return axios.get('https://magic-tech-backend.herokuapp.com/api/getUsers');
  }
 
  export const getUserID =(id) =>{
-     return axios.get(`http://magictsec.tis.cs.umss.edu.bo/api/getUserId/${id}`);
+     return axios.get(`https://magic-tech-backend.herokuapp.com/api/getUserId/${id}`);
  }
 
 
 
  export const createUser=(data)=>{
-    return axios.post('http://magictsec.tis.cs.umss.edu.bo/api/createUser', 
+    return axios.post('https://magic-tech-backend.herokuapp.com/api/createUser', 
       {
          id:        `${data.id}`,
          nombre:    `${data.nombre}`,
@@ -31,7 +31,7 @@ import axios from 'axios';
  }
 
 export const updateUserID =(data,id) =>{
-    return axios.put(`http://magictsec.tis.cs.umss.edu.bo/api/updateUser/${id}`, 
+    return axios.put(`https://magic-tech-backend.herokuapp.com/api/updateUser/${id}`, 
     {
       nombre:    `${data.nombre}`,
       apellido:  `${data.apellido}`,
@@ -50,12 +50,12 @@ export const updateUserID =(data,id) =>{
 }
 
 export const deleteUserID =(id) =>{
-    return axios.delete(`http://magictsec.tis.cs.umss.edu.bo/api/deleteUserId/${id}`);
+    return axios.delete(`https://magic-tech-backend.herokuapp.com/api/deleteUserId/${id}`);
 }
 
 export async function login(data){
 
-  return await axios.post('http://magictsec.tis.cs.umss.edu.bo/api/login', 
+  return await axios.post('https://magic-tech-backend.herokuapp.com/api/login', 
   {
      email:     `${data.email}`,
      password:  `${data.password}`
@@ -68,5 +68,5 @@ export async function login(data){
 }
 
 export const getUsersActivas = () =>{
-  return axios.get('http://magictsec.tis.cs.umss.edu.bo/api/getUsersActivas');
+  return axios.get('https://magic-tech-backend.herokuapp.com/api/getUsersActivas');
 }

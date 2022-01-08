@@ -88,7 +88,7 @@ export const Register = (props) =>{
             setIsPush(false); 
             const timeout = setTimeout(() => {}, 10000);
 
-            axios.post('http://magictsec.tis.cs.umss.edu.bo/api/createUser', 
+            axios.post('https://magic-tech-backend.herokuapp.com/api/createUser', 
             {
                 id:         `${idUser}`,
                 nombre:     `${data.nombre}`,
