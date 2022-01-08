@@ -392,7 +392,7 @@ const App = () => {
       
 
             var resultArray = data.filter((row) => {
-                var ignoreValue = Object.values(row).some(elem => elem === 'undefined');
+                var ignoreValue = Object.values(row).some(elem => elem === '*'||  elem === 'undefined');
                 return !ignoreValue ? true : false;
             });
             console.log(resultArray);

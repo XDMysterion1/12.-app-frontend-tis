@@ -110,6 +110,23 @@ import axios from 'axios';
          foroItemIcono:   `${data.foroItemIcono}`,
          foroItemTo:      `${data.foroItemTo}`,
 
+         home:         `${data.home}`,               
+         role:         `${data.role}`,             
+         item:         `${data.item}`,             
+         user:         `${data.user}`,             
+         empresa:      `${data.empresa}`,            
+         convocatoria: `${data.convocatoria}`,         
+         pliego:       `${data.pliego}`,              
+         contrato:     `${data.contrato}`,            
+         orden:        `${data.orden}`,              
+         plan:         `${data.plan}`,               
+         parteA:       `${data.parteA}`,              
+         parteB:       `${data.parteB}`,              
+         listEmpresa:  `${data.listEmpresa}`,           
+         listConv:     `${data.listConv}`,            
+         listPliego:   `${data.listPliego}`,           
+         foro:         `${data.foro}`,             
+
          estado:      `${data.estado}`,
          rol:         `${data.rol}`
       }
@@ -221,6 +238,23 @@ export const updateItemID =(data,id) =>{
         foroItemLabel:   `${data.foroItemLabel}`,
         foroItemIcono:   `${data.foroItemIcono}`,
         foroItemTo:      `${data.foroItemTo}`,
+
+        home:         `${data.home}`,               
+        role:         `${data.role}`,             
+        item:         `${data.item}`,             
+        user:         `${data.user}`,             
+        empresa:      `${data.empresa}`,            
+        convocatoria: `${data.convocatoria}`,         
+        pliego:       `${data.pliego}`,              
+        contrato:     `${data.contrato}`,            
+        orden:        `${data.orden}`,              
+        plan:         `${data.plan}`,               
+        parteA:       `${data.parteA}`,              
+        parteB:       `${data.parteB}`,              
+        listEmpresa:  `${data.listEmpresa}`,           
+        listConv:     `${data.listConv}`,            
+        listPliego:   `${data.listPliego}`,           
+        foro:         `${data.foro}`,  
 
         estado:      `${data.estado}`,
         rol:         `${data.rol}`

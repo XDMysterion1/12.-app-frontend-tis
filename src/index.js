@@ -12,7 +12,7 @@ import Cookies                   from 'universal-cookie';
 
 {const cookies  = new Cookies()
     cookies.set('isLogin', false);
-    cookies.set('rol', 'rol-kvjva7f6');
+    cookies.set('rol', 'rol-gt521sdfg');
 }
 
 

@@ -49,22 +49,22 @@ export const Permiso = (props) => {
         { name: "Desactivado" }
     ];
 
-    const estados1  = [{ name: "Activo" , item:"Home"      },{ name: "Desactivado" ,item:"" }];
-    const estados2  = [{ name: "Activo" , item:"Gestion de Roles"      },{ name: "Desactivado" ,item:"" }];
-    const estados3  = [{ name: "Activo" , item:"Gestion de Permisos"      },{ name: "Desactivado" ,item:"" }];
-    const estados4  = [{ name: "Activo" , item:"Gestion de Usuario"      },{ name: "Desactivado" ,item:"" }];
-    const estados5  = [{ name: "Activo" , item:"Gestion de Empresa"      },{ name: "Desactivado" ,item:"" }];
-    const estados6  = [{ name: "Activo" , item:"Gestion Publicacion Convocatoria"      },{ name: "Desactivado" ,item:"" }];
-    const estados7  = [{ name: "Activo" , item:"Gestion Publicacion Pliego de Especificaciones"      },{ name: "Desactivado" ,item:"" }];
-    const estados8  = [{ name: "Activo" , item:"Gestion de Firma de Contrato"      },{ name: "Desactivado" ,item:"" }];
-    const estados9  = [{ name: "Activo" , item:"Gestion de Orden de Cambio"      },{ name: "Desactivado" ,item:"" }];
-    const estados10 = [{ name: "Activo" , item:"Gestion de Plan de Pagos"      },{ name: "Desactivado" ,item:"" }];
-    const estados11 = [{ name: "Activo" , item:"Gestion de Entrega Parte A"      },{ name: "Desactivado" ,item:"" }];
-    const estados12 = [{ name: "Activo" , item:"Gestion de Entrega Parte B"      },{ name: "Desactivado" ,item:"" }];
-    const estados13 = [{ name: "Activo" , item:"Lista de empresas"      },{ name: "Desactivado" ,item:"" }];
-    const estados14 = [{ name: "Activo" , item:"Lista de Publicaciones Convocatorias"      },{ name: "Desactivado" ,item:"" }];
-    const estados15 = [{ name: "Activo" , item:"Lista de Publicaciones Pliego de Especificaciones"      },{ name: "Desactivado" ,item:"" }];
-    const estados16 = [{ name: "Activo" , item:"FORO DE DISCUSION"      },{ name: "Desactivado" ,item:"" }];
+    const estados1  = [{ name: "Activo" },{ name: "Desactivado" }];
+    const estados2  = [{ name: "Activo" },{ name: "Desactivado" }];
+    const estados3  = [{ name: "Activo" },{ name: "Desactivado" }];
+    const estados4  = [{ name: "Activo" },{ name: "Desactivado" }];
+    const estados5  = [{ name: "Activo" },{ name: "Desactivado" }];
+    const estados6  = [{ name: "Activo" },{ name: "Desactivado" }];
+    const estados7  = [{ name: "Activo" },{ name: "Desactivado" }];
+    const estados8  = [{ name: "Activo" },{ name: "Desactivado" }];
+    const estados9  = [{ name: "Activo" },{ name: "Desactivado" }];
+    const estados10 = [{ name: "Activo" },{ name: "Desactivado" }];
+    const estados11 = [{ name: "Activo" },{ name: "Desactivado" }];
+    const estados12 = [{ name: "Activo" },{ name: "Desactivado" }];
+    const estados13 = [{ name: "Activo" },{ name: "Desactivado" }];
+    const estados14 = [{ name: "Activo" },{ name: "Desactivado" }];
+    const estados15 = [{ name: "Activo" },{ name: "Desactivado" }];
+    const estados16 = [{ name: "Activo" },{ name: "Desactivado" }];
 
   
     const [roles,setRoles]                           = useState(null);
@@ -257,86 +257,86 @@ export const Permiso = (props) => {
                 _user['estado']        = data.estado;
                 _user['rol']           = data.rol;
 
-                let _homelabel              = "";
-                let _homeIcono              = "";
-                let _homeItemLabel          = ""; 
-                let _homeItemIcono          = ""; 
-                let _homeItemTo             = "";
-                let _rolelabel              = "";
-                let _roleIcono              = "";
-                let _roleItemLabel          = ""; 
-                let _roleItemIcono          = ""; 
-                let _roleItemTo             = "";
-                let _itemlabel              = "";
-                let _itemIcono              = "";
-                let _itemItemLabel          = ""; 
-                let _itemItemIcono          = ""; 
-                let _itemItemTo             = "";
-                let _userlabel              = "";
-                let _userIcono              = "";
-                let _userItemLabel          = ""; 
-                let _userItemIcono          = ""; 
-                let _userItemTo             = ""; 
-                let _empresalabel           = "";
-                let _empresaIcono           = "";
-                let _empresaItemLabel       = ""; 
-                let _empresaItemIcono       = ""; 
-                let _empresaItemTo          = "";
-                let _convocatorialabel      = "";
-                let _convocatoriaIcono      = "";
-                let _convocatoriaItemLabel  = ""; 
-                let _convocatoriaItemIcono  = ""; 
-                let _convocatoriaItemTo     = "";
-                let _pliegolabel            = "";
-                let _pliegoIcono            = "";
-                let _pliegoItemLabel        = ""; 
-                let _pliegoItemIcono        = ""; 
-                let _pliegoItemTo           = "";
-                let _contratolabel          = "";
-                let _contratoIcono          = "";
-                let _contratoItemLabel      = ""; 
-                let _contratoItemIcono      = ""; 
-                let _contratoItemTo         = "";
-                let _ordenlabel             = "";
-                let _ordenIcono             = "";
-                let _ordenItemLabel         = ""; 
-                let _ordenItemIcono         = ""; 
-                let _ordenItemTo            = "";
-                let _planlabel              = "";
-                let _planIcono              = "";
-                let _planItemLabel          = ""; 
-                let _planItemIcono          = ""; 
-                let _planItemTo             = "";
-                let _parteAlabel            = "";
-                let _parteAIcono            = "";
-                let _parteAItemLabel        = ""; 
-                let _parteAItemIcono        = ""; 
-                let _parteAItemTo           = "";
-                let _parteBlabel            = "";
-                let _parteBIcono            = "";
-                let _parteBItemLabel        = ""; 
-                let _parteBItemIcono        = ""; 
-                let _parteBItemTo           = "";
-                let _listEmpresalabel       = "";
-                let _listEmpresaIcono       = "";
-                let _listEmpresaItemLabel   = ""; 
-                let _listEmpresaItemIcono   = ""; 
-                let _listEmpresaItemTo      = "";
-                let _listConvlabel          = "";
-                let _listConvIcono          = "";
-                let _listConvItemLabel      = ""; 
-                let _listConvItemIcono      = ""; 
-                let _listConvItemTo         = "";
-                let _listPliegolabel        = "";
-                let _listPliegoIcono        = "";
-                let _listPliegoItemLabel    = ""; 
-                let _listPliegoItemIcono    = ""; 
-                let _listPliegoItemTo       = "";
-                let _foroIcono              = "";
-                let _forolabel              = "";
-                let _foroItemLabel          = ""; 
-                let _foroItemIcono          = ""; 
-                let _foroItemTo             = "";     
+                let _homelabel              = "*";
+                let _homeIcono              = "*";
+                let _homeItemLabel          = "*"; 
+                let _homeItemIcono          = "*"; 
+                let _homeItemTo             = "*";
+                let _rolelabel              = "*";
+                let _roleIcono              = "*";
+                let _roleItemLabel          = "*"; 
+                let _roleItemIcono          = "*"; 
+                let _roleItemTo             = "*";
+                let _itemlabel              = "*";
+                let _itemIcono              = "*";
+                let _itemItemLabel          = "*"; 
+                let _itemItemIcono          = "*"; 
+                let _itemItemTo             = "*";
+                let _userlabel              = "*";
+                let _userIcono              = "*";
+                let _userItemLabel          = "*"; 
+                let _userItemIcono          = "*"; 
+                let _userItemTo             = "*"; 
+                let _empresalabel           = "*";
+                let _empresaIcono           = "*";
+                let _empresaItemLabel       = "*"; 
+                let _empresaItemIcono       = "*"; 
+                let _empresaItemTo          = "*";
+                let _convocatorialabel      = "*";
+                let _convocatoriaIcono      = "*";
+                let _convocatoriaItemLabel  = "*"; 
+                let _convocatoriaItemIcono  = "*"; 
+                let _convocatoriaItemTo     = "*";
+                let _pliegolabel            = "*";
+                let _pliegoIcono            = "*";
+                let _pliegoItemLabel        = "*"; 
+                let _pliegoItemIcono        = "*"; 
+                let _pliegoItemTo           = "*";
+                let _contratolabel          = "*";
+                let _contratoIcono          = "*";
+                let _contratoItemLabel      = "*"; 
+                let _contratoItemIcono      = "*"; 
+                let _contratoItemTo         = "*";
+                let _ordenlabel             = "*";
+                let _ordenIcono             = "*";
+                let _ordenItemLabel         = "*"; 
+                let _ordenItemIcono         = "*"; 
+                let _ordenItemTo            = "*";
+                let _planlabel              = "*";
+                let _planIcono              = "*";
+                let _planItemLabel          = "*"; 
+                let _planItemIcono          = "*"; 
+                let _planItemTo             = "*";
+                let _parteAlabel            = "*";
+                let _parteAIcono            = "*";
+                let _parteAItemLabel        = "*"; 
+                let _parteAItemIcono        = "*"; 
+                let _parteAItemTo           = "*";
+                let _parteBlabel            = "*";
+                let _parteBIcono            = "*";
+                let _parteBItemLabel        = "*"; 
+                let _parteBItemIcono        = "*"; 
+                let _parteBItemTo           = "*";
+                let _listEmpresalabel       = "*";
+                let _listEmpresaIcono       = "*";
+                let _listEmpresaItemLabel   = "*"; 
+                let _listEmpresaItemIcono   = "*"; 
+                let _listEmpresaItemTo      = "*";
+                let _listConvlabel          = "*";
+                let _listConvIcono          = "*";
+                let _listConvItemLabel      = "*"; 
+                let _listConvItemIcono      = "*"; 
+                let _listConvItemTo         = "*";
+                let _listPliegolabel        = "*";
+                let _listPliegoIcono        = "*";
+                let _listPliegoItemLabel    = "*"; 
+                let _listPliegoItemIcono    = "*"; 
+                let _listPliegoItemTo       = "*";
+                let _foroIcono              = "*";
+                let _forolabel              = "*";
+                let _foroItemLabel          = "*"; 
+                let _foroItemIcono          = "*"; 
+                let _foroItemTo             = "*";     
 
 
                 if (_user.rol.trim()) {
@@ -347,101 +347,119 @@ export const Permiso = (props) => {
 
                         updateItemID(
                         {
-                            homelabel:              `${_user.homelabel}`,
-                            homeIcono:              `${_user.homeIcono}`,
-                            homeItemLabel:          `${_user.homeItemLabel}`,
-                            homeItemIcono:          `${_user.homeItemIcono}`,
-                            homeItemTo:             `${_user.homeItemTo}`,
+                            homelabel:              `${_homelabel}`,
+                            homeIcono:              `${_homeIcono}`,
+                            homeItemLabel:          `${_homeItemLabel}`,
+                            homeItemIcono:          `${_homeItemIcono}`,
+                            homeItemTo:             `${_homeItemTo}`,
                     
-                            rolelabel:              `${_user.rolelabel}`,
-                            roleIcono:              `${_user.roleIcono}`,
-                            roleItemLabel:          `${_user.roleItemLabel}`,
-                            roleItemIcono:          `${_user.roleItemIcono}`,
-                            roleItemTo:             `${_user.roleItemTo}`,
+                            rolelabel:              `${_rolelabel}`,
+                            roleIcono:              `${_roleIcono}`,
+                            roleItemLabel:          `${_roleItemLabel}`,
+                            roleItemIcono:          `${_roleItemIcono}`,
+                            roleItemTo:             `${_roleItemTo}`,
                     
-                            itemlabel:              `${_user.itemlabel}`,
-                            itemIcono:              `${_user.itemIcono}`,
-                            itemItemLabel:          `${_user.itemItemLabel}`,
-                            itemItemIcono:          `${_user.itemItemIcono}`,
-                            itemItemTo:             `${_user.itemItemTo}`,
+                            itemlabel:              `${_itemlabel}`,
+                            itemIcono:              `${_itemIcono}`,
+                            itemItemLabel:          `${_itemItemLabel}`,
+                            itemItemIcono:          `${_itemItemIcono}`,
+                            itemItemTo:             `${_itemItemTo}`,
                     
-                            userlabel:              `${_user.userlabel}`,
-                            userIcono:              `${_user.userIcono}`,
-                            userItemLabel:          `${_user.userItemLabel}`,
-                            userItemIcono:          `${_user.userItemIcono}`,
-                            userItemTo:             `${_user.userItemTo}`,
+                            userlabel:              `${_userlabel}`,
+                            userIcono:              `${_userIcono}`,
+                            userItemLabel:          `${_userItemLabel}`,
+                            userItemIcono:          `${_userItemIcono}`,
+                            userItemTo:             `${_userItemTo}`,
                     
-                            empresalabel:           `${_user.empresalabel}`,
-                            empresaIcono:           `${_user.empresaIcono}`,
-                            empresaItemLabel:       `${_user.empresaItemLabel}`,
-                            empresaItemIcono:       `${_user.empresaItemIcono}`,
-                            empresaItemTo:          `${_user.empresaItemTo}`,
+                            empresalabel:           `${_empresalabel}`,
+                            empresaIcono:           `${_empresaIcono}`,
+                            empresaItemLabel:       `${_empresaItemLabel}`,
+                            empresaItemIcono:       `${_empresaItemIcono}`,
+                            empresaItemTo:          `${_empresaItemTo}`,
                     
-                            convocatorialabel:      `${_user.convocatorialabel}`,
-                            convocatoriaIcono:      `${_user.convocatoriaIcono}`,
-                            convocatoriaItemLabel:  `${_user.convocatoriaItemLabel}`,
-                            convocatoriaItemIcono:  `${_user.convocatoriaItemIcono}`,
-                            convocatoriaItemTo:     `${_user.convocatoriaItemTo}`,
+                            convocatorialabel:      `${_convocatorialabel}`,
+                            convocatoriaIcono:      `${_convocatoriaIcono}`,
+                            convocatoriaItemLabel:  `${_convocatoriaItemLabel}`,
+                            convocatoriaItemIcono:  `${_convocatoriaItemIcono}`,
+                            convocatoriaItemTo:     `${_convocatoriaItemTo}`,
+
+                            pliegolabel:            `${_pliegolabel}`,
+                            pliegoIcono:            `${_pliegoIcono}`,
+                            pliegoItemLabel:        `${_pliegoItemLabel}`,
+                            pliegoItemIcono:        `${_pliegoItemIcono}`,
+                            pliegoItemTo:           `${_pliegoItemTo}`,
                     
-                            pliegolabel:            `${_user.pliegolabel}`,
-                            pliegoIcono:            `${_user.pliegoIcono}`,
-                            pliegoItemLabel:        `${_user.pliegoItemLabel}`,
-                            pliegoItemIcono:        `${_user.pliegoItemIcono}`,
-                            pliegoItemTo:           `${_user.pliegoItemTo}`,
+                            contratolabel:          `${_contratolabel}`,
+                            contratoIcono:          `${_contratoIcono}`,
+                            contratoItemLabel:      `${_contratoItemLabel}`,
+                            contratoItemIcono:      `${_contratoItemIcono}`,
+                            contratoItemTo:         `${_contratoItemTo}`,
                     
-                            contratolabel:          `${_user.contratolabel}`,
-                            contratoIcono:          `${_user.contratoIcono}`,
-                            contratoItemLabel:      `${_user.contratoItemLabel}`,
-                            contratoItemIcono:      `${_user.contratoItemIcono}`,
-                            contratoItemTo:         `${_user.contratoItemTo}`,
+                            ordenlabel:             `${_ordenlabel}`,
+                            ordenIcono:             `${_ordenIcono}`,
+                            ordenItemLabel:         `${_ordenItemLabel}`,
+                            ordenItemIcono:         `${_ordenItemIcono}`,
+                            ordenItemTo:            `${_ordenItemTo}`,
                     
-                            ordenlabel:             `${_user.ordenlabel}`,
-                            ordenIcono:             `${_user.ordenIcono}`,
-                            ordenItemLabel:         `${_user.ordenItemLabel}`,
-                            ordenItemIcono:         `${_user.ordenItemIcono}`,
-                            ordenItemTo:            `${_user.ordenItemTo}`,
+                            planlabel:              `${_planlabel}`,
+                            planIcono:              `${_planIcono}`,
+                            planItemLabel:          `${_planItemLabel}`,
+                            planItemIcono:          `${_planItemIcono}`,
+                            planItemTo:             `${_planItemTo}`,
                     
-                            planlabel:              `${_user.planlabel}`,
-                            planIcono:              `${_user.planIcono}`,
-                            planItemLabel:          `${_user.planItemLabel}`,
-                            planItemIcono:          `${_user.planItemIcono}`,
-                            planItemTo:             `${_user.planItemTo}`,
+                            parteAlabel:            `${_parteAlabel}`,
+                            parteAIcono:            `${_parteAIcono}`,
+                            parteAItemLabel:        `${_parteAItemLabel}`,
+                            parteAItemIcono:        `${_parteAItemIcono}`,
+                            parteAItemTo:           `${_parteAItemTo}`,
                     
-                            parteAlabel:            `${_user.parteAlabel}`,
-                            parteAIcono:            `${_user.parteAIcono}`,
-                            parteAItemLabel:        `${_user.parteAItemLabel}`,
-                            parteAItemIcono:        `${_user.parteAItemIcono}`,
-                            parteAItemTo:           `${_user.parteAItemTo}`,
+                            parteBlabel:            `${_parteBlabel}`,
+                            parteBIcono:            `${_parteBIcono}`,
+                            parteBItemLabel:        `${_parteBItemLabel}`,
+                            parteBItemIcono:        `${_parteBItemIcono}`,
+                            parteBItemTo:           `${_parteBItemTo}`,
                     
-                            parteBlabel:            `${_user.parteBlabel}`,
-                            parteBIcono:            `${_user.parteBIcono}`,
-                            parteBItemLabel:        `${_user.parteBItemLabel}`,
-                            parteBItemIcono:        `${_user.parteBItemIcono}`,
-                            parteBItemTo:           `${_user.parteBItemTo}`,
+                            listEmpresalabel:       `${_listEmpresalabel}`,
+                            listEmpresaIcono:       `${_listEmpresaIcono}`,
+                            listEmpresaItemLabel:   `${_listEmpresaItemLabel}`,
+                            listEmpresaItemIcono:   `${_listEmpresaItemIcono}`,
+                            listEmpresaItemTo:      `${_listEmpresaItemTo}`,
                     
-                            listEmpresalabel:       `${_user.listEmpresalabel}`,
-                            listEmpresaIcono:       `${_user.listEmpresaIcono}`,
-                            listEmpresaItemLabel:   `${_user.listEmpresaItemLabel}`,
-                            listEmpresaItemIcono:   `${_user.listEmpresaItemIcono}`,
-                            listEmpresaItemTo:      `${_user.listEmpresaItemTo}`,
+                            listConvlabel:          `${_listConvlabel}`,
+                            listConvIcono:          `${_listConvIcono}`,
+                            listConvItemLabel:      `${_listConvItemLabel}`,
+                            listConvItemIcono:      `${_listConvItemIcono}`,
+                            listConvItemTo:         `${_listConvItemTo}`,
                     
-                            listConvlabel:          `${_user.listConvlabel}`,
-                            listConvIcono:          `${_user.listConvIcono}`,
-                            listConvItemLabel:      `${_user.listConvItemLabel}`,
-                            listConvItemIcono:      `${_user.listConvItemIcono}`,
-                            listConvItemTo:         `${_user.listConvItemTo}`,
-                    
-                            listPliegolabel:       `${_user.listPliegolabel}`,
-                            listPliegoIcono:       `${_user.listPliegoIcono}`,
-                            listPliegoItemLabel:   `${_user.listPliegoItemLabel}`,
-                            listPliegoItemIcono:   `${_user.listPliegoItemIcono}`,
-                            listPliegoItemTo:      `${_user.listPliegoItemTo}`,
-                    
-                            foroIcono:             `${_user.foroIcono}`,
-                            forolabel:             `${_user.forolabel}`,
-                            foroItemLabel:         `${_user.foroItemLabel}`,
-                            foroItemIcono:         `${_user.foroItemIcono}`,
-                            foroItemTo:            `${_user.foroItemTo}`,
+                            listPliegolabel:       `${_listPliegolabel}`,
+                            listPliegoIcono:       `${_listPliegoIcono}`,
+                            listPliegoItemLabel:   `${_listPliegoItemLabel}`,
+                            listPliegoItemIcono:   `${_listPliegoItemIcono}`,
+                            listPliegoItemTo:      `${_listPliegoItemTo}`,
+                            
+                            forolabel:             `${_forolabel}`,
+                            foroIcono:             `${_foroIcono}`,
+                            foroItemLabel:         `${_foroItemLabel}`,
+                            foroItemIcono:         `${_foroItemIcono}`,
+                            foroItemTo:            `${_foroItemTo}`,
+
+                            home:                   `${_user.home}`,               
+                            role:                   `${_user.role}`,             
+                            item:                   `${_user.item}`,             
+                            user:                   `${_user.user}`,             
+                            empresa:                `${_user.empresa}`,            
+                            convocatoria:           `${_user.convocatoria}`,         
+                            pliego:                 `${_user.pliego}`,              
+                            contrato:               `${_user.contrato}`,            
+                            orden:                  `${_user.orden}`,              
+                            plan:                   `${_user.plan}`,               
+                            parteA:                 `${_user.parteA}`,              
+                            parteB:                 `${_user.parteB}`,              
+                            listEmpresa:            `${_user.listEmpresa}`,           
+                            listConv:               `${_user.listConv}`,            
+                            listPliego:             `${_user.listPliego}`,           
+                            foro:                   `${_user.foro}`, 
+
                     
                             estado:                `${_user.estado}`,
                             rol:                   `${_user.rol}`
@@ -450,13 +468,9 @@ export const Permiso = (props) => {
                         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Permiso Actualizado', life: 3000 });
                     }
                     else {
-                        
-                        console.log(data.home);
                         _user.id = uniqid("items-");
                         if (data.home === "Activo") {
-                            console.log(_homelabel);
                             _homelabel     = "Home";
-                            console.log(_homelabel);
                             _homeIcono     = "pi pi-fw pi-home";
                             _homeItemLabel = "Tablero"; 
                             _homeItemIcono = "pi pi-fw pi-home"; 
@@ -569,8 +583,8 @@ export const Permiso = (props) => {
                         if (data.listPliego === "Activo") {
                             _listPliegolabel     = "Lista de Publicaciones Pliego de Especificaciones";
                             _listPliegoIcono     = "pi pi-fw pi-sitemap";
-                            _listPliegoItemLabel = "Tablero"; 
-                            _listPliegoItemIcono = "Pliego de Especificaciones"; 
+                            _listPliegoItemLabel = "Pliego de Especificaciones"; 
+                            _listPliegoItemIcono = "pi pi-fw pi-id-card"; 
                             _listPliegoItemTo    = "/ListPliego";  
                         }
 
@@ -583,7 +597,7 @@ export const Permiso = (props) => {
                         }
                         _user.estado = "Activo"; 
                         _users.push(_user);
-                        console.log(_homelabel);
+                        console.log("------------colecion vacia-----------")
                         createItem(
                         {
                             id:                     `${_user.id}`,
@@ -682,10 +696,30 @@ export const Permiso = (props) => {
                             foroItemLabel:         `${_foroItemLabel}`,
                             foroItemIcono:         `${_foroItemIcono}`,
                             foroItemTo:            `${_foroItemTo}`,
+
+                            home:                   `${_user.home}`,               
+                            role:                   `${_user.role}`,             
+                            item:                   `${_user.item}`,             
+                            user:                   `${_user.user}`,             
+                            empresa:                `${_user.empresa}`,            
+                            convocatoria:           `${_user.convocatoria}`,         
+                            pliego:                 `${_user.pliego}`,              
+                            contrato:               `${_user.contrato}`,            
+                            orden:                  `${_user.orden}`,              
+                            plan:                   `${_user.plan}`,               
+                            parteA:                 `${_user.parteA}`,              
+                            parteB:                 `${_user.parteB}`,              
+                            listEmpresa:            `${_user.listEmpresa}`,           
+                            listConv:               `${_user.listConv}`,            
+                            listPliego:             `${_user.listPliego}`,           
+                            foro:                   `${_user.foro}`, 
+
                     
                             estado:                `${_user.estado}`,
                             rol:                   `${_user.rol}`
                         });
+                        console.log("foror de pueba---")
+                        console.log(`${_forolabel}`);
                         console.log( {
                             id:                     `${_user.id}`,
                             homelabel:              `${_homelabel}`,
@@ -783,6 +817,23 @@ export const Permiso = (props) => {
                             foroItemLabel:         `${_foroItemLabel}`,
                             foroItemIcono:         `${_foroItemIcono}`,
                             foroItemTo:            `${_foroItemTo}`,
+
+                            home:                   `${_user.home}`,               
+                            role:                   `${_user.role}`,             
+                            item:                   `${_user.item}`,             
+                            user:                   `${_user.user}`,             
+                            empresa:                `${_user.empresa}`,            
+                            convocatoria:           `${_user.convocatoria}`,         
+                            pliego:                 `${_user.pliego}`,              
+                            contrato:               `${_user.contrato}`,            
+                            orden:                  `${_user.orden}`,              
+                            plan:                   `${_user.plan}`,               
+                            parteA:                 `${_user.parteA}`,              
+                            parteB:                 `${_user.parteB}`,              
+                            listEmpresa:            `${_user.listEmpresa}`,           
+                            listConv:               `${_user.listConv}`,            
+                            listPliego:             `${_user.listPliego}`,           
+                            foro:                   `${_user.foro}`, 
                     
                             estado:                `${_user.estado}`,
                             rol:                   `${_user.rol}`
