@@ -158,6 +158,8 @@ const App = () => {
     const [mobileMenuActive, setMobileMenuActive]             = useState(false);
     const [mobileTopbarMenuActive, setMobileTopbarMenuActive] = useState(false);
     const [menus, setMenus]                                   = useState([ 
+        { 
+            items:[ 
     {
         label: "Home", icon: "pi pi-fw pi-home",
         items: [{
@@ -257,7 +259,7 @@ const App = () => {
         items: [
             {label: "", icon: "", to: ""}
         ]
-    }]);
+    }]}]);
 
     const cookies                                             = new Cookies();
 
@@ -274,7 +276,9 @@ const App = () => {
 
 
 
-        let data =[    
+        let data =[
+            { 
+                 items:[  
             {
                 label:  `${_permisos[0].homelabel}`, icon:  `${_permisos[0].homeIcono}`,
                 items: [{
@@ -371,7 +375,10 @@ const App = () => {
                 items: [{
                     label: `${_permisos[0].foroItemLabel}`, icon: `${_permisos[0].foroItemIcono}`, to: `${_permisos[0].foroItemTo}`
                 }]
-            }]
+
+                
+            }
+        ]}]
         setMenus(data);
     },[permisos])
 
@@ -612,7 +619,7 @@ const App = () => {
     });
 
 
-    return (
+    return ( 
         <div className={wrapperClass} onClick={onWrapperClick}>
             <AppTopbar onToggleMenuClick={onToggleMenuClick} layoutColorMode={layoutColorMode}
                        mobileTopbarMenuActive={mobileTopbarMenuActive} onMobileTopbarMenuClick={onMobileTopbarMenuClick} onMobileSubTopbarMenuClick={onMobileSubTopbarMenuClick}/>
