@@ -52,214 +52,223 @@ const App = () => {
     const [layoutColorMode, setLayoutColorMode]               = useState('light')
     const [inputStyle, setInputStyle]                         = useState('outlined');
     const [permisos, setPermisos]                             = useState([ 
+
         {
-            label: "Home", icon: "pi pi-fw pi-home",
-            items: [{
-                label: "Tablero", icon: "pi pi-fw pi-home", to: "/"
-            }]
-        },
-        {
-            label: "", icon: "",
             items: [
-                {label: "", icon: "", to: ""}
-               
+
+                {
+                    label: "Home", icon: "pi pi-fw pi-home",
+                    items: [{
+                        label: "Tablero", icon: "pi pi-fw pi-home", to: "/"
+                    }]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" }
+
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" }
+
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" }
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" }
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" },
+
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" },
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" }
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" }
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" }
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" }
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" }
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" }
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" },
+
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" }
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" }
+                    ]
+                }
             ]
-        },
-        {
-            label: "", icon: "",
-            items: [
-                {label: "", icon: "", to: ""}
-               
-            ]
-        },
-        {
-            label: "", icon: "",
-            items: [
-                {label: "", icon: "", to: ""}
-            ]
-        },
-        {
-            label: "", icon: "",
-            items: [
-                {label: "", icon: "", to: ""}
-            ]
-        },
-        {
-            label: "", icon: "",
-            items: [
-                {label: "" , icon: "", to: ""},
-               
-            ]
-        },
-        {
-            label: "", icon: "",
-            items: [
-                {label: "" , icon: "", to: ""},
-            ]
-        },
-        {
-            label: "", icon: "",
-            items: [
-                {label: "" , icon: "" , to: ""}
-            ]
-        },
-        {
-            label: "", icon: "",
-            items: [
-                {label: "" , icon: "" , to: ""}
-            ]
-        },
-        {
-            label: "", icon: "",
-            items: [
-                {label: "" , icon: "" , to: ""}
-            ]
-        },
-        {
-            label: "", icon: "",
-            items: [
-                {label: "" , icon: "", to: ""}
-            ]
-        },
-        {
-            label: "", icon: "",
-            items: [
-                {label: "", icon: "" , to: ""}
-            ]
-        },
-        {
-            label: "", icon: "",
-            items: [
-                {label: "", icon: "", to: ""}
-            ]
-        },
-        {
-            label: "", icon: "",
-            items: [
-                {label: "" , icon: "" , to: ""},
-                
-            ]
-        },
-        {
-            label: "", icon: "",
-            items: [
-                {label: "", icon: "", to: ""}
-            ]
-        },
-        {
-            label: "", icon: "",
-            items: [
-                {label: "", icon: "", to: ""}
-            ]
-        }]);
+        }
+    ]);
     const [ripple, setRipple]                                 = useState(true);
     const [staticMenuInactive, setStaticMenuInactive]         = useState(false);
     const [overlayMenuActive, setOverlayMenuActive]           = useState(false);
     const [mobileMenuActive, setMobileMenuActive]             = useState(false);
     const [mobileTopbarMenuActive, setMobileTopbarMenuActive] = useState(false);
     const [menus, setMenus]                                   = useState([ 
-        { 
-            items:[ 
-    {
-        label: "Home", icon: "pi pi-fw pi-home",
-        items: [{
-            label: "Tablero", icon: "pi pi-fw pi-home", to: "/"
-        }]
-    },
-    {
-        label: "", icon: "",
-        items: [
-            {label: "", icon: "", to: ""}
-           
-        ]
-    },
-    {
-        label: "", icon: "",
-        items: [
-            {label: "", icon: "", to: ""}
-           
-        ]
-    },
-    {
-        label: "", icon: "",
-        items: [
-            {label: "", icon: "", to: ""}
-        ]
-    },
-    {
-        label: "", icon: "",
-        items: [
-            {label: "", icon: "", to: ""}
-        ]
-    },
-    {
-        label: "", icon: "",
-        items: [
-            {label: "" , icon: "", to: ""},
-           
-        ]
-    },
-    {
-        label: "", icon: "",
-        items: [
-            {label: "" , icon: "", to: ""},
-        ]
-    },
-    {
-        label: "", icon: "",
-        items: [
-            {label: "" , icon: "" , to: ""}
-        ]
-    },
-    {
-        label: "", icon: "",
-        items: [
-            {label: "" , icon: "" , to: ""}
-        ]
-    },
-    {
-        label: "", icon: "",
-        items: [
-            {label: "" , icon: "" , to: ""}
-        ]
-    },
-    {
-        label: "", icon: "",
-        items: [
-            {label: "" , icon: "", to: ""}
-        ]
-    },
-    {
-        label: "", icon: "",
-        items: [
-            {label: "", icon: "" , to: ""}
-        ]
-    },
-    {
-        label: "", icon: "",
-        items: [
-            {label: "", icon: "", to: ""}
-        ]
-    },
-    {
-        label: "", icon: "",
-        items: [
-            {label: "" , icon: "" , to: ""},
-            
-        ]
-    },
-    {
-        label: "", icon: "",
-        items: [
-            {label: "", icon: "", to: ""}
-        ]
-    },
-    {
-        label: "", icon: "",
-        items: [
-            {label: "", icon: "", to: ""}
-        ]
-    }]}]);
+        {
+            items: [
+                {
+                    label: "Home", icon: "pi pi-fw pi-home",
+                    items: [{
+                        label: "Tablero", icon: "pi pi-fw pi-home", to: "/"
+                    }]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" }
+
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" }
+
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" }
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" }
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" },
+
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" },
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" }
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" }
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" }
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" }
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" }
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" }
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" },
+
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" }
+                    ]
+                },
+                {
+                    label: "", icon: "",
+                    items: [
+                        { label: "", icon: "", to: "" }
+                    ]
+                }
+            ]
+        }]);
 
     const cookies                                             = new Cookies();
 
@@ -269,118 +278,151 @@ const App = () => {
     let menuClick = false;
     let mobileTopbarMenuClick = false;
 
+    const removeEmptyOrNull = (obj) => {
+        Object.keys(obj).forEach(k =>
+          (obj[k] && typeof obj[k] === 'object') && removeEmptyOrNull(obj[k]) ||
+          (!obj[k] && obj[k] !== undefined) && delete obj[k]
+        );
+        return obj;
+      };
+
+
+    
     useEffect(()=>{
         let _permisos = [...permisos]
         let etiqueta = ["homelabel", "rolelabel","itemlabel","userlabel","empresalabel","convocatorialabel","pliegolabel","contratolabel","ordenlabel","planlabel","parteAlabel","parteBlabel","listEmpresalabel","listConvlabel","listPliegolabel","forolabel"];
 
 
+         
+          let myObj2 = removeEmptyOrNull(_permisos);
+ 
 
 
         let data =[
-            { 
-                 items:[  
             {
-                label:  `${_permisos[0].homelabel}`, icon:  `${_permisos[0].homeIcono}`,
-                items: [{
-                    label: `${_permisos[0].homeItemLabel}`, icon: `${_permisos[0].homeItemIcono}`, to: `${_permisos[0].homeItemTo}`
-                }]
-            },
-            
-            {
-                label:  `${_permisos[0].rolelabel}`, icon:  `${_permisos[0].roleIcono}`,
-                items: [{
-                    label: `${_permisos[0].roleItemLabel}`, icon: `${_permisos[0].roleItemIcono}`, to: `${_permisos[0].roleItemTo}`
-                }]
-            },
-            {
-                label:  `${_permisos[0].itemlabel}`, icon:  `${_permisos[0].itemIcono}`,
-                items: [{
-                    label: `${_permisos[0].itemItemLabel}`, icon: `${_permisos[0].itemItemIcono}`, to: `${_permisos[0].itemItemTo}`
-                }]
-            },
-            {
-                label:  `${_permisos[0].userlabel}`, icon:  `${_permisos[0].userIcono}`,
-                items: [{
-                    label: `${_permisos[0].userItemLabel}`, icon: `${_permisos[0].userItemIcono}`, to: `${_permisos[0].userItemTo}`
-                }]
-            },
-            {
-                label:  `${_permisos[0].empresalabel}`, icon:  `${_permisos[0].empresaIcono}`,
-                items: [{
-                    label: `${_permisos[0].empresaItemLabel}`, icon: `${_permisos[0].empresaItemIcono}`, to: `${_permisos[0].empresaItemTo}`
-                }]
-            },
-            {
-                label:  `${_permisos[0].convocatorialabel}`, icon:  `${_permisos[0].convocatoriaIcono}`,
-                items: [{
-                    label: `${_permisos[0].convocatoriaItemLabel}`, icon: `${_permisos[0].convocatoriaItemIcono}`, to: `${_permisos[0].convocatoriaItemTo}`
-                }]
-            },
-            {
-                label:  `${_permisos[0].pliegolabel}`, icon:  `${_permisos[0].pliegoIcono}`,
-                items: [{
-                    label: `${_permisos[0].pliegoItemLabel}`, icon: `${_permisos[0].pliegoItemIcono}`, to: `${_permisos[0].pliegoItemTo}`
-                }]
-            },
-            {
-                label:  `${_permisos[0].contratolabel}`, icon:  `${_permisos[0].contratoIcono}`,
-                items: [{
-                    label: `${_permisos[0].contratoItemLabel}`, icon: `${_permisos[0].contratoItemIcono}`, to: `${_permisos[0].contratoItemTo}`
-                }]
-            },
-            {
-                label:  `${_permisos[0].ordenlabel}`, icon:  `${_permisos[0].ordenIcono}`,
-                items: [{
-                    label: `${_permisos[0].ordenItemLabel}`, icon: `${_permisos[0].ordenItemIcono}`, to: `${_permisos[0].ordenItemTo}`
-                }]
-            },
-            {
-                label:  `${_permisos[0].planlabel}`, icon:  `${_permisos[0].planIcono}`,
-                items: [{
-                    label: `${_permisos[0].planItemLabel}`, icon: `${_permisos[0].planItemIcono}`, to: `${_permisos[0].planItemTo}`
-                }]
-            },
-            {
-                label:  `${_permisos[0].parteAlabel}`, icon:  `${_permisos[0].parteAIcono}`,
-                items: [{
-                    label: `${_permisos[0].parteAItemLabel}`, icon: `${_permisos[0].parteAItemIcono}`, to: `${_permisos[0].parteAItemTo}`
-                }]
-            },
-            {
-                label:  `${_permisos[0].parteBlabel}`, icon:  `${_permisos[0].parteBIcono}`,
-                items: [{
-                    label: `${_permisos[0].parteBItemLabel}`, icon: `${_permisos[0].parteBItemIcono}`, to: `${_permisos[0].parteBItemTo}`
-                }]
-            },
-            {
-                label:  `${_permisos[0].listEmpresalabel}`, icon:  `${_permisos[0].listEmpresaIcono}`,
-                items: [{
-                    label: `${_permisos[0].listEmpresaItemLabel}`, icon: `${_permisos[0].listEmpresaItemIcono}`, to: `${_permisos[0].listEmpresaItemTo}`
-                }]
-            },
-            {
-                label:  `${_permisos[0].listConvlabel}`, icon:  `${_permisos[0].listConvIcono}`,
-                items: [{
-                    label: `${_permisos[0].listConvItemLabel}`, icon: `${_permisos[0].listConvItemIcono}`, to: `${_permisos[0].listConvItemTo}`
-                }]
-            },
-            {
-                label:  `${_permisos[0].listPliegolabel}`, icon:  `${_permisos[0].listPliegoIcono}`,
-                items: [{
-                    label: `${_permisos[0].listPliegoItemLabel}`, icon: `${_permisos[0].listPliegoItemIcono}`, to: `${_permisos[0].listPliegoItemTo}`
-                }]
-            },
-            {
-                label:  `${_permisos[0].forolabel}`, icon:  `${_permisos[0].foroIcono}`,
-                items: [{
-                    label: `${_permisos[0].foroItemLabel}`, icon: `${_permisos[0].foroItemIcono}`, to: `${_permisos[0].foroItemTo}`
-                }]
+                items: [
+                    {
+                        label: `${_permisos[0].homelabel}`, icon: `${_permisos[0].homeIcono}`,
+                        items: [{
+                            label: `${_permisos[0].homeItemLabel}`, icon: `${_permisos[0].homeItemIcono}`, to: `${_permisos[0].homeItemTo}`
+                        }]
+                    },
 
-                
-            }
-        ]}]
-        setMenus(data);
+                    {
+                        label: `${_permisos[0].rolelabel}`, icon: `${_permisos[0].roleIcono}`,
+                        items: [{
+                            label: `${_permisos[0].roleItemLabel}`, icon: `${_permisos[0].roleItemIcono}`, to: `${_permisos[0].roleItemTo}`
+                        }]
+                    },
+                    {
+                        label: `${_permisos[0].itemlabel}`, icon: `${_permisos[0].itemIcono}`,
+                        items: [{
+                            label: `${_permisos[0].itemItemLabel}`, icon: `${_permisos[0].itemItemIcono}`, to: `${_permisos[0].itemItemTo}`
+                        }]
+                    },
+                    {
+                        label: `${_permisos[0].userlabel}`, icon: `${_permisos[0].userIcono}`,
+                        items: [{
+                            label: `${_permisos[0].userItemLabel}`, icon: `${_permisos[0].userItemIcono}`, to: `${_permisos[0].userItemTo}`
+                        }]
+                    },
+                    {
+                        label: `${_permisos[0].empresalabel}`, icon: `${_permisos[0].empresaIcono}`,
+                        items: [{
+                            label: `${_permisos[0].empresaItemLabel}`, icon: `${_permisos[0].empresaItemIcono}`, to: `${_permisos[0].empresaItemTo}`
+                        }]
+                    },
+                    {
+                        label: `${_permisos[0].convocatorialabel}`, icon: `${_permisos[0].convocatoriaIcono}`,
+                        items: [{
+                            label: `${_permisos[0].convocatoriaItemLabel}`, icon: `${_permisos[0].convocatoriaItemIcono}`, to: `${_permisos[0].convocatoriaItemTo}`
+                        }]
+                    },
+                    {
+                        label: `${_permisos[0].pliegolabel}`, icon: `${_permisos[0].pliegoIcono}`,
+                        items: [{
+                            label: `${_permisos[0].pliegoItemLabel}`, icon: `${_permisos[0].pliegoItemIcono}`, to: `${_permisos[0].pliegoItemTo}`
+                        }]
+                    },
+                    {
+                        label: `${_permisos[0].contratolabel}`, icon: `${_permisos[0].contratoIcono}`,
+                        items: [{
+                            label: `${_permisos[0].contratoItemLabel}`, icon: `${_permisos[0].contratoItemIcono}`, to: `${_permisos[0].contratoItemTo}`
+                        }]
+                    },
+                    {
+                        label: `${_permisos[0].ordenlabel}`, icon: `${_permisos[0].ordenIcono}`,
+                        items: [{
+                            label: `${_permisos[0].ordenItemLabel}`, icon: `${_permisos[0].ordenItemIcono}`, to: `${_permisos[0].ordenItemTo}`
+                        }]
+                    },
+                    {
+                        label: `${_permisos[0].planlabel}`, icon: `${_permisos[0].planIcono}`,
+                        items: [{
+                            label: `${_permisos[0].planItemLabel}`, icon: `${_permisos[0].planItemIcono}`, to: `${_permisos[0].planItemTo}`
+                        }]
+                    },
+                    {
+                        label: `${_permisos[0].parteAlabel}`, icon: `${_permisos[0].parteAIcono}`,
+                        items: [{
+                            label: `${_permisos[0].parteAItemLabel}`, icon: `${_permisos[0].parteAItemIcono}`, to: `${_permisos[0].parteAItemTo}`
+                        }]
+                    },
+                    {
+                        label: `${_permisos[0].parteBlabel}`, icon: `${_permisos[0].parteBIcono}`,
+                        items: [{
+                            label: `${_permisos[0].parteBItemLabel}`, icon: `${_permisos[0].parteBItemIcono}`, to: `${_permisos[0].parteBItemTo}`
+                        }]
+                    },
+                    {
+                        label: `${_permisos[0].listEmpresalabel}`, icon: `${_permisos[0].listEmpresaIcono}`,
+                        items: [{
+                            label: `${_permisos[0].listEmpresaItemLabel}`, icon: `${_permisos[0].listEmpresaItemIcono}`, to: `${_permisos[0].listEmpresaItemTo}`
+                        }]
+                    },
+                    {
+                        label: `${_permisos[0].listConvlabel}`, icon: `${_permisos[0].listConvIcono}`,
+                        items: [{
+                            label: `${_permisos[0].listConvItemLabel}`, icon: `${_permisos[0].listConvItemIcono}`, to: `${_permisos[0].listConvItemTo}`
+                        }]
+                    },
+                    {
+                        label: `${_permisos[0].listPliegolabel}`, icon: `${_permisos[0].listPliegoIcono}`,
+                        items: [{
+                            label: `${_permisos[0].listPliegoItemLabel}`, icon: `${_permisos[0].listPliegoItemIcono}`, to: `${_permisos[0].listPliegoItemTo}`
+                        }]
+                    },
+                    {
+                        label: `${_permisos[0].forolabel}`, icon: `${_permisos[0].foroIcono}`,
+                        items: [{
+                            label: `${_permisos[0].foroItemLabel}`, icon: `${_permisos[0].foroItemIcono}`, to: `${_permisos[0].foroItemTo}`
+                        }]
+                    }
+                ]
+            
+
+            },]
+        
+             
+      
+
+            var resultArray = data.filter((row) => {
+                var ignoreValue = Object.values(row).some(elem => elem === 'undefined');
+                return !ignoreValue ? true : false;
+            });
+            console.log(resultArray);
+
+        setMenus(resultArray);
     },[permisos])
+    
+    function removeEmpty(obj) {
+        return Object.fromEntries(
+          Object.entries(obj)
+            .filter(([_, v]) => v != null)
+            .map(([k, v]) => [k, v === Object(v) ? removeEmpty(v) : v])
+        );
+      }
+
 
     useEffect(()=>{
         fetchPermisos();
