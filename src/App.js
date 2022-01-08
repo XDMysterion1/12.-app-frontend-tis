@@ -49,12 +49,107 @@ const App = () => {
     const [layoutMode, setLayoutMode]                         = useState('static');
     const [layoutColorMode, setLayoutColorMode]               = useState('light')
     const [inputStyle, setInputStyle]                         = useState('outlined');
-    const [permisos, setPermisos]                             = useState([{
-        label: "Home", icon: "pi pi-fw pi-home",
-        items: [{
-            label: "Tablero", icon: "pi pi-fw pi-home", to: "/"
-        }]
-    }]);
+    const [permisos, setPermisos]                             = useState([ 
+        {
+            label: "Home", icon: "pi pi-fw pi-home",
+            items: [{
+                label: "Tablero", icon: "pi pi-fw pi-home", to: "/"
+            }]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "", icon: "", to: ""}
+               
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "", icon: "", to: ""}
+               
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "", icon: "", to: ""}
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "", icon: "", to: ""}
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "" , icon: "", to: ""},
+               
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "" , icon: "", to: ""},
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "" , icon: "" , to: ""}
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "" , icon: "" , to: ""}
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "" , icon: "" , to: ""}
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "" , icon: "", to: ""}
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "", icon: "" , to: ""}
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "", icon: "", to: ""}
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "" , icon: "" , to: ""},
+                
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "", icon: "", to: ""}
+            ]
+        },
+        {
+            label: "", icon: "",
+            items: [
+                {label: "", icon: "", to: ""}
+            ]
+        }]);
     const [ripple, setRipple]                                 = useState(true);
     const [staticMenuInactive, setStaticMenuInactive]         = useState(false);
     const [overlayMenuActive, setOverlayMenuActive]           = useState(false);
