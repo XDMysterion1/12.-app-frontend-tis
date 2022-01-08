@@ -267,11 +267,24 @@ const App = () => {
     let menuClick = false;
     let mobileTopbarMenuClick = false;
 
+    const removeEmptyOrNull = (obj) => {
+        Object.keys(obj).forEach(k =>
+          (obj[k] && typeof obj[k] === 'object') && removeEmptyOrNull(obj[k]) ||
+          (!obj[k] && obj[k] !== undefined) && delete obj[k]
+        );
+        return obj;
+      };
+
+
+    
     useEffect(()=>{
         let _permisos = [...permisos]
         let etiqueta = ["homelabel", "rolelabel","itemlabel","userlabel","empresalabel","convocatorialabel","pliegolabel","contratolabel","ordenlabel","planlabel","parteAlabel","parteBlabel","listEmpresalabel","listConvlabel","listPliegolabel","forolabel"];
 
 
+         
+          let myObj2 = removeEmptyOrNull(_permisos);
+ 
 
 
         let data =[    
@@ -372,8 +385,29 @@ const App = () => {
                     label: `${_permisos[0].foroItemLabel}`, icon: `${_permisos[0].foroItemIcono}`, to: `${_permisos[0].foroItemTo}`
                 }]
             }]
-        setMenus(data);
+
+            console.log("-----------------------")
+            console.log(data);
+       
+      
+
+            var resultArray = data.filter((row) => {
+                var ignoreValue = Object.values(row).some(elem => elem === 'undefined');
+                return !ignoreValue ? true : false;
+            });
+            console.log(resultArray);
+
+        setMenus(resultArray);
     },[permisos])
+    
+    function removeEmpty(obj) {
+        return Object.fromEntries(
+          Object.entries(obj)
+            .filter(([_, v]) => v != null)
+            .map(([k, v]) => [k, v === Object(v) ? removeEmpty(v) : v])
+        );
+      }
+
 
     useEffect(()=>{
         fetchPermisos();
