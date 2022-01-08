@@ -3,10 +3,12 @@ import classNames           from 'classnames';
 import { Route}             from 'react-router-dom';
 import { CSSTransition }    from 'react-transition-group';
 
+
 import { AppTopbar }        from './AppTopbar';
 import { AppFooter }        from './AppFooter';
 import { AppMenu }          from './AppMenu';
 import { AppConfig }        from './AppConfig';
+import { Derechos}          from './Derechos';
 
 import { Dashboard }             from './components/Dashboard';
 import { Role }                  from './components/Role';
@@ -637,6 +639,7 @@ const App = () => {
                 </div>
 
                 <AppFooter layoutColorMode={layoutColorMode}/>
+                <Derechos layoutColorMode={layoutColorMode}/>
             </div>
 
             <AppConfig rippleEffect={ripple} onRippleEffect={onRipple} inputStyle={inputStyle} onInputStyleChange={onInputStyleChange}
