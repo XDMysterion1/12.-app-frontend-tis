@@ -12,6 +12,7 @@ import { Derechos}          from './Derechos';
 
 import { Dashboard }             from './components/Dashboard';
 import { Role }                  from './components/Role';
+import { Permiso }               from './components/Permiso';
 import { User }                  from './components/User';
 import {Empresa}                 from './components/Empresa';
 import { Convocatoria }          from './components/Convocatoria';
@@ -187,77 +188,84 @@ const App = () => {
     const menu = [
             {
                 label: "Home", icon: "pi pi-fw pi-home",
-                "items": [{
+                items: [{
                     label: "Tablero", icon: "pi pi-fw pi-home", to: "/"
                 }]
             },
             {
                 label: "Gestion de Roles", icon: "pi pi-fw pi-sitemap",
-                "items": [
+                items: [
                     {"label": "Roles", icon: "pi pi-fw pi-users", to: "/Role"}
                    
                 ]
             },
             {
+                label: "Gestion de Permisos", icon: "pi pi-fw pi-globe",
+                items: [
+                    {"label": "Permisos", icon: "pi pi-fw pi-globe", to: "/Permiso"}
+                   
+                ]
+            },
+            {
                 label: "Gestion de Usuario", icon: "pi pi-fw pi-sitemap",
-                "items": [
+                items: [
                     {"label": "Usuarios", icon: "pi pi-fw pi-user", to: "/User"}
                 ]
             },
             {
                 label: "Gestion de Empresa", icon: "pi pi-fw pi-briefcase",
-                "items": [
+                items: [
                     {"label": "Empresas", icon: "pi pi-fw pi-briefcase", to: "/Empresa"}
                 ]
             },
             {
                 label: "Gestion Publicacion", icon: "pi pi-fw pi-sitemap",
-                "items": [
+                items: [
                     {"label": "Convocatoria"              , icon: "pi pi-fw pi-id-card"     , to: "/Convocatoria"},
                     {"label": "Pliego de Especificaciones", icon: "pi pi-fw pi-check-square", to: "/PliegoEspecificacion"}
                 ]
             },
             {
                 label: "Gestion de Firma de Contrato", icon: "pi pi-fw pi-sitemap",
-                "items": [
+                items: [
                     {"label": "Firma de contrato"              , icon: "pi pi-fw pi-id-card"     , to: "/Contrato"}
                 ]
             },
             {
                 label: "Gestion de Orden de Cambio", icon: "pi pi-fw pi-sitemap",
-                "items": [
+                items: [
                     {"label": "Orden de cambio"              , icon: "pi pi-fw pi-id-card"     , to: "/Orden"}
                 ]
             },
             {
                 label: "Gestion de Plan de Pagos", icon: "pi pi-fw pi-sitemap",
-                "items": [
+                items: [
                     {"label": "Plan de pagos"              , icon: "pi pi-fw pi-id-card"     , to: "/Plan"}
                 ]
             },
             {
                 label: "Gestion de Entrega", icon: "pi pi-fw pi-sitemap",
-                "items": [
+                items: [
                     {"label": "Parte A"              , icon: "pi pi-fw pi-id-card"     , to: "/ParteA"},
                     {"label": "Parte B"              , icon: "pi pi-fw pi-id-card"     , to: "/ParteB"}
                 ]
             },
             {
                 label: "Lista de empresas", icon: "pi pi-fw pi-briefcase",
-                "items": [
+                items: [
                     {"label": "Empresas", icon: "pi pi-fw pi-briefcase", to: "/ListEmpresa"}
                 ]
             },
             {
                 label: "Lista de Publicaciones", icon: "pi pi-fw pi-sitemap",
-                "items": [
+                items: [
                     {"label": "Convocatoria"              , icon: "pi pi-fw pi-id-card"     , to: "/ListConvocatoria"},
                     {"label": "Pliego de Especificaciones", icon: "pi pi-fw pi-check-square", to: "/ListPliego"}
                 ]
             },
             {
                 label: "FORO DE DISCUSION", icon: "pi pi-fw pi-sitemap",
-                "items": [
+                items: [
                     {label: "Foro", icon: "pi pi-fw pi-users", to: "/Forum"}
                 ]
             }
@@ -277,6 +285,7 @@ const App = () => {
                 <div className="layout-main">
                     <Route path="/"                      exact component={Dashboard}/>
                     <Route path="/Role"                  exact={true} render={props => <Role                 layoutColorMode={layoutColorMode} {...props} />}/>
+                    <Route path="/Permiso"               exact={true} render={props => <Permiso              layoutColorMode={layoutColorMode} {...props} />}/>
                     <Route path="/User"                  exact={true} render={props => <User                 layoutColorMode={layoutColorMode} {...props} />}/>
                     <Route path="/Empresa"               exact={true} render={props => <Empresa              layoutColorMode={layoutColorMode} {...props} />}/>
                     <Route path="/Convocatoria"          exact={true} render={props => <Convocatoria         layoutColorMode={layoutColorMode} {...props} />}/>

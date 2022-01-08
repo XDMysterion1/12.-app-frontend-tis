@@ -1,17 +1,17 @@
 import axios from 'axios';
 
  export const getPliegos = () =>{
-     return axios.get('http://magictsec.tis.cs.umss.edu.bo/api/getPliegos');
+     return axios.get('https://magic-tech-backend.herokuapp.com/api/getPliegos');
  }
 
  export const getPliegoID =(id) =>{
-     return axios.get(`http://magictsec.tis.cs.umss.edu.bo/api/getPliegoId/${id}`);
+     return axios.get(`https://magic-tech-backend.herokuapp.com/api/getPliegoId/${id}`);
  }
 
 
 
  export const createPliego=(data)=>{
-    return axios.post('http://magictsec.tis.cs.umss.edu.bo/api/createPliego', 
+    return axios.post('https://magic-tech-backend.herokuapp.com/api/createPliego', 
       {
         id:        `${data.id}`,
         titulo:    `${data.titulo}`,
@@ -32,7 +32,7 @@ import axios from 'axios';
  }
 
 export const updatePliegoID =(data,id) =>{
-    return axios.put(`http://magictsec.tis.cs.umss.edu.bo/api/updatePliego/${id}`, 
+    return axios.put(`https://magic-tech-backend.herokuapp.com/api/updatePliego/${id}`, 
     {
         titulo:    `${data.titulo}`,
         codigo:    `${data.codigo}`,
@@ -52,9 +52,9 @@ export const updatePliegoID =(data,id) =>{
 }
 
 export const deletePliegoID =(id) =>{
-    return axios.delete(`http://magictsec.tis.cs.umss.edu.bo/api/deletePliegoId/${id}`);
+    return axios.delete(`https://magic-tech-backend.herokuapp.com/api/deletePliegoId/${id}`);
 }
 
 export const getPliegosPublicados = () =>{
-  return axios.get('http://magictsec.tis.cs.umss.edu.bo/api/getPliegosPublicados');
+  return axios.get('https://magic-tech-backend.herokuapp.com/api/getPliegosPublicados');
 }
