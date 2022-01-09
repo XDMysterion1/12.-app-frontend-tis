@@ -201,10 +201,6 @@ export const PliegoEspecificacion = (props) => {
                 }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.semestre)) {
                     errors.semestre = "No se permiten numero o caracteres especiales";
                 }
-
-                if (archivo!=null) {
-                    errors.link = "Se requiere el archivo";
-                }
                 
 
                 if (!data.user) {

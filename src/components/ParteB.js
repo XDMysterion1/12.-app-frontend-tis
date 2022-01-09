@@ -146,10 +146,7 @@ export const ParteB = (props) => {
 
             }else{
 
-                if (archivo!=null) {
-                    errors.link = "Se requiere el archivo";
-                }
-
+           
 
                 if (!data.fechaInicio) {
                     errors.fechaInicio = "Se requiere la fecha de inicio";
