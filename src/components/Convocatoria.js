@@ -14,6 +14,7 @@ import { Row }              from 'primereact/row';
 import { Dropdown }         from 'primereact/dropdown';
 import { useFormik }        from "formik";
 import { Link }             from 'react-router-dom';
+import Cookies              from 'universal-cookie';
 
 import uniqid               from 'uniqid';
 
@@ -44,8 +45,7 @@ export const Convocatoria = (props) => {
         semestre:  '',
         link:      'https://umss',
         publicado: '',
-        estado:    '',
-        user:      ''
+        estado:    ''
     };
 
     const semestres = [
@@ -81,6 +81,7 @@ export const Convocatoria = (props) => {
     const dt                                                         = useRef(null);
     const [stateConvocatoria,setStateConvocatoria]                   = useState(false);
     const [convocatoriaUpdate, setConvocatoriaUpdate]                = useState("");
+    const cookies                                                    = new Cookies();
 
     const formik = useFormik({
         initialValues: {
@@ -89,8 +90,7 @@ export const Convocatoria = (props) => {
             semestre:  '',
             link:      'http://umss',
             publicado: '',
-            estado:    '',
-            user:      ''
+            estado:    ''
         },
          validate: (data) => {
             let errors = {};
@@ -152,15 +152,6 @@ export const Convocatoria = (props) => {
                     errors.estado = "No se permiten numero o caracteres especiales";
                 } 
 
-                if (!data.user) {
-                    errors.user = "Se requiere el usuario";
-                } else if (data.user.length < 2) {
-                    errors.user = "Como minimo 2 caracteres";
-                } else if (data.user.length > 30) {
-                    errors.user = "Como maximo 30 caracteres";
-                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.user)) {
-                    errors.user = "No se permiten numero o caracteres especiales";
-                }
 
             }else{
                 if (!data.titulo) {
@@ -200,18 +191,6 @@ export const Convocatoria = (props) => {
                     errors.semestre = "No se permiten numero o caracteres especiales";
                 }
 
-             
-
-                if (!data.user) {
-                    errors.user = "Se requiere el usuario";
-                } else if (data.user.length < 2) {
-                    errors.user = "Como minimo 2 caracteres";
-                } else if (data.user.length > 30) {
-                    errors.user = "Como maximo 30 caracteres";
-                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.user)) {
-                    errors.user = "No se permiten numero o caracteres especiales";
-                }
-
             }
 
             return errors;
@@ -227,7 +206,7 @@ export const Convocatoria = (props) => {
                 _convocatoria['link']       = data.link;
                 _convocatoria['publicado']  = data.publicado;
                 _convocatoria['estado']     = data.estado;
-                _convocatoria['user']       = data.user;
+                _convocatoria['user']       = cookies.get('id');
 
                 if (_convocatoria.titulo.trim()) {
                     if (convocatoria.id) {
@@ -243,7 +222,8 @@ export const Convocatoria = (props) => {
 
                         _convocatoria.id        = uniqid("conv-");
                         _convocatoria.publicado = "No publicar";
-                        _convocatoria.estado    = "Activo"; 
+                        _convocatoria.estado    = "Activo";
+                        _convocatoria.user      = cookies.get('id'); 
                         _convocatorias.push(_convocatoria);
                         subirConvocatoria(archivo);
                         createConvocatoria({id:`${_convocatoria.id}`,titulo:`${_convocatoria.titulo}`,codigo:`${_convocatoria.codigo}`,semestre:`${_convocatoria.semestre}`,link:`${_convocatoria.link}`,publicado:`${_convocatoria.publicado}`,estado:`${_convocatoria.estado}`,user:`${_convocatoria.user}`});
@@ -348,8 +328,7 @@ export const Convocatoria = (props) => {
             semestre:  `${convocatoria.semestre}`,
             link:      `${convocatoria.link}`,
             publicado: `${convocatoria.publicado}`,
-            estado:    `${convocatoria.estado}`,
-            user:      `${convocatoria.user}`
+            estado:    `${convocatoria.estado}`
         });
         setConvocatoriaUpdate(`${convocatoria.codigo}`);
         setStateConvocatoria(true);
@@ -662,16 +641,6 @@ export const Convocatoria = (props) => {
                             ):
                                 null
                             }
-
-                            <div className="p-field mt-2">
-                                <div className="p-inputgroup">
-                                        <span className="p-inputgroup-addon">
-                                            <i className="pi pi-user"></i>
-                                        </span>
-                                        <Dropdown id="user" name="user" placeholder="Seleccione un usuario" value={formik.values.user} onChange={formik.handleChange} options={users} optionLabel="nombre"  optionValue="id"/>
-                                </div>       
-                            </div>
-                            {getFormErrorMessage('user')}
 
 
                             <div className='mt-2'>

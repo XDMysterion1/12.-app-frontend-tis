@@ -17,6 +17,7 @@ import { addLocale }        from 'primereact/api';
 import { useFormik }        from "formik";
 import { Link }             from 'react-router-dom';
 import { renderToString }   from 'react-dom/server';
+import Cookies              from 'universal-cookie';
 import jsPDF                from 'jspdf';
 import 'jspdf-autotable';
 
@@ -36,8 +37,7 @@ export const Contrato = (props) => {
         codigoConvocatoria: '',
         codigoPliego:       '',
         estado:             '',
-        empresa:            '',
-        user:               ''
+        empresa:            ''
     };
 
 
@@ -75,6 +75,7 @@ export const Contrato = (props) => {
     const dt                                                 = useRef(null);
     const [stateContrato,setStateContrato]                   = useState(false);
     const [contratoUpdate, setContratoUpdate]                = useState("");
+    const cookies                                            = new Cookies();
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
     let today = new Date();
@@ -99,8 +100,7 @@ export const Contrato = (props) => {
             codigoConvocatoria: '',
             codigoPliego:       '',
             estado:             '',
-            empresa:            '',
-            user:               ''
+            empresa:            ''
         },
          validate: (data) => {
             let errors = {};
@@ -146,16 +146,6 @@ export const Contrato = (props) => {
                     errors.empresa = "No se permiten numero o caracteres especiales";
                 }
 
-                if (!data.user) {
-                    errors.user = "Se requiere el usuario";
-                } else if (data.user.length < 2) {
-                    errors.user = "Como minimo 2 caracteres";
-                } else if (data.user.length > 30) {
-                    errors.user = "Como maximo 30 caracteres";
-                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.user)) {
-                    errors.user = "No se permiten numero o caracteres especiales";
-                }
-
             }else{
                 if (!data.fecha) {
                     errors.fecha = "Se requiere la fecha";
@@ -187,16 +177,6 @@ export const Contrato = (props) => {
                     errors.empresa = "No se permiten numero o caracteres especiales";
                 }
 
-                if (!data.user) {
-                    errors.user = "Se requiere el usuario";
-                } else if (data.user.length < 2) {
-                    errors.user = "Como minimo 2 caracteres";
-                } else if (data.user.length > 30) {
-                    errors.user = "Como maximo 30 caracteres";
-                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.user)) {
-                    errors.user = "No se permiten numero o caracteres especiales";
-                }
-
             }
 
             return errors;
@@ -214,7 +194,7 @@ export const Contrato = (props) => {
                 _contrato['codigoPliego']       = data.codigoPliego;
                 _contrato['estado']             = data.estado;
                 _contrato['empresa']            = data.empresa;
-                _contrato['user']               = data.user;
+                _contrato['user']               = cookies.get('id');
 
                 if (_contrato.codigoConvocatoria.trim()) {
                     if (contrato.id) {
@@ -230,6 +210,7 @@ export const Contrato = (props) => {
 
                         _contrato.id        = uniqid("cont-");
                         _contrato.estado    = "Activo"; 
+                        _contrato.user      = cookies.get('id');
                         _contratos.push(_contrato);
                 
                         createContrato({id:`${_contrato.id}`,fecha:`${_contrato.fecha}`,codigoConvocatoria:`${_contrato.codigoConvocatoria}`,codigoPliego:`${_contrato.codigoPliego}`,estado:`${_contrato.estado}`,empresa:`${_contrato.empresa}`,user:`${_contrato.user}`});
@@ -361,8 +342,7 @@ export const Contrato = (props) => {
             codigoConvocatoria: `${contrato.codigoConvocatoria}`,
             codigoPliego:       `${contrato.codigoPliego}`,
             estado:             `${contrato.estado}`,
-            empresa:            `${contrato.empresa}`,
-            user:               `${contrato.user}`
+            empresa:            `${contrato.empresa}`
         });
         setContratoUpdate(`${contrato.codigoConvocatoria}`);
         setStateContrato(true);
@@ -750,16 +730,6 @@ export const Contrato = (props) => {
                                 </div>       
                             </div>
                             {getFormErrorMessage('empresa')}
-
-                            <div className="p-field mt-2">
-                                <div className="p-inputgroup">
-                                        <span className="p-inputgroup-addon">
-                                            <i className="pi pi-user"></i>
-                                        </span>
-                                        <Dropdown id="user" name="user" placeholder="Seleccione un usuario" value={formik.values.user} onChange={formik.handleChange} options={users} optionLabel="nombre"  optionValue="id"/>
-                                </div>       
-                            </div>
-                            {getFormErrorMessage('user')}
 
 
                             <div className='mt-2'>

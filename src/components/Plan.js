@@ -16,6 +16,7 @@ import { Dropdown }         from 'primereact/dropdown';
 import { addLocale }        from 'primereact/api';
 import { useFormik }        from "formik";
 import { Link }             from 'react-router-dom';
+import Cookies              from 'universal-cookie';
 
 import uniqid               from 'uniqid';
 
@@ -41,9 +42,8 @@ const [archivo, setArchivo]= useState(initialValues);
 /**archivo */
     let emptyParte = {
         id:            null,
-        link:         '',
-        estado:       '',
-        user:         ''
+        link:         'https://umss',
+        estado:       ''
     };
 
     const estados = [
@@ -77,13 +77,13 @@ const [archivo, setArchivo]= useState(initialValues);
     const dt                                           = useRef(null);
     const [stateParte,setStateParte]                   = useState(false);
     const [parteUpdate, setParteUpdate]                = useState("");
+    const cookies                                      = new Cookies();
     const options1 = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const options2 = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const formik = useFormik({
         initialValues: {
-            link:         '',
-            estado:       '',
-            user:         ''
+            link:         'http://umss',
+            estado:       ''
         },
          validate: (data) => {
             let errors = {};
@@ -103,29 +103,8 @@ const [archivo, setArchivo]= useState(initialValues);
                 }
                 
 
-                if (!data.user) {
-                    errors.user = "Se requiere el usuario";
-                } else if (data.user.length < 2) {
-                    errors.user = "Como minimo 2 caracteres";
-                } else if (data.user.length > 30) {
-                    errors.user = "Como maximo 30 caracteres";
-                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.user)) {
-                    errors.user = "No se permiten numero o caracteres especiales";
-                }
-
             }else{
 
-               
-
-                if (!data.user) {
-                    errors.user = "Se requiere el usuario";
-                } else if (data.user.length < 2) {
-                    errors.user = "Como minimo 2 caracteres";
-                } else if (data.user.length > 30) {
-                    errors.user = "Como maximo 30 caracteres";
-                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.user)) {
-                    errors.user = "No se permiten numero o caracteres especiales";
-                }
 
             }
 
@@ -141,10 +120,10 @@ const [archivo, setArchivo]= useState(initialValues);
 
                 _parte['link']        = data.link;
                 _parte['estado']      = data.estado;
-                _parte['user']        = data.user;
+                _parte['user']        = cookies.get('id');
                 console.log(_parte);
 
-                if (_parte.link.trim()) {
+                
                     if (parte.id) {
 
                         setParte({ ...parte });
@@ -158,13 +137,14 @@ const [archivo, setArchivo]= useState(initialValues);
                     else {
 
                         _parte.id        = uniqid("plan-");
-                        _parte.estado    = "Activo"; 
+                        _parte.estado    = "Activo";
+                        _parte.user      = cookies.get('id'); 
                         _partes.push(_parte);
                         createPlan({id:`${_parte.id}`,link:`${_parte.link}`,estado:`${_parte.estado}`,user:`${_parte.user}`});
                         subirArchivo(archivo);
                         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Plan de pago Creado', life: 3000 });
                     }
-                }
+                
                 setPartes(_partes);
                 setParteDialog(false);
                 setParte(emptyParte);
@@ -241,8 +221,7 @@ const [archivo, setArchivo]= useState(initialValues);
         formik.setValues(
         {
             link:        `${parte.link}`,
-            estado:      `${parte.estado}`,
-            user:        `${parte.user}`
+            estado:      `${parte.estado}`
         });
         setParteUpdate(`${parte.estado}`);
         setStateParte(true);
@@ -258,7 +237,7 @@ const [archivo, setArchivo]= useState(initialValues);
         let _partes = [...partes];
         let _parte  = {...parte };
         
-        if (parte.link.trim()) {
+        
             if (parte.id) {
 
                 const index = findIndexById(parte.id);
@@ -270,7 +249,7 @@ const [archivo, setArchivo]= useState(initialValues);
                 setParte({ ...parte });
                 toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Plan de pago desactivado', life: 3000 });
             }
-        }
+        
         setPartes(_partes);
         setParte(emptyParte);
         setDeleteParteDialog(false);
@@ -466,16 +445,6 @@ const [archivo, setArchivo]= useState(initialValues);
                             ):
                                 null
                             }
-
-                            <div className="p-field mt-2">
-                                <div className="p-inputgroup">
-                                        <span className="p-inputgroup-addon">
-                                            <i className="pi pi-user"></i>
-                                        </span>
-                                        <Dropdown id="user" name="user" placeholder="Seleccione un usuario" value={formik.values.user} onChange={formik.handleChange} options={users} optionLabel="nombre"  optionValue="id"/>
-                                </div>       
-                            </div>
-                            {getFormErrorMessage('user')}
 
 
                             <div className='mt-2'>

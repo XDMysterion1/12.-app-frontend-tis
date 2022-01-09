@@ -14,6 +14,7 @@ import { Row }              from 'primereact/row';
 import { Dropdown }         from 'primereact/dropdown';
 import { useFormik }        from "formik";
 import { Link }             from 'react-router-dom';
+import Cookies              from 'universal-cookie';
 
 import uniqid               from 'uniqid';
 
@@ -46,8 +47,7 @@ export const PliegoEspecificacion = (props) => {
         semestre:  '',
         link:      'https://umss',
         publicado: '',
-        estado:    '',
-        user:      ''
+        estado:    ''
     };
 
     const semestres = [
@@ -83,6 +83,7 @@ export const PliegoEspecificacion = (props) => {
     const dt                                             = useRef(null);
     const [statePliego,setStatePliego]                   = useState(false);
     const [pliegoUpdate, setPliegoUpdate]                = useState("");
+    const cookies                                        = new Cookies();
 
     const formik = useFormik({
         initialValues: {
@@ -91,8 +92,7 @@ export const PliegoEspecificacion = (props) => {
             semestre:  '',
             link:      'https://umss',
             publicado: '',
-            estado:    '',
-            user:      ''
+            estado:    ''
         },
          validate: (data) => {
             let errors = {};
@@ -155,15 +155,6 @@ export const PliegoEspecificacion = (props) => {
                     errors.estado = "No se permiten numero o caracteres especiales";
                 } 
 
-                if (!data.user) {
-                    errors.user = "Se requiere el usuario";
-                } else if (data.user.length < 2) {
-                    errors.user = "Como minimo 2 caracteres";
-                } else if (data.user.length > 30) {
-                    errors.user = "Como maximo 30 caracteres";
-                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.user)) {
-                    errors.user = "No se permiten numero o caracteres especiales";
-                }
 
             }else{
 
@@ -203,16 +194,6 @@ export const PliegoEspecificacion = (props) => {
                 }
                 
 
-                if (!data.user) {
-                    errors.user = "Se requiere el usuario";
-                } else if (data.user.length < 2) {
-                    errors.user = "Como minimo 2 caracteres";
-                } else if (data.user.length > 30) {
-                    errors.user = "Como maximo 30 caracteres";
-                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.user)) {
-                    errors.user = "No se permiten numero o caracteres especiales";
-                }
-
             }
 
             return errors;
@@ -228,7 +209,7 @@ export const PliegoEspecificacion = (props) => {
                 _pliego['link']       = data.link;
                 _pliego['publicado']  = data.publicado;
                 _pliego['estado']     = data.estado;
-                _pliego['user']       = data.user;
+                _pliego['user']       = cookies.get('id');
 
                 if (_pliego.titulo.trim()) {
                     if (pliego.id) {
@@ -245,6 +226,7 @@ export const PliegoEspecificacion = (props) => {
                         _pliego.id        = uniqid("plieg-");
                         _pliego.publicado = "No publicar";
                         _pliego.estado    = "Activo";
+                        _pliego.user      = cookies.get('id');
                         _pliegos.push(_pliego);
                         subirPliego(archivo);
                         createPliego({id:`${_pliego.id}`,titulo:`${_pliego.titulo}`,codigo:`${_pliego.codigo}`,semestre:`${_pliego.semestre}`,link:`${_pliego.link}`,publicado:`${_pliego.publicado}`,estado:`${_pliego.estado}`,user:`${_pliego.user}`});
@@ -349,8 +331,7 @@ export const PliegoEspecificacion = (props) => {
             semestre:  `${pliego.semestre}`,
             link:      `${pliego.link}`,
             publicado: `${pliego.publicado}`,
-            estado:    `${pliego.estado}`,
-            user:      `${pliego.user}`
+            estado:    `${pliego.estado}`
         });
         setPliegoUpdate(`${pliego.codigo}`);
         setStatePliego(true);
@@ -659,16 +640,6 @@ export const PliegoEspecificacion = (props) => {
                             ):
                                 null
                             }
-                            
-                            <div className="p-field mt-2">
-                                <div className="p-inputgroup">
-                                        <span className="p-inputgroup-addon">
-                                            <i className="pi pi-user"></i>
-                                        </span>
-                                        <Dropdown id="user" name="user" placeholder="Seleccione un usuario" value={formik.values.user} onChange={formik.handleChange} options={users} optionLabel="nombre"  optionValue="id"/>
-                                </div>       
-                            </div>
-                            {getFormErrorMessage('user')}
 
 
                             <div className='mt-2'>

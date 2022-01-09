@@ -16,6 +16,7 @@ import { Dropdown }         from 'primereact/dropdown';
 import { addLocale }        from 'primereact/api';
 import { useFormik }        from "formik";
 import { Link }             from 'react-router-dom';
+import Cookies              from 'universal-cookie';
 
 import uniqid               from 'uniqid';
 
@@ -46,8 +47,7 @@ export const ParteA = (props) => {
         link:         'https://umss',
         fechaInicio:  '',
         fechaCierre:  '',
-        estado:       '',
-        user:         ''
+        estado:       ''
     };
 
     const estados = [
@@ -81,6 +81,7 @@ export const ParteA = (props) => {
     const dt                                           = useRef(null);
     const [stateParte,setStateParte]                   = useState(false);
     const [parteUpdate, setParteUpdate]                = useState("");
+    const cookies                                      = new Cookies();
     const options1 = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const options2 = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
@@ -107,8 +108,7 @@ export const ParteA = (props) => {
             link:         'https://www.magict',
             fechaInicio:  '',
             fechaCierre:  '',
-            estado:       '',
-            user:         ''
+            estado:       ''
         },
          validate: (data) => {
             let errors = {};
@@ -136,20 +136,7 @@ export const ParteA = (props) => {
                 }
                 
 
-                if (!data.user) {
-                    errors.user = "Se requiere el usuario";
-                } else if (data.user.length < 2) {
-                    errors.user = "Como minimo 2 caracteres";
-                } else if (data.user.length > 30) {
-                    errors.user = "Como maximo 30 caracteres";
-                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.user)) {
-                    errors.user = "No se permiten numero o caracteres especiales";
-                }
-
             }else{
-
-        
-             
 
                 if (!data.fechaInicio) {
                     errors.fechaInicio = "Se requiere la fecha de inicio";
@@ -159,15 +146,6 @@ export const ParteA = (props) => {
                     errors.fechaCierre = "Se requiere la fecha de cierre";
                 } 
 
-                if (!data.user) {
-                    errors.user = "Se requiere el usuario";
-                } else if (data.user.length < 2) {
-                    errors.user = "Como minimo 2 caracteres";
-                } else if (data.user.length > 30) {
-                    errors.user = "Como maximo 30 caracteres";
-                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.user)) {
-                    errors.user = "No se permiten numero o caracteres especiales";
-                }
 
             }
 
@@ -191,7 +169,7 @@ export const ParteA = (props) => {
                 _parte['fechaInicio'] = convertido1;
                 _parte['fechaCierre'] = convertido2;
                 _parte['estado']      = data.estado;
-                _parte['user']        = data.user;
+                _parte['user']        = cookies.get('id');
                 console.log("aqui estoy"+_parte);
 
                 if (_parte.link.trim()) {
@@ -208,7 +186,8 @@ export const ParteA = (props) => {
                     else {
 
                         _parte.id        = uniqid("parteA-");
-                        _parte.estado    = "Activo"; 
+                        _parte.estado    = "Activo";
+                        _parte.user      = cookies.get('id'); 
                         _partes.push(_parte);
                         console.log({id:`${_parte.id}`,link:`${_parte.link}`,fechaInicio:`${_parte.fechaInicio}`,fechaCierre:`${_parte.fechaCierre}`,estado:`${_parte.estado}`,user:`${_parte.user}`});
                         subirParteA(archivo);
@@ -294,8 +273,7 @@ export const ParteA = (props) => {
             link:        `${parte.link}`,
             fechaInicio: `${parte.fechaInicio}`,
             fechaCierre: `${parte.fechaCierre}`,
-            estado:      `${parte.estado}`,
-            user:        `${parte.user}`
+            estado:      `${parte.estado}`
         });
         setParteUpdate(`${parte.estado}`);
         setStateParte(true);
@@ -311,7 +289,7 @@ export const ParteA = (props) => {
         let _partes = [...partes];
         let _parte  = {...parte };
         
-        if (parte.link.trim()) {
+        
             if (parte.id) {
 
                 const index = findIndexById(parte.id);
@@ -325,7 +303,7 @@ export const ParteA = (props) => {
                 setParte({ ...parte });
                 toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Parte A desactivado', life: 3000 });
             }
-        }
+        
         setPartes(_partes);
         setParte(emptyParte);
         setDeleteParteDialog(false);
@@ -559,16 +537,6 @@ export const ParteA = (props) => {
                             ):
                                 null
                             }
-
-                            <div className="p-field mt-2">
-                                <div className="p-inputgroup">
-                                        <span className="p-inputgroup-addon">
-                                            <i className="pi pi-user"></i>
-                                        </span>
-                                        <Dropdown id="user" name="user" placeholder="Seleccione un usuario" value={formik.values.user} onChange={formik.handleChange} options={users} optionLabel="nombre"  optionValue="id"/>
-                                </div>       
-                            </div>
-                            {getFormErrorMessage('user')}
 
 
                             <div className='mt-2'>

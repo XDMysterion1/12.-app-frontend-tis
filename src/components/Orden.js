@@ -16,6 +16,7 @@ import { Dropdown }         from 'primereact/dropdown';
 import { addLocale }        from 'primereact/api';
 import { useFormik }        from "formik";
 import { Link }             from 'react-router-dom';
+import Cookies              from 'universal-cookie';
 import jsPDF                from 'jspdf';
 
 import uniqid               from 'uniqid';
@@ -50,8 +51,7 @@ export const Orden = (props) => {
         precioTotal:            '',
         usoHerramienta:         '',
         estado:                 '',
-        empresa:                '',
-        user:                   ''
+        empresa:                ''
     };
 
     const estados = [
@@ -209,6 +209,7 @@ export const Orden = (props) => {
     const dt                                           = useRef(null);
     const [stateParte,setStateParte]                   = useState(false);
     const [parteUpdate, setParteUpdate]                = useState("");
+    const cookies                                      = new Cookies();
 
     const options1 = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
@@ -251,8 +252,8 @@ export const Orden = (props) => {
             precioTotal:            '',
             usoHerramienta:         '',
             estado:                 '',
-            empresa:                '',
-            user:                   ''
+            empresa:                ''
+
         },
          validate: (data) => {
             let errors = {};
@@ -439,16 +440,6 @@ export const Orden = (props) => {
                 }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.empresa)) {
                     errors.empresa = "No se permiten numero o caracteres especiales";
                 }
-                
-                if (!data.user) {
-                    errors.user = "Se requiere el usuario";
-                } else if (data.user.length < 2) {
-                    errors.user = "Como minimo 2 caracteres";
-                } else if (data.user.length > 30) {
-                    errors.user = "Como maximo 30 caracteres";
-                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.user)) {
-                    errors.user = "No se permiten numero o caracteres especiales";
-                }
 
             }else{
 
@@ -621,16 +612,6 @@ export const Orden = (props) => {
                 }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.empresa)) {
                     errors.empresa = "No se permiten numero o caracteres especiales";
                 }
-                
-                if (!data.user) {
-                    errors.user = "Se requiere el usuario";
-                } else if (data.user.length < 2) {
-                    errors.user = "Como minimo 2 caracteres";
-                } else if (data.user.length > 30) {
-                    errors.user = "Como maximo 30 caracteres";
-                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.user)) {
-                    errors.user = "No se permiten numero o caracteres especiales";
-                }
 
             }
 
@@ -669,7 +650,7 @@ export const Orden = (props) => {
                 _parte['usoHerramienta']            = data.usoHerramienta;
                 _parte['estado']                    = data.estado;
                 _parte['empresa']                   = data.empresa;
-                _parte['user']                      = data.user;
+                _parte['user']                      = cookies.get('id');
 
 
                 if (_parte.caratulaA.trim()) {
@@ -711,7 +692,8 @@ export const Orden = (props) => {
                     else {
 
                         _parte.id        = uniqid("Orden-");
-                        _parte.estado    = "Activo"; 
+                        _parte.estado    = "Activo";
+                        _parte.user      = cookies.get('id'); 
                         _partes.push(_parte);
                         createOrden(
                             {
@@ -855,8 +837,7 @@ export const Orden = (props) => {
             precioTotal:                `${parte.precioTotal}`,
             usoHerramienta:             `${parte.usoHerramienta}`,
             estado:                     `${parte.estado}`,
-            empresa:                    `${parte.empresa}`,
-            user:                       `${parte.user}`
+            empresa:                    `${parte.empresa}`
         });
         setParteUpdate(`${parte.estado}`);
         setStateParte(true);
@@ -1434,16 +1415,6 @@ export const Orden = (props) => {
                                 </div>       
                             </div>
                             {getFormErrorMessage('empresa')}
-
-                            <div className="p-field mt-2">
-                                <div className="p-inputgroup">
-                                        <span className="p-inputgroup-addon">
-                                            <i className="pi pi-user"></i>
-                                        </span>
-                                        <Dropdown id="user" name="user" placeholder="Seleccione un usuario" value={formik.values.user} onChange={formik.handleChange} options={users} optionLabel="nombre"  optionValue="id"/>
-                                </div>       
-                            </div>
-                            {getFormErrorMessage('user')}
 
 
                             <div className='mt-2'>

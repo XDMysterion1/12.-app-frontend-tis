@@ -16,6 +16,7 @@ import { Dropdown }         from 'primereact/dropdown';
 import { addLocale }        from 'primereact/api';
 import { useFormik }        from "formik";
 import { Link }             from 'react-router-dom';
+import Cookies              from 'universal-cookie';
 
 import uniqid               from 'uniqid';
 
@@ -46,8 +47,7 @@ export const ParteB = (props) => {
         link:         'https://umss',
         fechaInicio:  '',
         fechaCierre:  '',
-        estado:       '',
-        user:         ''
+        estado:       ''
     };
 
     const estados = [
@@ -81,6 +81,7 @@ export const ParteB = (props) => {
     const dt                                           = useRef(null);
     const [stateParte,setStateParte]                   = useState(false);
     const [parteUpdate, setParteUpdate]                = useState("");
+    const cookies                                      = new Cookies();
     const options1 = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const options2 = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
@@ -105,8 +106,7 @@ export const ParteB = (props) => {
             link:         'http://www.magit',
             fechaInicio:  '',
             fechaCierre:  '',
-            estado:       '',
-            user:         ''
+            estado:       ''
         },
          validate: (data) => {
             let errors = {};
@@ -134,16 +134,6 @@ export const ParteB = (props) => {
                 }
                 
 
-                if (!data.user) {
-                    errors.user = "Se requiere el usuario";
-                } else if (data.user.length < 2) {
-                    errors.user = "Como minimo 2 caracteres";
-                } else if (data.user.length > 30) {
-                    errors.user = "Como maximo 30 caracteres";
-                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.user)) {
-                    errors.user = "No se permiten numero o caracteres especiales";
-                }
-
             }else{
 
            
@@ -155,16 +145,6 @@ export const ParteB = (props) => {
                 if (!data.fechaCierre) {
                     errors.fechaCierre = "Se requiere la fecha de cierre";
                 } 
-
-                if (!data.user) {
-                    errors.user = "Se requiere el usuario";
-                } else if (data.user.length < 2) {
-                    errors.user = "Como minimo 2 caracteres";
-                } else if (data.user.length > 30) {
-                    errors.user = "Como maximo 30 caracteres";
-                }else if (!/^^[a-zA-Z0-9\s-]+$/i.test(data.user)) {
-                    errors.user = "No se permiten numero o caracteres especiales";
-                }
 
             }
 
@@ -188,10 +168,10 @@ export const ParteB = (props) => {
                 _parte['fechaInicio'] = convertido1;
                 _parte['fechaCierre'] = convertido2;
                 _parte['estado']      = data.estado;
-                _parte['user']        = data.user;
+                _parte['user']        = cookies.get('id');
                 console.log(_parte);
 
-                if (_parte.link.trim()) {
+                
                     if (parte.id) {
 
                         setParte({ ...parte });
@@ -204,14 +184,15 @@ export const ParteB = (props) => {
                     else {
 
                         _parte.id        = uniqid("parteB-");
-                        _parte.estado    = "Activo"; 
+                        _parte.estado    = "Activo";
+                        _parte.user      = cookies.get('id'); 
                         _partes.push(_parte);
                         console.log({id:`${_parte.id}`,link:`${_parte.link}`,fechaInicio:`${_parte.fechaInicio}`,fechaCierre:`${_parte.fechaCierre}`,estado:`${_parte.estado}`,user:`${_parte.user}`});
                         subirParteB(archivo);
                         createEntregaB({id:`${_parte.id}`,link:`${_parte.link}`,fechaInicio:`${_parte.fechaInicio}`,fechaCierre:`${_parte.fechaCierre}`,estado:`${_parte.estado}`,user:`${_parte.user}`});
                         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Parte B Creado', life: 3000 });
                     }
-                }
+                
                 setPartes(_partes);
                 setParteDialog(false);
                 setParte(emptyParte);
@@ -290,8 +271,7 @@ export const ParteB = (props) => {
             link:        `${parte.link}`,
             fechaInicio: `${parte.fechaInicio}`,
             fechaCierre: `${parte.fechaCierre}`,
-            estado:      `${parte.estado}`,
-            user:        `${parte.user}`
+            estado:      `${parte.estado}`
         });
         setParteUpdate(`${parte.estado}`);
         setStateParte(true);
@@ -307,7 +287,7 @@ export const ParteB = (props) => {
         let _partes = [...partes];
         let _parte  = {...parte };
         
-        if (parte.link.trim()) {
+        
             if (parte.id) {
 
                 const index = findIndexById(parte.id);
@@ -321,7 +301,7 @@ export const ParteB = (props) => {
                 setParte({ ...parte });
                 toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Parte B desactivado', life: 3000 });
             }
-        }
+        
         setPartes(_partes);
         setParte(emptyParte);
         setDeleteParteDialog(false);
@@ -554,16 +534,6 @@ export const ParteB = (props) => {
                             ):
                                 null
                             }
-
-                            <div className="p-field mt-2">
-                                <div className="p-inputgroup">
-                                        <span className="p-inputgroup-addon">
-                                            <i className="pi pi-user"></i>
-                                        </span>
-                                        <Dropdown id="user" name="user" placeholder="Seleccione un usuario" value={formik.values.user} onChange={formik.handleChange} options={users} optionLabel="nombre"  optionValue="id"/>
-                                </div>       
-                            </div>
-                            {getFormErrorMessage('user')}
 
 
                             <div className='mt-2'>
