@@ -5,7 +5,7 @@ export const subirArchivo = (archivo) =>{
    
     const fd = new FormData();
     fd.append('file', archivo.archivo, archivo.archivoNombre);
-    axios.post('https://magic-tech-backend.herokuapp.com/api/upload', fd,{
+    axios.post('http://magictsec.tis.cs.umss.edu.bo/api/upload', fd,{
         onUploadProgress: progressEvent =>{
             console.log("Upload progress: " + Math.round(progressEvent.loaded / progressEvent.total * 100) + "%")
         }
@@ -14,7 +14,7 @@ export const subirArchivo = (archivo) =>{
 }
 export const download=()=>{
     axios({
-        url:"https://magic-tech-backend.herokuapp.com/api/download",
+        url:"http://magictsec.tis.cs.umss.edu.bo/api/download",
         method: 'GET',
         responseType:'blob',
 
@@ -33,7 +33,7 @@ export const subirConvocatoria = (archivo) =>{
    
     const fd = new FormData();
     fd.append('file', archivo.archivo, archivo.archivoNombre);
-    axios.post('https://magic-tech-backend.herokuapp.com/api/uploadConvocatoria', fd,{
+    axios.post('http://magictsec.tis.cs.umss.edu.bo/api/uploadConvocatoria', fd,{
         onUploadProgress: progressEvent =>{
             console.log("Upload progress: " + Math.round(progressEvent.loaded / progressEvent.total * 100) + "%")
         }
@@ -42,17 +42,18 @@ export const subirConvocatoria = (archivo) =>{
 }
 export const downloadConvocatoria=()=>{
     axios({
-        url:"https://magic-tech-backend.herokuapp.com/api/downloadConvocatoria",
+        url:"http://magictsec.tis.cs.umss.edu.bo/api/downloadConvocatoria",
         method: 'GET',
         responseType:'blob',
 
     }).then((reponse) => {
         const url = window.URL.createObjectURL(new Blob([reponse.data]));
-        const link1 = document.createElement('a');
-        link1.href=url;
-        link1.setAttribute('download', 'convocatoria.pdf');
-        document.body.appendChild(link1);
-        link1.click();
+        const link = document.createElement('a');
+        link.href=url;
+        link.setAttribute('download', 'convocatoria.pdf');
+        console.log("este es el link"+link);
+        document.body.appendChild(link);
+        link.click();
     })
 }
 ///pliego
@@ -60,7 +61,7 @@ export const subirPliego = (archivo) =>{
    
     const fd = new FormData();
     fd.append('file', archivo.archivo, archivo.archivoNombre);
-    axios.post('https://magic-tech-backend.herokuapp.com/api/uploadPliego', fd,{
+    axios.post('http://magictsec.tis.cs.umss.edu.bo/api/uploadPliego', fd,{
         onUploadProgress: progressEvent =>{
             console.log("Upload progress: " + Math.round(progressEvent.loaded / progressEvent.total * 100) + "%")
         }
@@ -69,7 +70,7 @@ export const subirPliego = (archivo) =>{
 }
 export const downloadPliego=()=>{
     axios({
-        url:"https://magic-tech-backend.herokuapp.com/api/downloadPliego",
+        url:"http://magictsec.tis.cs.umss.edu.bo/api/downloadPliego",
         method: 'GET',
         responseType:'blob',
 
@@ -88,7 +89,7 @@ export const subirParteA = (archivo) =>{
    
     const fd = new FormData();
     fd.append('file', archivo.archivo, archivo.archivoNombre);
-    axios.post('https://magic-tech-backend.herokuapp.com/api/uploadParteA', fd,{
+    axios.post('http://magictsec.tis.cs.umss.edu.bo/api/uploadParteA', fd,{
         onUploadProgress: progressEvent =>{
             console.log("Upload progress: " + Math.round(progressEvent.loaded / progressEvent.total * 100) + "%")
         }
@@ -97,7 +98,7 @@ export const subirParteA = (archivo) =>{
 }
 export const descargarParteA=()=>{
     axios({
-        url:"https://magic-tech-backend.herokuapp.com/api/downloadParteA",
+        url:"http://magictsec.tis.cs.umss.edu.bo/api/downloadParteA",
         method: 'GET',
         responseType:'blob',
 
@@ -115,7 +116,7 @@ export const subirParteB = (archivo) =>{
    
     const fd = new FormData();
     fd.append('file', archivo.archivo, archivo.archivoNombre);
-    axios.post('https://magic-tech-backend.herokuapp.com/api/uploadParteB', fd,{
+    axios.post('http://magictsec.tis.cs.umss.edu.bo/api/uploadParteB', fd,{
         onUploadProgress: progressEvent =>{
             console.log("Upload progress: " + Math.round(progressEvent.loaded / progressEvent.total * 100) + "%")
         }
@@ -124,7 +125,7 @@ export const subirParteB = (archivo) =>{
 }
 export const descargarParteB=()=>{
     axios({
-        url:"https://magic-tech-backend.herokuapp.com/api/downloadParteB",
+        url:"http://magictsec.tis.cs.umss.edu.bo/api/downloadParteB",
         method: 'GET',
         responseType:'blob',
 

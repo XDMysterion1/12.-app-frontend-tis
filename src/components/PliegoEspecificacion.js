@@ -44,7 +44,7 @@ export const PliegoEspecificacion = (props) => {
         titulo:    '',
         codigo:    '',
         semestre:  '',
-        link:      '',
+        link:      'https://umss',
         publicado: '',
         estado:    '',
         user:      ''
@@ -89,7 +89,7 @@ export const PliegoEspecificacion = (props) => {
             titulo:    '',
             codigo:    '',
             semestre:  '',
-            link:      '',
+            link:      'https://umss',
             publicado: '',
             estado:    '',
             user:      ''

@@ -42,7 +42,7 @@ export const Convocatoria = (props) => {
         titulo:    '',
         codigo:    '',
         semestre:  '',
-        link:      '',
+        link:      'https://umss',
         publicado: '',
         estado:    '',
         user:      ''
@@ -87,7 +87,7 @@ export const Convocatoria = (props) => {
             titulo:    '',
             codigo:    '',
             semestre:  '',
-            link:      '',
+            link:      'http://umss',
             publicado: '',
             estado:    '',
             user:      ''
@@ -173,10 +173,7 @@ export const Convocatoria = (props) => {
                     errors.titulo = "No se permiten numero o caracteres especiales";
                 }
 
-                if (archivo!=null) {
-                    errors.link = "Se requiere el archivo";
-                }
-                
+               
 
                 if (!data.codigo) {
                     errors.codigo = "Se requiere el codigo";

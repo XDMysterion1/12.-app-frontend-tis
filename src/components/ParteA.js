@@ -38,7 +38,6 @@ export const ParteA = (props) => {
             archivo: e.target.files[0],
             archivoNombre: e.target.files[0].name
         })
-        console.log(archivo)
     }
 
 
@@ -135,10 +134,7 @@ export const ParteA = (props) => {
                 } else if (!/^^[a-zA-Z\s]+$/i.test(data.estado)) {
                     errors.estado = "No se permiten numero o caracteres especiales";
                 }
-                console.log("antes de validar"+archivo)
-                if (archivo!=null) {
-                    errors.link = "Se requiere el archivo";
-                }
+                
 
                 if (!data.user) {
                     errors.user = "Se requiere el usuario";
@@ -153,7 +149,9 @@ export const ParteA = (props) => {
             }else{
 
         
-              
+                if (archivo!=null) {
+                    errors.link = "Se requiere el archivo";
+                }
                 
 
                 if (!data.fechaInicio) {

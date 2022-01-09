@@ -1,17 +1,18 @@
 import axios from 'axios';
 
  export const getItems = () =>{
-     return axios.get('https://magic-tech-backend.herokuapp.com/api/getItems');
+     return axios.get('http://magictsec.tis.cs.umss.edu.bo/api/getItems');
  }
 
  export const getItemId =(id) =>{
-     return axios.get(`https://magic-tech-backend.herokuapp.com/api/getItemId/${id}`);
+  
+     return axios.get(`http://magictsec.tis.cs.umss.edu.bo/api/getItemId/${id}`);
  }
 
 
 
  export const createItem=(data)=>{
-    return axios.post('https://magic-tech-backend.herokuapp.com/api/createItem', 
+    return axios.post('http://magictsec.tis.cs.umss.edu.bo/api/createItem', 
       {
          id:                 `${data.id}`,
          homelabel:          `${data.homelabel}`,
@@ -141,7 +142,7 @@ import axios from 'axios';
  }
 
 export const updateItemID =(data,id) =>{
-    return axios.put(`https://magic-tech-backend.herokuapp.com/api/updateItem/${id}`, 
+    return axios.put(`http://magictsec.tis.cs.umss.edu.bo/api/updateItem/${id}`, 
     {
         homelabel:       `${data.homelabel}`,
         homeIcono:       `${data.homeIcono}`,
@@ -269,13 +270,13 @@ export const updateItemID =(data,id) =>{
 }
 
 export const deleteItemID =(id) =>{
-    return axios.delete(`https://magic-tech-backend.herokuapp.com/api/deleteItemId/${id}`);
+    return axios.delete(`http://magictsec.tis.cs.umss.edu.bo/api/deleteItemId/${id}`);
 }
 
 export const getItemsActivas = () =>{
-  return axios.get('https://magic-tech-backend.herokuapp.com/api/getItemsActivas');
+  return axios.get('http://magictsec.tis.cs.umss.edu.bo/api/getItemsActivas');
 }
 
 export const getItemsRol = (id) =>{
-    return axios.get(`https://magic-tech-backend.herokuapp.com/api/getItemsRol/${id}`);
+    return axios.get(`http://magictsec.tis.cs.umss.edu.bo/api/getItemsRol/${id}`);
   }

@@ -43,7 +43,7 @@ export const ParteB = (props) => {
 
     let emptyParte = {
         id:            null,
-        link:         '',
+        link:         'https://umss',
         fechaInicio:  '',
         fechaCierre:  '',
         estado:       '',
