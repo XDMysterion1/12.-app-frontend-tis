@@ -1,17 +1,17 @@
 import axios from 'axios';
 
  export const getOrdens = () =>{
-     return axios.get('http://magictsec.tis.cs.umss.edu.bo/api/getOrdens');
+     return axios.get('https://magic-tech-backend.herokuapp.com/api/getOrdens');
  }
 
  export const getOrdenID =(id) =>{
-     return axios.get(`http://magictsec.tis.cs.umss.edu.bo/api/getOrdenId/${id}`);
+     return axios.get(`https://magic-tech-backend.herokuapp.com/api/getOrdenId/${id}`);
  }
 
 
 
  export const createOrden=(data)=>{
-    return axios.post('http://magictsec.tis.cs.umss.edu.bo/api/createOrden', 
+    return axios.post('https://magic-tech-backend.herokuapp.com/api/createOrden', 
       {
          id:                     `${data.id}`,
          fecha:                  `${data.fecha}`,
@@ -49,7 +49,7 @@ import axios from 'axios';
  }
 
 export const updateOrdenID =(data,id) =>{
-    return axios.put(`http://magictsec.tis.cs.umss.edu.bo/api/updateOrden/${id}`, 
+    return axios.put(`https://magic-tech-backend.herokuapp.com/api/updateOrden/${id}`, 
     {
         fecha:                  `${data.fecha}`,
         caratulaA:              `${data.caratulaA}`,
@@ -85,9 +85,9 @@ export const updateOrdenID =(data,id) =>{
 }
 
 export const deleteOrdenID =(id) =>{
-    return axios.delete(`http://magictsec.tis.cs.umss.edu.bo/api/deleteOrdenId/${id}`);
+    return axios.delete(`https://magic-tech-backend.herokuapp.com/api/deleteOrdenId/${id}`);
 }
 
 export const getOrdensActivas = () =>{
-  return axios.get('http://magictsec.tis.cs.umss.edu.bo/api/getOrdensActivas');
+  return axios.get('https://magic-tech-backend.herokuapp.com/api/getOrdensActivas');
 }

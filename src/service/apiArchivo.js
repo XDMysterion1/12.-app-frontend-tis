@@ -14,7 +14,7 @@ export const subirArchivo = (archivo) =>{
 }
 export const download=()=>{
     axios({
-        url:"http://magictsec.tis.cs.umss.edu.bo/api/download",
+        url:"https://magic-tech-backend.herokuapp.com/api/download",
         method: 'GET',
         responseType:'blob',
 
